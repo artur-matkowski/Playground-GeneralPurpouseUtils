@@ -5,7 +5,7 @@
 #include <ostream>
 #include <string>
 #include <fstream>
-#include "bfuObject.hpp"
+#include "stream.hpp"
 
 
 enum class DebugLevel {
@@ -42,7 +42,7 @@ public:
         // out stream object
         static struct OutStream {
 
-                std::ostringstream 	stream;
+                bfu::stream     	stream;
                 DebugLevel 			level = DebugLevel::ALL;
                 bool 				loggingToFile = false;
                 std::string 		LogFileName;
@@ -116,7 +116,7 @@ public:
 							}
 							level = tmp;
 						}
-						outfile << log::getTime() << LogLvl(level) << stream.str() << os;
+						outfile << log::getTime() << LogLvl(level) << stream << os;
 						outfile.close();
                     }
 
@@ -135,12 +135,12 @@ public:
 
 					}
                     // here you can build the real console log line, add colors and infos, or even write out to a log file
-                    std::cout << log::getTime() << LogLvl(level) << stream.str() << os;
+                    std::cout << log::getTime() << LogLvl(level) << stream << os;
 					printf("\033[0m");
 
 
 
-                    stream.str(""); // reset the string stream
+                    stream.clear(); // reset the string stream
                     level = DebugLevel::ALL; // reset the level to info
                     return *this;
                 }

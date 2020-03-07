@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include "LOG.hpp"
 
 #include "Log.hpp"
 
@@ -11,21 +10,16 @@
 
 using namespace std;
 
-
+using namespace bfu;
 
 int main(int argc, char** argv)
 {
-	/*
-	LOG_DEBUG("slaby blad : %s ", "asdfaf");
-	LOG_INFO("slaby blad : %s ", "asdfaf");
-	LOG_WARNING("slaby blad : %s ", "asdfaf");
-	LOG_ERROR("slaby blad : %s ", "asdfaf");
+	
 
-	LOG_INFO("slaby blad", 1);
 
-	Debug::Log.EnableFileLogging();
-*/
-	//Debug::Log << "Hello Log! " << 2 << " " << __FUNCTION__ << std::endl;
+	//log::Log.EnableFileLogging();
+
+
 	
 	
 	log::error << "dasdad" << std::endl;
@@ -35,18 +29,18 @@ int main(int argc, char** argv)
 
     log::debug << "Hello Log! " << 0xFA << std::endl; // NB: this way the debugLevel is default
 
-	cout << "\nProject Name: " << getenv("PROJECT_NAME") << flush;
+	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;
 
-
+/*
 	bfu::stream str;
 
-	str.resize();
+	str << "dadf adfads df asdf fsg sdfg sdfgs dfg dafsadf sfsf sfd sd sdf s s";
+	//str << "kupa kupa kupa";
 
-	str.sprintf("kupa kupa kupa");
 
 
-	std::cout << str.str();
-
+	std::cout << str << true << false << std::flush;
+*/
 
 
 	return 0;

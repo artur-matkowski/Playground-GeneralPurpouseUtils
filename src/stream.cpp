@@ -8,10 +8,16 @@ namespace bfu{
 	    ,last(0)
 	    ,current(0)
 	{
+		if(buffsize!=0)
+		{
+			first = new char[buffsize];
+		    last = first+buffsize-1;
+		    current = first;
+		}
 	}
 
 	stream::stream(const char* input, int size)
-	    :buffsize( std::max(size, (int)strlen(input)) )
+	    :buffsize( std::max( {size, (int)strlen(input), minimalbuffsize} ) )
 	    ,first(new char[buffsize])
 	    ,last(first+buffsize-1)
 	    ,current(first)
@@ -31,6 +37,13 @@ namespace bfu{
 	stream::~stream()
 	{
 		delete[] first;
+	}
+
+	std::ostream& operator<<(std::ostream& os, const stream& strm)
+	{
+		strm.current[0] = '\0';
+	    os << strm.first;
+	    return os;
 	}
 
 }

@@ -7,7 +7,7 @@
 void* operator new(size_t size)
 {
 	void* ptr = std::malloc(size);
-	//std::cout << "alocated " << size << " bytes of memory in " << ptr << "\n" << std::flush;
+	std::cout << "alocated " << size << " bytes of memory in " << ptr << "\n" << std::flush;
 
 	return ptr;
 }

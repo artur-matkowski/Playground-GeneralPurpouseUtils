@@ -3,12 +3,15 @@
 #include <cstdarg>
 #include <cstring>
 #include <string>
+#include <iostream>
 #include "bfuObject.hpp"
 
+	
 namespace bfu{
 	class stream
 	{
-		//lazy alocation
+		const int minimalbuffsize = 64;
+		//lazy alocation if buffsize = 0
 		int buffsize = 0;
 		char* first = 0;
 		char* last = 0;
@@ -31,6 +34,20 @@ namespace bfu{
 
 	    ~stream();
 
+	    inline int size()
+	    {
+	    	return (int)(current-first);
+	    }
+
+	    inline bool eof()
+	    {
+	    	return current==last;
+	    }
+
+		inline void clear()
+		{
+			current = first;
+		}
 
 		inline bool isOneOf(const char* str)
 		{
@@ -56,7 +73,7 @@ namespace bfu{
 
 		inline void skipTo(char c)
 		{
-			while( current!=last && *current!=c ) 
+			while( !eof() && *current!=c ) 
 			{
 				++current;
 			}
@@ -80,6 +97,12 @@ namespace bfu{
 
 		inline void SetCursonPos(int pos)
 		{
+			if(pos > buffsize)
+			{
+				int t = next_power_of_two(pos);
+				resize(t);
+			}
+
 			current = first + pos;
 		}
 
@@ -108,6 +131,7 @@ namespace bfu{
 
 		inline void resize(int newsize)
 		{
+			newsize = std::max(newsize, minimalbuffsize);
 			char* newbuff = new char[newsize];
 			int toCopy = std::min(newsize, (int)(current-first));
 
@@ -123,11 +147,55 @@ namespace bfu{
 
 		inline void resize()
 		{
-			int size = next_power_of_two(8);
+			int size = next_power_of_two(buffsize);
 			resize(size);
 		}
+
+		stream& operator<<(const char* val)
+		{
+			this->sprintf(val);
+
+			return *this;
+		}
+
+		stream& operator<<(const int& val)
+		{
+			this->sprintf("%d", val);
+
+			return *this;
+		}
+
+		stream& operator<<(const float& val)
+		{
+			this->sprintf("%f", val);
+
+			return *this;
+		}
+
+		stream& operator<<(const bool& val)
+		{
+			this->sprintf("%d", val);
+
+			return *this;
+		}
+
+		stream& operator<<(const std::string& val)
+		{
+			this->sprintf(val.c_str());
+
+			return *this;
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const stream& strm);
 	};
+
+	std::ostream& operator<<(std::ostream& os, const stream& strm);
+
+
+
 }
+
+using bfu::operator<<;
 
 
 #endif
