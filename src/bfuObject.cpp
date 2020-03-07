@@ -1,13 +1,23 @@
 #include "bfuObject.hpp"
 #include <iostream>
 #include <cstdlib> 
-#include "Log.hpp"
+#include <iomanip>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <termios.h>
 
 
 void* operator new(size_t size)
 {
 	void* ptr = std::malloc(size);
-	std::cout << "alocated " << size << " bytes of memory in " << ptr << "\n" << std::flush;
+
+	
+	struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    std::cout.width( w.ws_col -64);
+
+	std::cout << std::right << "alocated " << size << " bytes of memory in " << ptr << "\n" << std::flush;
 
 	return ptr;
 }

@@ -42,7 +42,7 @@ namespace bfu{
 	std::ostream& operator<<(std::ostream& os, const stream& strm)
 	{
 		strm.current[0] = '\0';
-	    os << strm.first;
+	    os << strm.first << std::flush;
 	    return os;
 	}
 

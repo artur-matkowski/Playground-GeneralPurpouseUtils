@@ -186,6 +186,13 @@ namespace bfu{
 			return *this;
 		}
 
+		stream& operator<<(std::ostream& (*os)(std::ostream&))
+		{
+			this->sprintf("\n");
+			
+			return *this;
+		}
+
 		friend std::ostream& operator<<(std::ostream& os, const stream& strm);
 	};
 

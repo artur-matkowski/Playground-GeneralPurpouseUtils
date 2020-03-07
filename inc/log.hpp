@@ -45,8 +45,8 @@ public:
                 bfu::stream     	stream;
                 DebugLevel 			level = DebugLevel::ALL;
                 bool 				loggingToFile = false;
-                std::string 		LogFileName;
-                std::string			path = "Logs/";
+                char*        		LogFileName;
+                const char*			path = "./Logs/";
                	std::ofstream 		outfile;
 
                 inline const char* LogLvl(DebugLevel lvl)
@@ -65,6 +65,15 @@ public:
                 	return "UNKNOWN";
                 }
             public:
+                OutStream(){
+                    bfu::stream   stm;
+
+                    stm << path << "LOG " << std::string(log::getDate()) << " " << std::string(log::getTime()) << ".txt";
+
+                    LogFileName = new char[ stm.size() ];
+
+                    sprintf(LogFileName, stm.str().c_str());
+                }
             	OutStream& operator()(const char* file, int line)
             	{
                     #ifndef NOTRACE
@@ -102,16 +111,15 @@ public:
 
                 	if(loggingToFile)
                     {
-						outfile.open(path+LogFileName, std::ios_base::app); // append instead of overwrite
+						outfile.open(LogFileName, std::ios_base::app); // append instead of overwrite
 						if(outfile.fail())
 						{
 							DebugLevel tmp = level;
-							log::Log(DebugLevel::WARNING) << "\nFailed to open log file in location: " << path+LogFileName << " traying to log into executable folder";
-							path = "./";
-							outfile.open(path+LogFileName, std::ios_base::app);
+							log::warning << "\nFailed to open log file in location: " << LogFileName << " traying to log into executable folder";
+							outfile.open(LogFileName, std::ios_base::app);
 							if(outfile.fail())
 							{
-								log::Log(DebugLevel::ERROR) << "\nFailed to log into executable folder, disabling file logging";
+								log::error << "\nFailed to log into executable folder, disabling file logging";
 								loggingToFile = false;
 							}
 							level = tmp;

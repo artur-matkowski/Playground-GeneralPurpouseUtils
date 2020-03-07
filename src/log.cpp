@@ -1,4 +1,4 @@
-#include "Log.hpp"
+#include "log.hpp"
 #include <ctime>
 #include <cstring>
 
@@ -35,6 +35,4 @@ char* log::getDate()
 void log::OutStream::EnableFileLogging()
 {
 	loggingToFile = true;
-
-	LogFileName = "LOG " + std::string(log::getDate()) + " " + std::string(log::getTime()) + ".txt";
 }

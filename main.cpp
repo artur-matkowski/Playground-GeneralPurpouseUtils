@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "Log.hpp"
 
-#include "stream.hpp"
+#include "tests/streamTests.hpp"
+#include "tests/loggingTests.hpp"
 
 using namespace std;
 
@@ -14,21 +14,15 @@ using namespace bfu;
 
 int main(int argc, char** argv)
 {
+	streamTests();
+	loggingTests();
+
+
+	//
+
+
 	
-
-
-	//log::Log.EnableFileLogging();
-
-
 	
-	
-	log::error << "dasdad" << std::endl;
-  	log::warning << "Hello Log! " << 2 << " " << __FUNCTION__ << std::endl;
-	log::info << "Hello Log! " << 2 << " " << __FUNCTION__ << std::endl;
-	log::debug << "Hello Log! " << 2 << " " << __FUNCTION__ << std::endl;
-
-    log::debug << "Hello Log! " << 0xFA << std::endl; // NB: this way the debugLevel is default
-
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;
 
 /*
