@@ -5,7 +5,7 @@
 
 bool loggingTests()
 {
-	log::Log.EnableFileLogging();
+	//log::Log.EnableFileLogging();
 
 	log::error << "Hello Log! " << 2 << " " << __FUNCTION__ << ":" << __LINE__ << std::endl;
   	log::warning << "Hello Log! " << 2 << " " << __FUNCTION__ << ":" << __LINE__ << std::endl;
