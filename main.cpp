@@ -8,6 +8,7 @@
 #include "tests/streamTests.hpp"
 #include "tests/loggingTests.hpp"
 #include "tests/udpTests.hpp"
+#include "tests/jsonTests.hpp"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ int main(int argc, char** argv)
 	//streamTests();
 	//loggingTests();
 
-	udpTests();
-
+	//udpTests();
+	jsonTests();
 
 
 	

@@ -19,30 +19,16 @@ void udpTests()
 
 	if (resoult == 0) 
 	{
-		Udp udp(8888);
+		bfu::Udp udp(8888);
 		printf(udp.Read().c_str());
 		printf(udp.Read().c_str());
 	}
     else
     {
-		Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
-		Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
+		bfu::Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
+		bfu::Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
 	}
 
-
-    /*
-	if(strcmp(argv[1], "sync")==0)
-	{
-		if(strcmp(argv[2], "server")==0)
-		{
-			Udp udp(8888);
-			printf(udp.Read().c_str());
-		}
-		else if(strcmp(argv[2], "client")==0)
-		{
-			Udp::Write(argv[1], "127.0.0.1", 8888);
-		}
-	}*/
 
 }
 
