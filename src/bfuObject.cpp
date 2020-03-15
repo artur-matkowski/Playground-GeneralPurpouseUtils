@@ -12,13 +12,13 @@ void* operator new(size_t size)
 {
 	void* ptr = std::malloc(size);
 
-	
+	/*
 	struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     std::cout.width( w.ws_col -64);
 
 	std::cout << std::right << "alocated " << size << " bytes of memory in " << ptr << "\n" << std::flush;
-
+*/
 	return ptr;
 }
 

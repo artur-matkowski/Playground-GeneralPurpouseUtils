@@ -13,7 +13,9 @@ namespace bfu{
 
 
   class JSONStream: public stream{
+    /*
     int buffsize = 1024*4;
+    
     char* first = 0;
     char* last = 0;
     char* current = 0;
@@ -31,9 +33,9 @@ namespace bfu{
       }
       return false;
     }
-
+*/
   public:
-
+/*
     inline bool isOneOf(const char* str)
     {
       int size = strlen(str);
@@ -72,13 +74,10 @@ namespace bfu{
         current = last;
       }
     }
-
+*/
     JSONStream()
-      :first(new char[buffsize])
-      ,last(first+buffsize-1)
-      ,current(first)
+      :stream()
       {
-        memset(first, 0, buffsize);
       }
 
     JSONStream(const char* input)
@@ -96,7 +95,6 @@ namespace bfu{
 
     ~JSONStream()
     {
-      delete[] first;
     }
 
     JSONStream& Deserialize(float& val)
@@ -174,25 +172,25 @@ namespace bfu{
 
     JSONStream& Serialize(const float& val)
     {
-      current += snprintf(current, last-current, "%f", val);
+      this->sprintf("%f", val);
       return *this;
     }
 
     JSONStream& Serialize(const int& val)
     {
-      current += snprintf(current, last-current, "%d", val);
+      this->sprintf("%d", val);
       return *this;
     }
 
     JSONStream& Serialize(const bool& val)
     {
-      current += snprintf(current, last-current, "%s", (val ? "true" : "false") );
+      this->sprintf("%s", (val ? "true" : "false") );
       return *this;
     }
 
     JSONStream& Serialize(const std::string& val)
     {
-      current += snprintf(current, last-current, "\"%s\"", val.c_str() );
+      this->sprintf("\"%s\"", val.c_str() );
       return *this;
     }
 
@@ -204,7 +202,7 @@ namespace bfu{
     }
 
 
-
+/*
     std::string str()
     {
       return std::string(first,last);
@@ -227,7 +225,7 @@ namespace bfu{
     inline char peak() const
     {
       return *current;
-    }
+    }*/
   };
 }
 

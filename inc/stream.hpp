@@ -10,6 +10,7 @@
 namespace bfu{
 	class stream
 	{
+	protected:
 		const int minimalbuffsize = 64;
 		//lazy alocation if buffsize = 0
 		int buffsize = 0;
@@ -113,15 +114,22 @@ namespace bfu{
 
 			int t = vsnprintf(current, last-current, str, args);
 
+			va_end(args);
+
 			if(t > last-current)
 			{
 				t = next_power_of_two(current-first+t);
 				resize(t);
+
+				va_list args;
+				va_start(args, str);
+
 				t = vsnprintf(current, last-current, str, args);
+
+				va_end(args);
 			}
 
 			current += t;
-			va_end(args);
 		}
 
 		inline char peak() const
