@@ -13,68 +13,7 @@ namespace bfu{
 
 
   class JSONStream: public stream{
-    /*
-    int buffsize = 1024*4;
-    
-    char* first = 0;
-    char* last = 0;
-    char* current = 0;
-
-    inline bool isOneOf(char* c, const char* str)
-    {
-      int size = strlen(str);
-      
-      for(int i=0; i<size; ++i)
-      {
-        if(*c==str[i])
-        {
-          return true;
-        }
-      }
-      return false;
-    }
-*/
   public:
-/*
-    inline bool isOneOf(const char* str)
-    {
-      int size = strlen(str);
-      
-      for(int i=0; i<size; ++i)
-      {
-        if(*current==str[i])
-        {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    inline void skipToOneOf(const char* str)
-    {
-      while( current!=last && !isOneOf(current, str) ) {
-        ++current;
-      }
-    }
-
-    inline void skipTo(char c)
-    {
-      while( current!=last && *current!=c ) {
-        ++current;
-      }
-    }
-    inline void skip(int c)
-    {
-      if( (current + c) <= last )
-      {
-        current += c;
-      }
-      else
-      {
-        current = last;
-      }
-    }
-*/
     JSONStream()
       :stream()
       {
@@ -134,7 +73,7 @@ namespace bfu{
 
       return *this;
     }
-
+/*
     JSONStream& Deserialize(std::string& val)
     {
       skipTo('\"');
@@ -159,6 +98,66 @@ namespace bfu{
 
       return *this;
     }
+*/
+
+    JSONStream& Deserialize(std::string& val)
+    {
+      if(m_status < status::OK)
+      {
+        return *this;        
+      }
+
+      skipTo('\"');
+
+      char* skipper = current+1;
+
+      while( current!=last && *skipper != '\"' )
+      {
+        if( *skipper=='\\' )
+        {
+          ++skipper;
+          if( current==last )
+          {
+            m_status = status::NOK;
+            return *this;
+          }
+        }
+        ++skipper;
+      }
+
+      int size = skipper-current+1;
+      char* buff = new char[size];
+
+      int streamC = 1;
+      int buffC = 0;
+
+      for(;;)
+      {
+        if( current[streamC]=='\\' && current[streamC+1]=='\"' )
+        {
+          ++streamC;
+        }
+        else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
+        {
+          buff[buffC] = '\0';
+          break;
+        }
+        buff[buffC] = current[streamC];
+
+        ++streamC;
+        ++buffC;
+      }
+      
+      val.assign(buff);
+
+      delete buff;
+
+      current = skipper;
+      skipToOneOf(":,]}");
+
+      return *this;
+    }
+
 
     JSONStream& operator>> ( SerializableBase& val)
     {
@@ -190,7 +189,24 @@ namespace bfu{
 
     JSONStream& Serialize(const std::string& val)
     {
-      this->sprintf("\"%s\"", val.c_str() );
+      //this->sprintf("\"%s\"", val.c_str() );
+
+      const char* buff = val.c_str();
+      const int buffsize = val.size();
+
+      put('\"');
+
+      for(int i=0; i<buffsize; ++i)
+      {
+        if( buff[i] == '\"' )
+        {
+          put('\\');
+        }
+        put(buff[i]);
+      }
+
+      put('\"');
+
       return *this;
     }
 
@@ -200,32 +216,6 @@ namespace bfu{
 
       return *this;
     }
-
-
-/*
-    std::string str()
-    {
-      return std::string(first,last);
-    }
-
-    void SetCursonPos(int pos)
-    {
-      current = first + pos;
-    }
-
-    void sprintf(const char* str, ...)
-    {
-      va_list args;
-      va_start(args, str);
-
-      current += vsnprintf(current, last-current, str, args);
-      va_end(args);
-    }
-
-    inline char peak() const
-    {
-      return *current;
-    }*/
   };
 }
 

@@ -11,6 +11,7 @@ public:
 	SerializableVar<bool> m_var;
 	SerializableVar<float> m_var2;
 	SerializableVarVector<float> m_var3;
+	SerializableVar<std::string> m_var4;
 
 
 
@@ -20,12 +21,15 @@ public:
 		,m_var("m_var",this)
 		,m_var2("m_var2",this)
 		,m_var3("m_var3",this)
+		,m_var4("m_var4",this)
 	{
 		m_var = true;
 		m_var2 = 2.00123;
 
 		m_var3.push_back(1.2);
 		m_var3.push_back(1.1);
+
+		m_var4 = "testing \"std::string";
 	}
 
 	testClass2(const testClass2& copy)
@@ -33,12 +37,15 @@ public:
 		,m_var("m_var",this)
 		,m_var2("m_var2",this)
 		,m_var3("m_var3",this)
+		,m_var4("m_var4",this)
 	{
 		m_var = true;
 		m_var2 = 2.00123;
 
 		m_var3.push_back(1.2);
 		m_var3.push_back(1.1);
+
+		m_var4 = "testing \"std::string";
 	}
 };
 

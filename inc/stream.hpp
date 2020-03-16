@@ -18,6 +18,10 @@ namespace bfu{
 		char* last = 0;
 		char* current = 0;
 
+		enum class status{NOK = -1, OK = 0};
+
+		status m_status = status::OK;
+
 		int next_power_of_two(int n) {
 		    int i = 0;
 		    ++n;
@@ -137,6 +141,19 @@ namespace bfu{
 			return *current;
 		}
 
+		inline void put(char c)
+		{
+			if( current == last )
+			{
+				int newSize = last-first+1;
+				newSize = next_power_of_two(newSize);
+				resize(newSize);
+			}
+
+			*current = c;
+			++current;			
+		}
+
 		inline void resize(int newsize)
 		{
 			newsize = std::max(newsize, minimalbuffsize);
@@ -151,6 +168,11 @@ namespace bfu{
 			current = first + toCopy;
 			last = first + newsize -1;
 			buffsize = newsize;
+		}
+
+		inline status getStatus()
+		{
+			return m_status;
 		}
 
 		inline void resize()
