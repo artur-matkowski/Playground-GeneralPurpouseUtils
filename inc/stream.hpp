@@ -39,7 +39,7 @@ namespace bfu{
 
 	    ~stream();
 
-	    inline int size()
+	    inline int size() const
 	    {
 	    	return (int)(current-first);
 	    }
@@ -170,6 +170,13 @@ namespace bfu{
 			buffsize = newsize;
 		}
 
+		inline void grow(int minSize)
+		{
+			int newSize = last-first+1;
+			newSize = next_power_of_two(newSize);
+			resize(newSize);
+		}
+
 		inline status getStatus()
 		{
 			return m_status;
@@ -221,6 +228,11 @@ namespace bfu{
 			this->sprintf("\n");
 			
 			return *this;
+		}
+
+		inline char operator[](int i) const
+		{
+			return first[i];
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const stream& strm);

@@ -73,32 +73,7 @@ namespace bfu{
 
       return *this;
     }
-/*
-    JSONStream& Deserialize(std::string& val)
-    {
-      skipTo('\"');
 
-      char* skipper = current+1;
-
-      while( current!=last && *skipper != '\"' )
-      {
-        if(*skipper=='\\' )
-        {
-          ++skipper;
-          if( current==last )
-            break;
-        }
-        ++skipper;
-      }
-      
-      val.assign(current+1, skipper);
-
-      current = skipper;
-      skipToOneOf(":,]}");
-
-      return *this;
-    }
-*/
 
     JSONStream& Deserialize(std::string& val)
     {
@@ -159,6 +134,70 @@ namespace bfu{
     }
 
 
+    JSONStream& Deserialize(bfu::stream& val)
+    {
+      
+      if(m_status < status::OK)
+      {
+        return *this;        
+      }
+
+      skipTo('\"');
+
+      char* skipper = current+1;
+
+      while( current!=last && *skipper != '\"' )
+      {
+        if( *skipper=='\\' )
+        {
+          ++skipper;
+          if( current==last )
+          {
+            m_status = status::NOK;
+            return *this;
+          }
+        }
+        ++skipper;
+      }
+
+      int size = skipper-current+1;
+      char* buff = new char[size];
+
+      val.grow( size );
+
+      int streamC = 1;
+      int buffC = 0;
+
+      for(;;)
+      {
+        if( current[streamC]=='\\' && current[streamC+1]=='\"' )
+        {
+          ++streamC;
+        }
+        else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
+        {
+          //buff[buffC] = '\0';
+          val.put( '\0' );
+          break;
+        }
+        //buff[buffC] = current[streamC];
+        val.put( current[streamC] );
+
+        ++streamC;
+        ++buffC;
+      }
+      
+      //val.assign(buff);
+
+      delete buff;
+
+      current = skipper;
+      skipToOneOf(":,]}");
+
+      return *this;
+    }
+
+
     JSONStream& operator>> ( SerializableBase& val)
     {
       val.Deserialize(*this);
@@ -189,8 +228,6 @@ namespace bfu{
 
     JSONStream& Serialize(const std::string& val)
     {
-      //this->sprintf("\"%s\"", val.c_str() );
-
       const char* buff = val.c_str();
       const int buffsize = val.size();
 
@@ -203,6 +240,26 @@ namespace bfu{
           put('\\');
         }
         put(buff[i]);
+      }
+
+      put('\"');
+
+      return *this;
+    }
+
+    JSONStream& Serialize(const bfu::stream& val)
+    {
+      int buffsize = val.size();
+
+      put('\"');
+
+      for(int i=0; i<buffsize; ++i)
+      {
+        if( val[i] == '\"' )
+        {
+          put('\\');
+        }
+        put(val[i]);
       }
 
       put('\"');
