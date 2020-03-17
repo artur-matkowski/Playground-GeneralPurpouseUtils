@@ -267,12 +267,12 @@ bool _TESTclassNested()
 
 void jsonTests()
 {
-	srand (1584472904);
+	srand (time(NULL));
 
 	//std::cout << std::endl << time(NULL) << std::endl;
 
 	bool test = true;
-	/*
+	
 	test = test && TESTJSONStream(float, randf() );
 	test = test && TESTJSONStream(float, randf() );
 
@@ -297,10 +297,10 @@ void jsonTests()
 
 	test = test && TESTJSONStreamVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
 
-*/
+
 	test = test && _TESTclass();
 
-	//test = test && _TESTclassNested();
+	test = test && _TESTclassNested();
 
 
 /*

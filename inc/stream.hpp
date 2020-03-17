@@ -110,24 +110,7 @@ namespace bfu{
 
 			current = first + pos;
 		}
-/*
-		inline void sprintf(const char* str)
-		{
-			const int size = strlen(str);
-			int t;
 
-			if(size > last-current)
-			{
-				t = next_power_of_two(current-first+size);
-				resize(t);
-
-
-			}
-			t = vsnprintf(current, last-current, str, args2);
-
-			current += t;
-		}
-*/
 		inline void sprintf(const char* str, ...)
 		{
 			va_list args1;

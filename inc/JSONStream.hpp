@@ -114,7 +114,7 @@ namespace bfu{
         }
         else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
         {
-          //buff[buffC] = '\0';
+          buff[buffC] = '\0';
           break;
         }
         buff[buffC] = current[streamC];
@@ -177,7 +177,7 @@ namespace bfu{
         else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
         {
           //buff[buffC] = '\0';
-          //val.put( '\0' );
+          val.put( '\0' );
           break;
         }
         //buff[buffC] = current[streamC];
