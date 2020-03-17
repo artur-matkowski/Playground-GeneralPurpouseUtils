@@ -7,6 +7,7 @@
 
 namespace bfu{
 	
+	class stream;
 
 	struct cmpByStringLength {
 	    bool operator()(const char* a, const char* b) const {
@@ -34,8 +35,12 @@ namespace bfu{
 		{
 			m_membersMap[memberName] = memberReference;
 		}
+
+
+		void print();
 	};
 
 }
+
 
 #endif

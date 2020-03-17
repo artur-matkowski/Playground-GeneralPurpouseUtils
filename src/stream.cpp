@@ -13,6 +13,7 @@ namespace bfu{
 			first = new char[buffsize];
 		    last = first+buffsize-1;
 		    current = first;
+			std::memset(first, ' ', buffsize);
 		}
 	}
 
@@ -41,7 +42,6 @@ namespace bfu{
 
 	std::ostream& operator<<(std::ostream& os, const stream& strm)
 	{
-		strm.current[0] = '\0';
 	    os << strm.first << std::flush;
 	    return os;
 	}

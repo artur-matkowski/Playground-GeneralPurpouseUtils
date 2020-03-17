@@ -2,8 +2,31 @@
 #define _H_jsonTests
 
 #include "SerializableVarVector.hpp"
+#include <stdlib.h>    
+#include <time.h>
+
 
 using namespace bfu;
+
+
+
+float randf()
+{
+	return (rand() % 100) * 0.01 + rand() % 100 - 50;
+}
+
+int randi()
+{
+	return rand() % 100 - 50;
+}
+
+bool randb()
+{
+	return (rand() % 2) == 0;
+}
+
+
+
 
 class testClass2: public SerializableClassBase
 {
@@ -23,11 +46,11 @@ public:
 		,m_var3("m_var3",this)
 		,m_var4("m_var4",this)
 	{
-		m_var = true;
-		m_var2 = 2.00123;
+		m_var = randb();
+		m_var2 = randf();
 
-		m_var3.push_back(1.2);
-		m_var3.push_back(1.1);
+		m_var3.push_back(randf());
+		m_var3.push_back(randf());
 
 		m_var4 = "testing \"std::string";
 	}
@@ -39,13 +62,12 @@ public:
 		,m_var3("m_var3",this)
 		,m_var4("m_var4",this)
 	{
-		m_var = true;
-		m_var2 = 2.00123;
+		m_var = copy.m_var;
+		m_var2 = copy.m_var2;
 
-		m_var3.push_back(1.2);
-		m_var3.push_back(1.1);
+		m_var3 = copy.m_var3;
 
-		m_var4 = "testing \"std::string";
+		m_var4 = copy.m_var4;
 	}
 };
 
@@ -71,18 +93,18 @@ public:
 		,m_var4("m_var4",this)
 		,m_var5("m_var5",this)
 	{
-		m_var = true;
-		m_var2 = 2.00123;
+		m_var = randb();
+		m_var2 = randf();
 
-		m_var3.push_back(1.2);
-		m_var3.push_back(1.1);
-		m_var3.push_back(3.2);
-		m_var3.push_back(13.2);
+		m_var3.push_back(randf());
+		m_var3.push_back(randf());
+		m_var3.push_back(randf());
+		m_var3.push_back(randf());
 
 
 		m_var5.push_back( testClass2() );
-		m_var5.push_back(testClass2());
-		m_var5.push_back(testClass2());
+		m_var5.push_back( testClass2() );
+		m_var5.push_back( testClass2() );
 	}
 };
 
@@ -163,38 +185,125 @@ bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 
 #define TESTJSONStreamVector(T,...) _TESTJSONStreamVector<T>( #T , {__VA_ARGS__})
 
+bool _TESTclass()
+{
+	JSONStream json;
+	JSONStream json2;
+	testClass2 tt;
+	testClass2 tt2;
+	//tt = val;
+
+	std::cout << "tt:";
+	//tt.print();
+
+	
+	std::cout << "tt2:";
+	//tt2.print();
+
+	json << tt;
+
+	json.SetCursonPos(0);
+
+	json >> tt2;
+	json2 << tt2;
+
+
+	std::cout << "tt2 after deseriailze:";
+	//tt2.print();
+
+	log::info << "Testing: testClass2" 
+			//<< "\n\tOriginal input:\n\t\t>" << tt 
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+			<< "<\n" << std::endl;
+
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	{
+		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
+	}
+	else
+	{
+		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
+	}
+}
+
+bool _TESTclassNested()
+{
+	JSONStream json;
+	JSONStream json2;
+	testClass tt;
+	testClass tt2;
+	//tt = val;
+
+	json << tt;
+
+	json.SetCursonPos(0);
+
+	json >> tt2;
+	json2 << tt2;
+
+	log::info << "Testing: testClass nested" 
+			//<< "\n\tOriginal input:\n\t\t>" << tt 
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+			<< "<\n" << std::endl;
+
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	{
+		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
+	}
+	else
+	{
+		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
+	}
+}
+
 
 void jsonTests()
 {
-		bool test = true;
-	
-	test = test && TESTJSONStream(float, -2.342);
-	test = test && TESTJSONStream(float, 2);
+	srand (1584472904);
+
+	//std::cout << std::endl << time(NULL) << std::endl;
+
+	bool test = true;
+	/*
+	test = test && TESTJSONStream(float, randf() );
+	test = test && TESTJSONStream(float, randf() );
 
 
-	test = test && TESTJSONStream(int, 3);
-	test = test && TESTJSONStream(int, -2);
+	test = test && TESTJSONStream(int, randi() );
+	test = test && TESTJSONStream(int, randi() );
 
 
-	test = test && TESTJSONStream(bool, false);
-	test = test && TESTJSONStream(bool, true);
+	test = test && TESTJSONStream(bool, randb() );
+	test = test && TESTJSONStream(bool, randb() );
 
 
-	test = test && TESTJSONStream(std::string, "gowno test \\\"213.ad,das");
+	test = test && TESTJSONStream(std::string, "gowno test \"213.ad,das");
 
 
 
-	test = test && TESTJSONStreamVector(bool, true, false, true, true); 
+	test = test && TESTJSONStreamVector(bool, randb(), randb(), randb(), randb()); 
 
-	test = test && TESTJSONStreamVector(float, 1.2, -2.3, 3.4, -4.5 ); 
+	test = test && TESTJSONStreamVector(float, randf(), randf(), randf(), randf() ); 
 
-	test = test && TESTJSONStreamVector(int, 1, -2, 3, -4, 7 ); 
+	test = test && TESTJSONStreamVector(int, randi(), randi(), randi(), randi(), randi() ); 
 
 	test = test && TESTJSONStreamVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
 
+*/
+	test = test && _TESTclass();
+
+	//test = test && _TESTclassNested();
 
 
-
+/*
 	{
 		JSONStream json;
 		JSONStream json2;
@@ -226,7 +335,7 @@ void jsonTests()
 			log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
 			test = test && false;		
 		}
-	}
+	}*/
 
 
 	if( test )

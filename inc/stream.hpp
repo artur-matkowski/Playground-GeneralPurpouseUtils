@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include "bfuObject.hpp"
-
+//#include <iostream>
 	
 namespace bfu{
 	class stream
@@ -110,28 +110,44 @@ namespace bfu{
 
 			current = first + pos;
 		}
-
-		inline void sprintf(const char* str, ...)
+/*
+		inline void sprintf(const char* str)
 		{
-			va_list args;
-			va_start(args, str);
+			const int size = strlen(str);
+			int t;
 
-			int t = vsnprintf(current, last-current, str, args);
-
-			va_end(args);
-
-			if(t > last-current)
+			if(size > last-current)
 			{
-				t = next_power_of_two(current-first+t);
+				t = next_power_of_two(current-first+size);
 				resize(t);
 
-				va_list args;
-				va_start(args, str);
 
-				t = vsnprintf(current, last-current, str, args);
-
-				va_end(args);
 			}
+			t = vsnprintf(current, last-current, str, args2);
+
+			current += t;
+		}
+*/
+		inline void sprintf(const char* str, ...)
+		{
+			va_list args1;
+			va_start(args1, str);
+			va_list args2;
+    		va_copy(args2, args1);
+
+			int t = vsnprintf(current, last-current, str, args1);
+
+			va_end(args1);
+
+			if(t >= last-current)
+			{
+				t = next_power_of_two(current-first+t+2);
+				resize(t);
+
+				t = vsnprintf(current, last-current, str, args2);
+
+			}
+    		va_end(args2);
 
 			current += t;
 		}
@@ -160,12 +176,14 @@ namespace bfu{
 			char* newbuff = new char[newsize];
 			int toCopy = std::min(newsize, (int)(current-first));
 
+			std::memset(newbuff, ' ', newsize);
 			std::memcpy(newbuff, first, toCopy);
 
 			delete[] first;
 
 			first = newbuff;
 			current = first + toCopy;
+			//*current = ' ';
 			last = first + newsize -1;
 			buffsize = newsize;
 		}
@@ -235,10 +253,24 @@ namespace bfu{
 			return first[i];
 		}
 
-		friend std::ostream& operator<<(std::ostream& os, const stream& strm);
+		inline stream& operator=(const bfu::stream& src)
+		{
+			buffsize = src.buffsize;
+			resize(buffsize);
+
+			std::memcpy(first, src.first, buffsize);
+
+			const int offset = src.current - src.first;
+
+			current = first + offset;
+
+			return *this;
+		}
+
+		friend std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
 	};
 
-	std::ostream& operator<<(std::ostream& os, const stream& strm);
+	std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
 
 
 

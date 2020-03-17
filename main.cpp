@@ -16,6 +16,7 @@ using namespace bfu;
 
 int main(int argc, char** argv)
 {
+	log::Log.EnableFileLogging();
 	//streamTests();
 	//loggingTests();
 

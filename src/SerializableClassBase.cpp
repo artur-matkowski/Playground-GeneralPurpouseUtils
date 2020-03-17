@@ -45,4 +45,18 @@ namespace bfu{
 		}
 	}
 
+	void SerializableClassBase::print()
+	{
+		auto last = m_membersMap.end();
+
+		for(auto it = m_membersMap.begin(); it != last; )
+		{
+			std::cout << "\n\tKEY: " << it->first;
+
+			std::cout  << "\n\tVALUE: " << it->second;
+		}
+
+	    return;
+	}
+
 }
