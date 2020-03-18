@@ -42,14 +42,16 @@ namespace bfu{
 			m_membersMap[ token.c_str() ]->Deserialize( stream );
 
 			stream.skipToOneOf("\"}");
+
 		}
+		stream.skip(1);
 	}
 
 	void SerializableClassBase::print()
 	{
 		auto last = m_membersMap.end();
 
-		for(auto it = m_membersMap.begin(); it != last; )
+		for(auto it = m_membersMap.begin(); it != last; ++it)
 		{
 			std::cout << "\n\tKEY: " << it->first;
 

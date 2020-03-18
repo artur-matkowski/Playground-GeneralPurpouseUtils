@@ -85,14 +85,13 @@ namespace bfu{
 		}
 		inline void skip(int c)
 		{
-			if( (current + c) <= last )
+			if( (current + c) > last )
 			{
-				current += c;
+				int newSize = next_power_of_two(size()+c+2);
+				resize(newSize);
 			}
-			else
-			{
-				current = last;
-			}
+
+			current += c;
 		}
 
 		inline std::string str()
@@ -135,9 +134,9 @@ namespace bfu{
 			current += t;
 		}
 
-		inline char peak() const
+		inline char peak(int offset = 0) const
 		{
-			return *current;
+			return current[offset];
 		}
 
 		inline void put(char c)

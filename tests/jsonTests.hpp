@@ -267,9 +267,17 @@ bool _TESTclassNested()
 
 void jsonTests()
 {
+
+#define SEED 0
+
+#if SEED!=0
+	srand (SEED);
+#else
 	srand (time(NULL));
 
-	//std::cout << std::endl << time(NULL) << std::endl;
+	std::cout << std::endl << "time(NULL): " << time(NULL) << std::endl;
+#endif
+
 
 	bool test = true;
 	
