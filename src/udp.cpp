@@ -6,10 +6,11 @@
 
 namespace bfu{
 
-	Udp::Udp(int Port)
-		:port(Port)
+	udp::udp(int Port)
+		:m_port(Port)
+		,m_json(PACKAGESIZE)
 	{
-		if ((s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+		if ((m_socket=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 		{
 			log::error << "Creating socket" << std::endl;
 			return;
@@ -19,11 +20,11 @@ namespace bfu{
 		memset((char *) &si_me, 0, sizeof(si_me));
 
 		si_me.sin_family = AF_INET;
-		si_me.sin_port = htons(port);
+		si_me.sin_port = htons(m_port);
 		si_me.sin_addr.s_addr = htonl(INADDR_ANY);
 
 		//bind socket to port
-		if( bind(s , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
+		if( bind(m_socket , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
 		{
 			log::error << "Binding socket" << std::endl;
 			return;
@@ -32,13 +33,8 @@ namespace bfu{
 	}
 
 
-	std::string Udp::Read()
-	{
-		std::string host;
-		return this->Read(host);
-	}
 
-	std::string Udp::Read(std::string & remoteHost)
+	std::string udp::Read(std::string & remoteHost)
 	{
 		struct sockaddr_in si_other;
 
@@ -51,7 +47,7 @@ namespace bfu{
 
 	    //try to receive some data, this is a blocking call
 
-		if ((recvfrom(s, cache, PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+		if ((recvfrom(m_socket, cache, PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen)) == -1)
 		{
 			log::error << "recvfrom2" << std::endl;
 			return "";
@@ -64,12 +60,12 @@ namespace bfu{
 		return std::string(cache);
 	}
 
-	void Udp::Read(char* outBuff, int buffSize)
+	void udp::Read(char* outBuff, int buffSize)
 	{
 		std::string host;
 		this->Read(outBuff, buffSize, host);
 	}
-	void Udp::Read(char* outBuff, int buffSize, std::string & remoteHost)
+	void udp::Read(char* outBuff, int buffSize, std::string & remoteHost)
 	{
 		struct sockaddr_in si_other;
 
@@ -82,7 +78,7 @@ namespace bfu{
 
 	    //try to receive some data, this is a blocking call
 
-		if ((recvfrom(s, outBuff, buffSize, 0, (struct sockaddr *) &si_other, &slen)) == -1)
+		if ((recvfrom(m_socket, outBuff, buffSize, 0, (struct sockaddr *) &si_other, &slen)) == -1)
 		{
 			log::error << "recvfrom2" << std::endl;
 			return;
@@ -93,7 +89,7 @@ namespace bfu{
 		log::debug << "Received udp msg: {" << outBuff << "} to {"<<inet_ntoa(si_other.sin_addr)<<":"<<ntohs(si_other.sin_port)<<"}" << std::endl;
 	}
 
-	void Udp::Write(const std::string & buff, const char* host, int port)
+	void udp::Write(const std::string & buff, const char* host, int port)
 	{
 		struct sockaddr_in si_other;
 	    int s;
@@ -132,7 +128,7 @@ namespace bfu{
 	}
 
 
-	void Udp::Write(const char * buff, int buffsize, const char* host, int port)
+	void udp::Write(const char * buff, int buffsize, const char* host, int port)
 	{
 		struct sockaddr_in si_other;
 	    int s;
@@ -170,9 +166,9 @@ namespace bfu{
 	    close(s);
 	}
 
-	int Udp::GetPort()
+	int udp::GetPort()
 	{
-		return port;
+		return m_port;
 	}
 
 }

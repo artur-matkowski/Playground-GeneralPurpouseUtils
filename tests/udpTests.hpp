@@ -19,14 +19,15 @@ void udpTests()
 
 	if (resoult == 0) 
 	{
-		bfu::Udp udp(8888);
-		printf(udp.Read().c_str());
-		printf(udp.Read().c_str());
+		bfu::udp udp(8888);
+		std::string host;
+		printf(udp.Read(host).c_str());
+		printf(udp.Read(host).c_str());
 	}
     else
     {
-		bfu::Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
-		bfu::Udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
+		bfu::udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
+		bfu::udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
 	}
 
 

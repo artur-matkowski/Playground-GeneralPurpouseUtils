@@ -16,21 +16,18 @@ namespace bfu{
   public:
     JSONStream()
       :stream()
-      {
-      }
+    {
+    }
 
-    JSONStream(const char* input)
-      {
-        int insize = strlen (input);
-        buffsize = std::max(buffsize, insize);
+    JSONStream(const int size)
+      :stream(size)
+    {
+    }
 
-        first = new char[buffsize];
-        last = first+buffsize-1;
-        current = first;
-
-        std::memset(first, 0, buffsize);
-        std::memcpy(first, input, insize);
-      }
+    JSONStream(const JSONStream& input)
+      :stream(input)
+    {
+    }
 
     ~JSONStream()
     {
@@ -40,7 +37,7 @@ namespace bfu{
     {
       skipToOneOf("-.0123456789");
 
-      current += sscanf(current, "%f", &val);
+      m_current += sscanf(m_current, "%f", &val);
       skipToOneOf(",]}");
 
       return *this;
@@ -50,7 +47,7 @@ namespace bfu{
     {
       skipToOneOf("-0123456789");
 
-      current += sscanf(current, "%d", &val);
+      m_current += sscanf(m_current, "%d", &val);
       skipToOneOf(",]}");
 
       return *this;
@@ -60,11 +57,11 @@ namespace bfu{
     {
       skipToOneOf("tf");
 
-      if( 0==strncmp(current, "true", 4) )
+      if( 0==strncmp(m_current, "true", 4) )
       {
         val = true;
       }
-      else if( 0==strncmp(current, "false", 5) )
+      else if( 0==strncmp(m_current, "false", 5) )
       {
         val = false;
       }
@@ -84,14 +81,14 @@ namespace bfu{
 
       skipTo('\"');
 
-      char* skipper = current+1;
+      char* skipper = m_current+1;
 
-      while( current!=last && *skipper != '\"' )
+      while( m_current!=m_last && *skipper != '\"' )
       {
         if( *skipper=='\\' )
         {
           ++skipper;
-          if( current==last )
+          if( m_current==m_last )
           {
             m_status = status::NOK;
             return *this;
@@ -100,7 +97,7 @@ namespace bfu{
         ++skipper;
       }
 
-      int size = skipper-current+1;
+      int size = skipper-m_current+1;
       char* buff = new char[size];
 
       int streamC = 1;
@@ -108,16 +105,16 @@ namespace bfu{
 
       for(;;)
       {
-        if( current[streamC]=='\\' && current[streamC+1]=='\"' )
+        if( m_current[streamC]=='\\' && m_current[streamC+1]=='\"' )
         {
           ++streamC;
         }
-        else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
+        else if( m_current[streamC]=='\"' && m_current[streamC-1]!='\\' )
         {
           buff[buffC] = '\0';
           break;
         }
-        buff[buffC] = current[streamC];
+        buff[buffC] = m_current[streamC];
 
         ++streamC;
         ++buffC;
@@ -127,7 +124,7 @@ namespace bfu{
 
       delete buff;
 
-      current = skipper;
+      m_current = skipper;
       skipToOneOf(":,]}");
 
       return *this;
@@ -144,14 +141,14 @@ namespace bfu{
 
       skipTo('\"');
 
-      char* skipper = current+1;
+      char* skipper = m_current+1;
 
-      while( current!=last && *skipper != '\"' )
+      while( m_current!=m_last && *skipper != '\"' )
       {
         if( *skipper=='\\' )
         {
           ++skipper;
-          if( current==last )
+          if( m_current==m_last )
           {
             m_status = status::NOK;
             return *this;
@@ -160,7 +157,7 @@ namespace bfu{
         ++skipper;
       }
 
-      int size = skipper-current+1;
+      int size = skipper-m_current+1;
       char* buff = new char[size];
 
       val.grow( size );
@@ -170,18 +167,18 @@ namespace bfu{
 
       for(;;)
       {
-        if( current[streamC]=='\\' && current[streamC+1]=='\"' )
+        if( m_current[streamC]=='\\' && m_current[streamC+1]=='\"' )
         {
           ++streamC;
         }
-        else if( current[streamC]=='\"' && current[streamC-1]!='\\' )
+        else if( m_current[streamC]=='\"' && m_current[streamC-1]!='\\' )
         {
           //buff[buffC] = '\0';
           val.put( '\0' );
           break;
         }
-        //buff[buffC] = current[streamC];
-        val.put( current[streamC] );
+        //buff[buffC] = m_current[streamC];
+        val.put( m_current[streamC] );
 
         ++streamC;
         ++buffC;
@@ -191,7 +188,7 @@ namespace bfu{
 
       delete buff;
 
-      current = skipper;
+      m_current = skipper;
       skipToOneOf(":,]}");
 
       return *this;
@@ -201,6 +198,13 @@ namespace bfu{
     JSONStream& operator>> ( SerializableBase& val)
     {
       val.Deserialize(*this);
+
+      return *this;
+    }
+
+    JSONStream& operator>> ( JSONStream& val)
+    {
+      this->Deserialize( val );
 
       return *this;
     }
@@ -270,6 +274,13 @@ namespace bfu{
     JSONStream& operator<< ( SerializableBase& val)
     {
       val.Serialize(*this);
+
+      return *this;
+    }
+
+    JSONStream& operator<< ( JSONStream& val)
+    {
+      this->Serialize( val );
 
       return *this;
     }

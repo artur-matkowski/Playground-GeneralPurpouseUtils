@@ -11,12 +11,12 @@ namespace bfu{
 	class stream
 	{
 	protected:
-		const int minimalbuffsize = 64;
-		//lazy alocation if buffsize = 0
-		int buffsize = 0;
-		char* first = 0;
-		char* last = 0;
-		char* current = 0;
+		const int m_minimalbuffsize = 64;
+		//lazy alocation if buffsize = 0 and not constructing with size
+		int m_buffsize = 0;
+		char* m_first = 0;
+		char* m_last = 0;
+		char* m_current = 0;
 
 		enum class status{NOK = -1, OK = 0};
 
@@ -36,22 +36,23 @@ namespace bfu{
 		stream();
 	    stream(const char* input, int size = -1);
 	    stream(const stream& input);
+	    stream(const int size);
 
 	    ~stream();
 
 	    inline int size() const
 	    {
-	    	return (int)(current-first);
+	    	return (int)(m_current-m_first);
 	    }
 
 	    inline bool eof()
 	    {
-	    	return current==last;
+	    	return m_current==m_last;
 	    }
 
 		inline void clear()
 		{
-			current = first;
+			m_current = m_first;
 		}
 
 		inline bool isOneOf(const char* str)
@@ -60,7 +61,7 @@ namespace bfu{
 
 			for(int i=0; i<size; ++i)
 			{
-				if(*current==str[i])
+				if(*m_current==str[i])
 				{
 					return true;
 				}
@@ -70,44 +71,44 @@ namespace bfu{
 
 		inline void skipToOneOf(const char* str)
 		{
-			while( current!=last && !isOneOf(str) ) 
+			while( m_current!=m_last && !isOneOf(str) ) 
 			{
-				++current;
+				++m_current;
 			}
 		}
 
 		inline void skipTo(char c)
 		{
-			while( !eof() && *current!=c ) 
+			while( !eof() && *m_current!=c ) 
 			{
-				++current;
+				++m_current;
 			}
 		}
 		inline void skip(int c)
 		{
-			if( (current + c) > last )
+			if( (m_current + c) > m_last )
 			{
 				int newSize = next_power_of_two(size()+c+2);
 				resize(newSize);
 			}
 
-			current += c;
+			m_current += c;
 		}
 
 		inline std::string str()
 		{
-			return std::string(first,last);
+			return std::string(m_first,m_last);
 		}
 
 		inline void SetCursonPos(int pos)
 		{
-			if(pos > buffsize)
+			if(pos > m_buffsize)
 			{
 				int t = next_power_of_two(pos);
 				resize(t);
 			}
 
-			current = first + pos;
+			m_current = m_first + pos;
 		}
 
 		inline void sprintf(const char* str, ...)
@@ -117,62 +118,62 @@ namespace bfu{
 			va_list args2;
     		va_copy(args2, args1);
 
-			int t = vsnprintf(current, last-current, str, args1);
+			int t = vsnprintf(m_current, m_last-m_current, str, args1);
 
 			va_end(args1);
 
-			if(t >= last-current)
+			if(t >= m_last-m_current)
 			{
-				t = next_power_of_two(current-first+t+2);
+				t = next_power_of_two(m_current-m_first+t+2);
 				resize(t);
 
-				t = vsnprintf(current, last-current, str, args2);
+				t = vsnprintf(m_current, m_last-m_current, str, args2);
 
 			}
     		va_end(args2);
 
-			current += t;
+			m_current += t;
 		}
 
 		inline char peak(int offset = 0) const
 		{
-			return current[offset];
+			return m_current[offset];
 		}
 
 		inline void put(char c)
 		{
-			if( current == last )
+			if( m_current == m_last )
 			{
-				int newSize = last-first+1;
+				int newSize = m_last-m_first+1;
 				newSize = next_power_of_two(newSize);
 				resize(newSize);
 			}
 
-			*current = c;
-			++current;			
+			*m_current = c;
+			++m_current;			
 		}
 
 		inline void resize(int newsize)
 		{
-			newsize = std::max(newsize, minimalbuffsize);
+			newsize = std::max(newsize, m_minimalbuffsize);
 			char* newbuff = new char[newsize];
-			int toCopy = std::min(newsize, (int)(current-first));
+			int toCopy = std::min(newsize, (int)(m_current-m_first));
 
 			std::memset(newbuff, ' ', newsize);
-			std::memcpy(newbuff, first, toCopy);
+			std::memcpy(newbuff, m_first, toCopy);
 
-			delete[] first;
+			delete[] m_first;
 
-			first = newbuff;
-			current = first + toCopy;
-			//*current = ' ';
-			last = first + newsize -1;
-			buffsize = newsize;
+			m_first = newbuff;
+			m_current = m_first + toCopy;
+			//*m_current = ' ';
+			m_last = m_first + newsize;
+			m_buffsize = newsize;
 		}
 
 		inline void grow(int minSize)
 		{
-			int newSize = last-first+1;
+			int newSize = m_last-m_first+1;
 			newSize = next_power_of_two(newSize);
 			resize(newSize);
 		}
@@ -184,7 +185,7 @@ namespace bfu{
 
 		inline void resize()
 		{
-			int size = next_power_of_two(buffsize);
+			int size = next_power_of_two(m_buffsize);
 			resize(size);
 		}
 
@@ -232,19 +233,19 @@ namespace bfu{
 
 		inline char operator[](int i) const
 		{
-			return first[i];
+			return m_first[i];
 		}
 
 		inline stream& operator=(const bfu::stream& src)
 		{
-			buffsize = src.buffsize;
-			resize(buffsize);
+			m_buffsize = src.m_buffsize;
+			resize(m_buffsize);
 
-			std::memcpy(first, src.first, buffsize);
+			std::memcpy(m_first, src.m_first, m_buffsize);
 
-			const int offset = src.current - src.first;
+			const int offset = src.m_current - src.m_first;
 
-			current = first + offset;
+			m_current = m_first + offset;
 
 			return *this;
 		}

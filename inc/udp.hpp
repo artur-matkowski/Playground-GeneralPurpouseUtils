@@ -7,18 +7,33 @@
 #include <unistd.h>
 #include <string>
 
-#include "stream.hpp"
+#include "SerializableVarVector.hpp"
 
 namespace bfu{
-	class Udp
+	class udp
 	{
-		int s, port;
+		int m_socket; 
+		int m_port;
 		struct sockaddr_in si_me;
+		JSONStream m_json;
 
 	public:
-		Udp(int Port);
+		class packet: public SerializableClassBase
+		{
+		public:
+			SerializableVar<std::string> id;
+			SerializableVar<std::string> data;
+			char* host;
 
-		std::string Read();
+			packet()
+				:SerializableClassBase()
+				,id("id",this)
+				,data("data",this)
+			{}
+		};
+
+		udp(int Port);
+
 		std::string Read(std::string & remoteHost);
 		void Read(char* outBuff, int buffSize);
 		void Read(char* outBuff, int buffSize, std::string & remoteHost);

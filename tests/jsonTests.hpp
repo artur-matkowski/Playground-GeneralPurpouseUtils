@@ -28,86 +28,6 @@ bool randb()
 
 
 
-class testClass2: public SerializableClassBase
-{
-public:
-	SerializableVar<bool> m_var;
-	SerializableVar<float> m_var2;
-	SerializableVarVector<float> m_var3;
-	SerializableVar<std::string> m_var4;
-
-
-
-public:
-	testClass2()
-		:SerializableClassBase()
-		,m_var("m_var",this)
-		,m_var2("m_var2",this)
-		,m_var3("m_var3",this)
-		,m_var4("m_var4",this)
-	{
-		m_var = randb();
-		m_var2 = randf();
-
-		m_var3.push_back(randf());
-		m_var3.push_back(randf());
-
-		m_var4 = "testing \"std::string";
-	}
-
-	testClass2(const testClass2& copy)
-		:SerializableClassBase()
-		,m_var("m_var",this)
-		,m_var2("m_var2",this)
-		,m_var3("m_var3",this)
-		,m_var4("m_var4",this)
-	{
-		m_var = copy.m_var;
-		m_var2 = copy.m_var2;
-
-		m_var3 = copy.m_var3;
-
-		m_var4 = copy.m_var4;
-	}
-};
-
-
-class testClass: public SerializableClassBase
-{
-public:
-	SerializableVar<bool> m_var;
-	SerializableVar<float> m_var2;
-	SerializableVarVector<float> m_var3;
-
-	SerializableVar<testClass2> m_var4;
-	SerializableVarVector<testClass2> m_var5;
-
-
-
-public:
-	testClass()
-		:SerializableClassBase()
-		,m_var("m_var",this)
-		,m_var2("m_var2",this)
-		,m_var3("m_var3",this)
-		,m_var4("m_var4",this)
-		,m_var5("m_var5",this)
-	{
-		m_var = randb();
-		m_var2 = randf();
-
-		m_var3.push_back(randf());
-		m_var3.push_back(randf());
-		m_var3.push_back(randf());
-		m_var3.push_back(randf());
-
-
-		m_var5.push_back( testClass2() );
-		m_var5.push_back( testClass2() );
-		m_var5.push_back( testClass2() );
-	}
-};
-
 
 
 template<typename T>
@@ -187,10 +107,54 @@ bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 
 bool _TESTclass()
 {
+
+	class testClass: public SerializableClassBase
+	{
+	public:
+		SerializableVar<bool> m_var;
+		SerializableVar<float> m_var2;
+		SerializableVarVector<float> m_var3;
+		SerializableVar<std::string> m_var4;
+
+
+
+	public:
+		testClass()
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = randb();
+			m_var2 = randf();
+
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+
+			m_var4 = "testing \"std::string";
+		}
+
+		testClass(const testClass& copy)
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = copy.m_var;
+			m_var2 = copy.m_var2;
+
+			m_var3 = copy.m_var3;
+
+			m_var4 = copy.m_var4;
+		}
+	};
+
 	JSONStream json;
 	JSONStream json2;
-	testClass2 tt;
-	testClass2 tt2;
+	testClass tt;
+	testClass tt2;
 	//tt = val;
 
 	std::cout << "tt:";
@@ -232,6 +196,87 @@ bool _TESTclass()
 
 bool _TESTclassNested()
 {
+
+	class testClassChild: public SerializableClassBase
+	{
+	public:
+		SerializableVar<bool> m_var;
+		SerializableVar<float> m_var2;
+		SerializableVarVector<float> m_var3;
+		SerializableVar<std::string> m_var4;
+
+
+
+	public:
+		testClassChild()
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = randb();
+			m_var2 = randf();
+
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+
+			m_var4 = "testing \"std::string";
+		}
+
+		testClassChild(const testClassChild& copy)
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = copy.m_var;
+			m_var2 = copy.m_var2;
+
+			m_var3 = copy.m_var3;
+
+			m_var4 = copy.m_var4;
+		}
+	};
+
+
+	class testClass: public SerializableClassBase
+	{
+	public:
+		SerializableVar<bool> m_var;
+		SerializableVar<float> m_var2;
+		SerializableVarVector<float> m_var3;
+
+		SerializableVar<testClassChild> m_var4;
+		SerializableVarVector<testClassChild> m_var5;
+
+
+
+	public:
+		testClass()
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+			,m_var5("m_var5",this)
+		{
+			m_var = randb();
+			m_var2 = randf();
+
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+
+
+			m_var5.push_back( testClassChild() );
+			m_var5.push_back( testClassChild() );
+			m_var5.push_back( testClassChild() );
+		}
+	};
+
 	JSONStream json;
 	JSONStream json2;
 	testClass tt;
@@ -264,11 +309,118 @@ bool _TESTclassNested()
 	}
 }
 
+bool _TESTclassNestedJSON()
+{
+	class testClassChild: public SerializableClassBase
+	{
+	public:
+		SerializableVar<bool> m_var;
+		SerializableVar<float> m_var2;
+		SerializableVarVector<float> m_var3;
+		SerializableVar<std::string> m_var4;
+
+
+
+	public:
+		testClassChild()
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = randb();
+			m_var2 = randf();
+
+			m_var3.push_back(randf());
+			m_var3.push_back(randf());
+
+			m_var4 = "testing \"std::string";
+		}
+
+		testClassChild(const testClassChild& copy)
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var3("m_var3",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = copy.m_var;
+			m_var2 = copy.m_var2;
+
+			m_var3 = copy.m_var3;
+
+			m_var4 = copy.m_var4;
+		}
+	};
+
+
+	class testClass: public SerializableClassBase
+	{
+	public:
+		SerializableVar<bool> m_var;
+		SerializableVar<float> m_var2;
+
+		SerializableVar<JSONStream> m_var4;
+
+
+
+	public:
+		testClass()
+			:SerializableClassBase()
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var4("m_var4",this)
+		{
+			m_var = randb();
+			m_var2 = randf();
+		}
+	};
+
+
+	JSONStream json;
+	JSONStream json2;
+	testClassChild serializableObj;
+	testClass tt;
+	testClass tt2;
+
+
+	json << serializableObj;
+	json.SetCursonPos(0);
+	tt.m_var4 = json;
+
+
+	json.SetCursonPos(0);
+	json << tt;
+/*
+	json.SetCursonPos(0);
+
+	json >> tt2;
+	json2 << tt2;
+*/
+	log::info << "Testing: nested serializableObj" 
+			//<< "\n\tOriginal input:\n\t\t>" << tt 
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+			<< "<\n" << std::endl;
+
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	{
+		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
+	}
+	else
+	{
+		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
+	}
+}
 
 void jsonTests()
 {
 
-#define SEED 0
+#define SEED 1584641152
 
 #if SEED!=0
 	srand (SEED);
@@ -280,7 +432,7 @@ void jsonTests()
 
 
 	bool test = true;
-	
+	/*
 	test = test && TESTJSONStream(float, randf() );
 	test = test && TESTJSONStream(float, randf() );
 
@@ -309,6 +461,8 @@ void jsonTests()
 	test = test && _TESTclass();
 
 	test = test && _TESTclassNested();
+*/
+	test = test && _TESTclassNestedJSON();
 
 
 /*
