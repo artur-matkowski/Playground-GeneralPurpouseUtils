@@ -6,14 +6,16 @@ namespace bfu{
 	stream::stream()
 	    :m_first(0)
 	    ,m_last(0)
-	    ,m_current(0)
+	    ,m_writeCursor(0)
+	    ,m_readCursor(0)
 	{
 		if(m_buffsize!=0)
 		{
 			m_first = new char[m_buffsize];
 		    m_last = m_first+m_buffsize-1;
-		    m_current = m_first;
-			std::memset(m_first, ' ', m_buffsize);
+		    m_writeCursor = m_first;
+		    m_readCursor = m_first;
+			std::memset(m_first, 0, m_buffsize);
 		}
 	}
 
@@ -21,7 +23,8 @@ namespace bfu{
 	    :m_buffsize( std::max( {size, (int)strlen(input), m_minimalbuffsize} ) )
 	    ,m_first(new char[m_buffsize])
 	    ,m_last(m_first+m_buffsize)
-	    ,m_current(m_first)
+	    ,m_writeCursor(m_first)
+	    ,m_readCursor(m_first)
 	{
 		std::memcpy(m_first, input, m_buffsize);
 	}
@@ -30,7 +33,8 @@ namespace bfu{
 	    :m_buffsize( input.m_buffsize )
 	    ,m_first(new char[m_buffsize])
 	    ,m_last(m_first+m_buffsize)
-	    ,m_current(m_first)
+	    ,m_writeCursor(m_first)
+	    ,m_readCursor(m_first)
 	{
 		std::memcpy(m_first, input.m_first, m_buffsize);
 	}
@@ -39,9 +43,10 @@ namespace bfu{
 	    :m_buffsize( std::max( {size, m_minimalbuffsize} )  )
 	    ,m_first(new char[m_buffsize])
 	    ,m_last(m_first+m_buffsize)
-	    ,m_current(m_first)
+	    ,m_writeCursor(m_first)
+	    ,m_readCursor(m_first)
 	{
-		std::memset(m_first, ' ', m_buffsize);
+		std::memset(m_first, 0, m_buffsize);
 	}
 
 	stream::~stream()

@@ -386,18 +386,18 @@ bool _TESTclassNestedJSON()
 
 
 	json << serializableObj;
-	json.SetCursonPos(0);
+	//json.SetCursonPos(0);
 	tt.m_var4 = json;
+	
 
+	json.clear();
 
-	json.SetCursonPos(0);
 	json << tt;
-/*
-	json.SetCursonPos(0);
+
 
 	json >> tt2;
 	json2 << tt2;
-*/
+
 	log::info << "Testing: nested serializableObj" 
 			//<< "\n\tOriginal input:\n\t\t>" << tt 
 	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  

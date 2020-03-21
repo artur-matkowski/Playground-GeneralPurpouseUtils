@@ -37,7 +37,7 @@ namespace bfu{
     {
       skipToOneOf("-.0123456789");
 
-      m_current += sscanf(m_current, "%f", &val);
+      m_readCursor += sscanf(m_readCursor, "%f", &val);
       skipToOneOf(",]}");
 
       return *this;
@@ -47,7 +47,7 @@ namespace bfu{
     {
       skipToOneOf("-0123456789");
 
-      m_current += sscanf(m_current, "%d", &val);
+      m_readCursor += sscanf(m_readCursor, "%d", &val);
       skipToOneOf(",]}");
 
       return *this;
@@ -57,11 +57,11 @@ namespace bfu{
     {
       skipToOneOf("tf");
 
-      if( 0==strncmp(m_current, "true", 4) )
+      if( 0==strncmp(m_readCursor, "true", 4) )
       {
         val = true;
       }
-      else if( 0==strncmp(m_current, "false", 5) )
+      else if( 0==strncmp(m_readCursor, "false", 5) )
       {
         val = false;
       }
@@ -81,42 +81,37 @@ namespace bfu{
 
       skipTo('\"');
 
-      char* skipper = m_current+1;
+      char* skipper = m_readCursor+1;
 
-      while( m_current!=m_last && *skipper != '\"' )
+      while( m_readCursor!=m_last )
       {
-        if( *skipper=='\\' )
-        {
-          ++skipper;
-          if( m_current==m_last )
-          {
-            m_status = status::NOK;
-            return *this;
-          }
-        }
         ++skipper;
+
+        if( *skipper == '\"' && *(skipper-1)!='\\' )
+        {
+          break;
+        }
       }
 
-      int size = skipper-m_current+1;
+      int size = skipper-m_readCursor+1;
       char* buff = new char[size];
 
-      int streamC = 1;
       int buffC = 0;
 
-      for(;;)
+      for(char* cursor = m_readCursor+1; m_readCursor<skipper; ++cursor)
       {
-        if( m_current[streamC]=='\\' && m_current[streamC+1]=='\"' )
+        if( cursor[0]=='\\' && cursor[1]=='\"' )
         {
-          ++streamC;
+          ++cursor;
         }
-        else if( m_current[streamC]=='\"' && m_current[streamC-1]!='\\' )
+        //yes looks like shit, but this is never going to be first element of array anyway
+        else if( cursor[0]=='\"' && cursor[-1]!='\\' )
         {
           buff[buffC] = '\0';
           break;
         }
-        buff[buffC] = m_current[streamC];
+        buff[buffC] = *cursor;
 
-        ++streamC;
         ++buffC;
       }
       
@@ -124,7 +119,7 @@ namespace bfu{
 
       delete buff;
 
-      m_current = skipper;
+      m_readCursor = skipper;
       skipToOneOf(":,]}");
 
       return *this;
@@ -141,54 +136,38 @@ namespace bfu{
 
       skipTo('\"');
 
-      char* skipper = m_current+1;
+      char* skipper = m_readCursor+1;
 
-      while( m_current!=m_last && *skipper != '\"' )
+      while( m_readCursor!=m_last )
       {
-        if( *skipper=='\\' )
-        {
-          ++skipper;
-          if( m_current==m_last )
-          {
-            m_status = status::NOK;
-            return *this;
-          }
-        }
         ++skipper;
+
+        if( *skipper == '\"' && *(skipper-1)!='\\' )
+        {
+          break;
+        }
       }
 
-      int size = skipper-m_current+1;
-      char* buff = new char[size];
+      int size = skipper-m_readCursor+1;
 
       val.grow( size );
 
-      int streamC = 1;
-      int buffC = 0;
-
-      for(;;)
+      for(char* cursor = m_readCursor+1; cursor<skipper; ++cursor)
       {
-        if( m_current[streamC]=='\\' && m_current[streamC+1]=='\"' )
+        if( cursor[0]=='\\' && cursor[1]=='\"' )
         {
-          ++streamC;
+          ++cursor;
         }
-        else if( m_current[streamC]=='\"' && m_current[streamC-1]!='\\' )
+        else if( cursor[0]=='\"' && cursor[-1]!='\\' )
         {
-          //buff[buffC] = '\0';
           val.put( '\0' );
           break;
         }
-        //buff[buffC] = m_current[streamC];
-        val.put( m_current[streamC] );
-
-        ++streamC;
-        ++buffC;
+        val.put( *cursor );
       }
       
-      //val.assign(buff);
 
-      delete buff;
-
-      m_current = skipper;
+      m_readCursor = skipper;
       skipToOneOf(":,]}");
 
       return *this;

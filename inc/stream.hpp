@@ -16,7 +16,8 @@ namespace bfu{
 		int m_buffsize = 0;
 		char* m_first = 0;
 		char* m_last = 0;
-		char* m_current = 0;
+		char* m_writeCursor = 0;
+		char* m_readCursor = 0;
 
 		enum class status{NOK = -1, OK = 0};
 
@@ -42,26 +43,26 @@ namespace bfu{
 
 	    inline int size() const
 	    {
-	    	return (int)(m_current-m_first);
+	    	return (int)(m_writeCursor-m_first);
 	    }
 
-	    inline bool eof()
+	    inline int capacity() const
 	    {
-	    	return m_current==m_last;
+	    	return (int) (m_last-m_first);
 	    }
 
 		inline void clear()
 		{
-			m_current = m_first;
+			m_writeCursor = m_first;
 		}
 
-		inline bool isOneOf(const char* str)
+		inline bool isOneOf(const char* str) const
 		{
 			int size = strlen(str);
 
 			for(int i=0; i<size; ++i)
 			{
-				if(*m_current==str[i])
+				if(*m_readCursor==str[i])
 				{
 					return true;
 				}
@@ -71,33 +72,33 @@ namespace bfu{
 
 		inline void skipToOneOf(const char* str)
 		{
-			while( m_current!=m_last && !isOneOf(str) ) 
+			while( m_readCursor!=m_last && !isOneOf(str) ) 
 			{
-				++m_current;
+				++m_readCursor;
 			}
 		}
 
 		inline void skipTo(char c)
 		{
-			while( !eof() && *m_current!=c ) 
+			while( m_readCursor!=m_last && *m_readCursor!=c ) 
 			{
-				++m_current;
+				++m_readCursor;
 			}
 		}
 		inline void skip(int c)
 		{
-			if( (m_current + c) > m_last )
+			if( (m_readCursor + c) > m_last )
 			{
 				int newSize = next_power_of_two(size()+c+2);
 				resize(newSize);
 			}
 
-			m_current += c;
+			m_readCursor += c;
 		}
 
-		inline std::string str()
+		inline std::string str() const
 		{
-			return std::string(m_first,m_last);
+			return std::string(m_first,m_writeCursor);
 		}
 
 		inline void SetCursonPos(int pos)
@@ -108,7 +109,7 @@ namespace bfu{
 				resize(t);
 			}
 
-			m_current = m_first + pos;
+			m_readCursor = m_first + pos;
 		}
 
 		inline void sprintf(const char* str, ...)
@@ -118,55 +119,58 @@ namespace bfu{
 			va_list args2;
     		va_copy(args2, args1);
 
-			int t = vsnprintf(m_current, m_last-m_current, str, args1);
+			int t = vsnprintf(m_writeCursor, m_last-m_writeCursor, str, args1);
 
 			va_end(args1);
 
-			if(t >= m_last-m_current)
+			if(t >= m_last-m_writeCursor)
 			{
-				t = next_power_of_two(m_current-m_first+t+2);
+				t = next_power_of_two(m_writeCursor-m_first+t+2);
 				resize(t);
 
-				t = vsnprintf(m_current, m_last-m_current, str, args2);
+				t = vsnprintf(m_writeCursor, m_last-m_writeCursor, str, args2);
 
 			}
     		va_end(args2);
 
-			m_current += t;
+			m_writeCursor += t;
 		}
 
 		inline char peak(int offset = 0) const
 		{
-			return m_current[offset];
+			return m_readCursor[offset];
 		}
 
 		inline void put(char c)
 		{
-			if( m_current == m_last )
+			if( m_writeCursor == m_last )
 			{
 				int newSize = m_last-m_first+1;
 				newSize = next_power_of_two(newSize);
 				resize(newSize);
 			}
 
-			*m_current = c;
-			++m_current;			
+			*m_writeCursor = c;
+			++m_writeCursor;			
 		}
 
 		inline void resize(int newsize)
 		{
 			newsize = std::max(newsize, m_minimalbuffsize);
 			char* newbuff = new char[newsize];
-			int toCopy = std::min(newsize, (int)(m_current-m_first));
+			int toCopy = std::min(newsize, (int)(m_writeCursor-m_first));
 
 			std::memset(newbuff, ' ', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
 
 			delete[] m_first;
 
+			int readOffset = m_readCursor - m_first;
+
 			m_first = newbuff;
-			m_current = m_first + toCopy;
-			//*m_current = ' ';
+			m_writeCursor = m_first + toCopy;
+
+			m_readCursor = readOffset + m_first; 
 			m_last = m_first + newsize;
 			m_buffsize = newsize;
 		}
@@ -243,9 +247,11 @@ namespace bfu{
 
 			std::memcpy(m_first, src.m_first, m_buffsize);
 
-			const int offset = src.m_current - src.m_first;
+			const int writeOffset = src.m_writeCursor - src.m_first;
+			const int readOffset = src.m_writeCursor - src.m_first;
 
-			m_current = m_first + offset;
+			m_writeCursor = m_first + writeOffset;
+			m_readCursor = m_first + readOffset;
 
 			return *this;
 		}
