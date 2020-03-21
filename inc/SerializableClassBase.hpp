@@ -4,6 +4,7 @@
 //#include <cstdlib>
 #include <cstring>
 #include <map>
+#include "stream.hpp"
 
 namespace bfu{
 	
@@ -17,6 +18,7 @@ namespace bfu{
 
 	class SerializableClassBase: public SerializableBase
 	{
+    	stream m_token;
 		//member name, member reference
 		std::map<const char*, SerializableBase*, cmpByStringLength> m_membersMap;
 
@@ -26,6 +28,10 @@ namespace bfu{
 		//virtual SerializableClassBase(const SerializableClassBase& ) = 0;
 
 	public:
+
+		SerializableClassBase()
+			:m_token()
+		{};
 
 		virtual void Serialize(JSONStream& stream);
 

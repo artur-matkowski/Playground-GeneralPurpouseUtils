@@ -19,6 +19,7 @@ namespace bfu{
 		char* m_writeCursor = 0;
 		char* m_readCursor = 0;
 
+
 		enum class status{NOK = -1, OK = 0};
 
 		status m_status = status::OK;
@@ -101,6 +102,12 @@ namespace bfu{
 			return std::string(m_first,m_writeCursor);
 		}
 
+		inline char* c_str()
+		{
+			put( '\0' );
+			return m_first;
+		}
+
 		inline void SetCursonPos(int pos)
 		{
 			if(pos > m_buffsize)
@@ -151,7 +158,11 @@ namespace bfu{
 			}
 
 			*m_writeCursor = c;
-			++m_writeCursor;			
+
+			if( c != '\0' )
+			{
+				++m_writeCursor;
+			}		
 		}
 
 		inline void resize(int newsize)
@@ -242,6 +253,9 @@ namespace bfu{
 
 		inline stream& operator=(const bfu::stream& src)
 		{
+			if(src.m_buffsize == 0)
+				return *this;
+
 			m_buffsize = src.m_buffsize;
 			resize(m_buffsize);
 

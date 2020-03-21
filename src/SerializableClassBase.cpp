@@ -33,13 +33,13 @@ namespace bfu{
 		stream.skipTo('{');
 		stream.skip( 1 );
 
-		std::string token;
-
 		while( stream.peak() != '}' )
 		{
-			stream.Deserialize( token );
+			m_token.clear();
 
-			m_membersMap[ token.c_str() ]->Deserialize( stream );
+			stream.Deserialize( m_token );
+
+			m_membersMap[ m_token.c_str() ]->Deserialize( stream );
 
 			stream.skipToOneOf("\"}");
 

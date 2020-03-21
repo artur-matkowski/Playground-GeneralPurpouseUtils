@@ -432,7 +432,7 @@ void jsonTests()
 
 
 	bool test = true;
-	/*
+	
 	test = test && TESTJSONStream(float, randf() );
 	test = test && TESTJSONStream(float, randf() );
 
@@ -461,43 +461,8 @@ void jsonTests()
 	test = test && _TESTclass();
 
 	test = test && _TESTclassNested();
-*/
+
 	test = test && _TESTclassNestedJSON();
-
-
-/*
-	{
-		JSONStream json;
-		JSONStream json2;
-		testClass tt;
-		testClass tt2;
-		//tt = val;
-
-		json << tt;
-
-		json.SetCursonPos(0);
-
-		json >> tt2;
-		json2 << tt2;
-
-		log::info << "Testing: testClass2" 
-				//<< "\n\tOriginal input:\n\t\t>" << tt 
-		 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
-		 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
-		 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
-				<< "<\n" << std::endl;
-
-		if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
-		{
-			log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
-			test = test && true;
-		}
-		else
-		{
-			log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
-			test = test && false;		
-		}
-	}*/
 
 
 	if( test )
