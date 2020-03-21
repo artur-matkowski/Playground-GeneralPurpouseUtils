@@ -37,13 +37,14 @@ void udpTests(int argc, char** argv)
 
 		bfu::udp udp(8889);
 		udp.Write( msg );
+		udp.Write( msg );
 
-		while(1);
+		//while(1);
 
 	}
 	else
 	{
-		/*
+		
 		int result = fork();
 		
 		if(result==0)
@@ -52,16 +53,22 @@ void udpTests(int argc, char** argv)
 			sprintf(cmd, "xterm -e \"%s sender\"", argv[0]);
 			system(cmd);
 		}
-		else*/
+		else
 		{
 			bfu::udp::packet msg;
 
 			bfu::udp udp(8888);
-			std::string host;
 
-			udp.Read( msg, true);
+			while(1)
+			{
+				std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
-			printf( "%s\n", msg.m_id.GetRef().c_str() );			
+				while(udp.Read( msg, true))
+				{
+					printf( "%s\n", msg.m_id.GetRef().c_str() );
+				}
+			}
+		
 		}
 
 

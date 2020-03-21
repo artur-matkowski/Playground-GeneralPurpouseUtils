@@ -1,6 +1,7 @@
 #include "udp.hpp"
 #include <log.hpp>
 #include <algorithm>
+#include <poll.h>
 
 #define PACKAGESIZE 65507
 
@@ -37,12 +38,38 @@ namespace bfu{
 	{
 	    m_json.clear();
 
+	    if(isBlocking)
+	    {
+		    struct pollfd pollStruct[1];
+		    pollStruct[0].fd = m_socket;
+	        pollStruct[0].events = POLLIN;
+	        pollStruct[0].revents = 0;
+
+	        int rv = poll(pollStruct, 1, 0); 
+
+	        if(rv!=1)
+	        {
+				log::error << "\nno data received " << std::endl;
+	        	return false;
+	        }	    	
+	    }
+
 	    int recvsize = recvfrom(m_socket, m_json.c_str(), PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen);
 
-		if (recvsize == -1)
+		if (recvsize == -1 && recvsize != EAGAIN)
 		{
-			log::error << "recvfrom2" << std::endl;
-			return false;
+			log::error << "\nrecvfrom2 " << recvsize << std::endl;
+			//return false;
+		}
+
+		if(recvsize == EAGAIN)
+		{
+			log::error << "EAGAIN" << std::endl;
+		}
+
+		if(recvsize == EWOULDBLOCK)
+		{
+			log::error << "EWOULDBLOCK" << std::endl;
 		}
 
 		m_json >> out;
