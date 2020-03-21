@@ -10,36 +10,27 @@
 #include "udp.hpp"
 #include "testsbase.hpp"
 
+#define TEST_STRING "kupa msg type"
 
-void udpTests(int argc, char** argv)
+bool udpTests(int argc, char** argv)
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(200));
-/*
-	if (resoult == 0) 
-	{
-		bfu::udp udp(8888);
-		std::string host;
-		printf(udp.Read(host).c_str());
-		printf(udp.Read(host).c_str());
-	}
-    else
-    {
-		bfu::udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
-		bfu::udp::Write(LOREM_IPSUM, "127.0.0.1", 8888);
-	}
-*/
+
+	bfu::udp::packet out;
+	bfu::udp::packet msg;
+	std::string resultCache;
+
+	out.SetHost("127.0.0.1");
+	out.m_port = 8888;
+	out.m_id.GetRef() << TEST_STRING;
+
 	if(argc>1 && strcmp(argv[1], "sender") == 0 )
 	{
-		bfu::udp::packet msg;
-		msg.SetHost("127.0.0.1");
-		msg.m_port = 8888;
-		msg.m_id.GetRef() << "kupa msg type";
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
 
 		bfu::udp udp(8889);
-		udp.Write( msg );
-		udp.Write( msg );
-
-		//while(1);
+		udp.Write( out );
+		//udp.Write( out );
 
 	}
 	else
@@ -52,26 +43,31 @@ void udpTests(int argc, char** argv)
 			char cmd[128] = {0};
 			sprintf(cmd, "xterm -e \"%s sender\"", argv[0]);
 			system(cmd);
+			exit(0);
 		}
 		else
 		{
-			bfu::udp::packet msg;
-
 			bfu::udp udp(8888);
 
-			while(1)
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+			while(udp.Read( msg, true))
 			{
-				std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-
-				while(udp.Read( msg, true))
-				{
-					printf( "%s\n", msg.m_id.GetRef().c_str() );
-				}
+				printf( "%s\n", msg.m_id.GetRef().c_str() );
+				resultCache = msg.m_id.GetRef().str();
 			}
-		
 		}
+	}
 
-
+	if( std::strcmp(TEST_STRING, resultCache.c_str() )==0 )
+	{
+		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
+	}
+	else
+	{
+		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
 	}
 }
 

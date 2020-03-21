@@ -120,7 +120,7 @@ namespace bfu{
 			m_readCursor = m_first + pos;
 		}
 
-		inline void OverrideWritCursorPos(int pos)
+		inline void OverrideWriteCursorPos(int pos)
 		{
 			if(pos > m_buffsize)
 			{
@@ -129,6 +129,17 @@ namespace bfu{
 			}
 
 			m_writeCursor = m_first + pos;
+		}
+
+		inline void OverrideReadCursorPos(int pos)
+		{
+			if(pos > m_buffsize)
+			{
+				int t = next_power_of_two(pos);
+				resize(t);
+			}
+
+			m_readCursor = m_first + pos;
 		}
 
 		inline void sprintf(const char* str, ...)

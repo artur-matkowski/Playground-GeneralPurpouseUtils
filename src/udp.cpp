@@ -37,6 +37,7 @@ namespace bfu{
 	bool udp::Read(packet &out, bool isBlocking)
 	{
 	    m_json.clear();
+	    out.clear();
 
 	    if(isBlocking)
 	    {
@@ -73,7 +74,7 @@ namespace bfu{
 		}
 
 		m_json >> out;
-		m_json.OverrideWritCursorPos(recvsize);
+		m_json.OverrideWriteCursorPos(recvsize);
 
 		char* tmp = inet_ntoa(si_other.sin_addr);
 

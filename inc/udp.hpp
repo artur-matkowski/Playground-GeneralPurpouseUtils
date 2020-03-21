@@ -38,6 +38,12 @@ namespace bfu{
 			{
 				std::strncpy(m_host, host, HOSTSIZE);
 			}
+
+			void clear()
+			{
+				m_id.GetRef().clear();
+				m_data.GetRef().clear();
+			}
 		};
 
 		udp(int Port);
