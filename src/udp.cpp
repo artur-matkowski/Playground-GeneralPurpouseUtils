@@ -46,6 +46,7 @@ namespace bfu{
 		}
 
 		m_json >> out;
+		m_json.OverrideWritCursorPos(recvsize);
 
 		char* tmp = inet_ntoa(si_other.sin_addr);
 
