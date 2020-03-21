@@ -36,24 +36,24 @@ namespace bfu{
 
 	bool udp::Read(packet &out, bool isBlocking)
 	{
-	    m_json.clear();
-	    out.clear();
-
-	    if(isBlocking)
+	    if(!isBlocking)
 	    {
-		    struct pollfd pollStruct[1];
-		    pollStruct[0].fd = m_socket;
-	        pollStruct[0].events = POLLIN;
-	        pollStruct[0].revents = 0;
+		    struct pollfd pollStruct;
+		    pollStruct.fd = m_socket;
+	        pollStruct.events = POLLIN;
+	        pollStruct.revents = 0;
 
-	        int rv = poll(pollStruct, 1, 0); 
+	        int rv = poll( &pollStruct, 1, 0 ); 
 
 	        if(rv!=1)
 	        {
-				log::error << "\nno data received " << std::endl;
 	        	return false;
 	        }	    	
 	    }
+
+	    m_json.clear();
+	    out.clear();
+
 
 	    int recvsize = recvfrom(m_socket, m_json.c_str(), PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen);
 

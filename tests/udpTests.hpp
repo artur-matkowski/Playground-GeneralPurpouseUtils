@@ -10,14 +10,13 @@
 #include "udp.hpp"
 #include "testsbase.hpp"
 
-#define TEST_STRING "kupa msg type"
+#define TEST_STRING "{kupa \"msg type\"}"
 
 bool udpTests(int argc, char** argv)
 {
 
 	bfu::udp::packet out;
 	bfu::udp::packet msg;
-	std::string resultCache;
 
 	out.SetHost("127.0.0.1");
 	out.m_port = 8888;
@@ -30,7 +29,7 @@ bool udpTests(int argc, char** argv)
 
 		bfu::udp udp(8889);
 		udp.Write( out );
-		//udp.Write( out );
+		udp.Write( out );
 
 	}
 	else
@@ -51,15 +50,17 @@ bool udpTests(int argc, char** argv)
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-			while(udp.Read( msg, true))
+			bool readed;
+
+			do
 			{
-				printf( "%s\n", msg.m_id.GetRef().c_str() );
-				resultCache = msg.m_id.GetRef().str();
-			}
+				readed = udp.Read( msg, false);
+				printf( "gowno test:%s\n", msg.m_id.GetRef().c_str() );
+			}while(readed);
 		}
 	}
 
-	if( std::strcmp(TEST_STRING, resultCache.c_str() )==0 )
+	if( std::strcmp(TEST_STRING, msg.m_id.GetRef().c_str() )==0 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
