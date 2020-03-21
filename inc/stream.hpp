@@ -55,6 +55,7 @@ namespace bfu{
 		inline void clear()
 		{
 			m_writeCursor = m_first;
+			m_readCursor = m_first;
 		}
 
 		inline bool isOneOf(const char* str) const
@@ -117,6 +118,17 @@ namespace bfu{
 			}
 
 			m_readCursor = m_first + pos;
+		}
+
+		inline void OverrideWritCursorPos(int pos)
+		{
+			if(pos > m_buffsize)
+			{
+				int t = next_power_of_two(pos);
+				resize(t);
+			}
+
+			m_writeCursor = m_first + pos;
 		}
 
 		inline void sprintf(const char* str, ...)

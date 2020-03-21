@@ -16,9 +16,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const T& val)
-		{
-			m_var = val;
-		}
+			:m_var(val)
+		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
 		{
@@ -27,6 +26,11 @@ namespace bfu{
 		}
 
 		inline operator T() const
+		{
+			return m_var;
+		}
+
+		inline T& GetRef()
 		{
 			return m_var;
 		}
@@ -55,9 +59,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const int& val)
-		{
-			m_var = val;
-		}
+			:m_var(val)
+		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
 		{
@@ -66,6 +69,10 @@ namespace bfu{
 		}
 
 		inline operator int() const
+		{
+			return m_var;
+		}
+		inline int& GetRef()
 		{
 			return m_var;
 		}
@@ -94,9 +101,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const float& val)
-		{
-			m_var = val;
-		}
+			:m_var(val)
+		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
 		{
@@ -105,6 +111,11 @@ namespace bfu{
 		}
 
 		inline operator float() const
+		{
+			return m_var;
+		}
+
+		inline float& GetRef()
 		{
 			return m_var;
 		}
@@ -134,9 +145,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const bool& val)
-		{
-			m_var = val;
-		}
+			:m_var(val)
+		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
 		{
@@ -145,6 +155,11 @@ namespace bfu{
 		}
 
 		inline operator bool() const
+		{
+			return m_var;
+		}
+
+		inline bool& GetRef()
 		{
 			return m_var;
 		}
@@ -174,9 +189,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const bfu::stream& val)
-		{
-			m_var = val;
-		}
+			:m_var(val)
+		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
 		{
@@ -185,6 +199,11 @@ namespace bfu{
 		}
 
 		inline operator bfu::stream() const
+		{
+			return m_var;
+		}
+
+		inline bfu::stream& GetRef()
 		{
 			return m_var;
 		}
@@ -216,9 +235,8 @@ namespace bfu{
 	public:
 
 		SerializableVar(const std::string& val)
-		{
-			this->assign( val );
-		}
+			:std::string(val)
+		{}
 
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)

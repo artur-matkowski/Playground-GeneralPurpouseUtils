@@ -467,11 +467,11 @@ void jsonTests()
 
 	if( test )
 	{
-		log::warning << "<<<<<<<<<<<<<<<< TESTS concluded : SUCCES\n" << std::endl;
+		log::warning << "<<<<<<<<<<<<<<<< JOSN TESTS concluded : SUCCES\n" << std::endl;
 	}
 	else
 	{
-		log::error << "<<<<<<<<<<<<<<<< TESTS concluded : FAILED\n" << std::endl;	
+		log::error << "<<<<<<<<<<<<<<<< JOSN TESTS concluded : FAILED\n" << std::endl;	
 	}
 }
 

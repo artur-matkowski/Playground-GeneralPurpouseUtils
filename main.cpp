@@ -20,8 +20,8 @@ int main(int argc, char** argv)
 	//streamTests();
 	//loggingTests();
 
-	//udpTests();
-	jsonTests();
+	//jsonTests();
+	udpTests(argc, argv);
 
 
 	

@@ -85,12 +85,12 @@ namespace bfu{
 
       while( m_readCursor!=m_last )
       {
-        ++skipper;
-
-        if( *skipper == '\"' && *(skipper-1)!='\\' )
+        if( skipper[0] == '\"' && skipper[-1] != '\\' )
         {
           break;
         }
+
+        ++skipper;
       }
 
       int size = skipper-m_readCursor+1;
@@ -140,12 +140,12 @@ namespace bfu{
 
       while( m_readCursor!=m_last )
       {
-        ++skipper;
-
-        if( *skipper == '\"' && *(skipper-1)!='\\' )
+        if( skipper[0] == '\"' && skipper[-1] != '\\' )
         {
           break;
         }
+
+        ++skipper;
       }
 
       int size = skipper-m_readCursor+1;

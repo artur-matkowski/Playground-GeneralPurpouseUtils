@@ -1,5 +1,6 @@
 #include "udp.hpp"
 #include <log.hpp>
+#include <algorithm>
 
 #define PACKAGESIZE 65507
 
@@ -32,16 +33,70 @@ namespace bfu{
 		log::info << "Listening for udp on port " << Port << std::endl;
 	}
 
+	bool udp::Read(packet &out, bool isBlocking)
+	{
+	    m_json.clear();
 
+	    int recvsize = recvfrom(m_socket, m_json.c_str(), PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen);
+
+		if (recvsize == -1)
+		{
+			log::error << "recvfrom2" << std::endl;
+			return false;
+		}
+
+		m_json >> out;
+
+		char* tmp = inet_ntoa(si_other.sin_addr);
+
+		std::strncpy(out.m_host, tmp, HOSTSIZE);
+		out.m_port = ntohs(si_other.sin_port);
+
+	    //print details of the client/peer and the data received
+		log::debug << "Received udp json: >\n" << m_json.c_str() << "\n< from {"<< out.m_host <<":"<< out.m_port <<"}" << std::endl;
+
+		return true;
+	}
+
+	bool udp::Write( packet &in )
+	{
+	    int s;
+
+	    if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	    {
+			log::error << "Creating socket" << std::endl;
+			return false;
+	    }
+
+	    memset((char *) &si_other, 0, sizeof(si_other));
+	    si_other.sin_family = AF_INET;
+	    si_other.sin_port = htons(in.m_port);
+
+	    if (inet_aton(in.m_host , &si_other.sin_addr) == 0) 
+	    {
+			log::error << "inet_aton() failed" << std::endl;
+			return false;
+	    }
+
+	    m_json.clear();
+	    m_json << in;
+
+	    log::debug << "Sending udp json: >\n" << m_json.c_str() << "\n< to {"<< in.m_host <<":"<< in.m_port <<"}" << std::endl;
+
+	    //send the message
+	    if (sendto(s, m_json.c_str(), m_json.size() , 0 , (struct sockaddr *) &si_other, slen)==-1)
+	    {
+			log::error << "sendto() Error while sending udp json: >\n" << m_json.c_str() << "\n< to {"<< in.m_host <<":"<< in.m_port <<"}" << std::endl;
+			return false;
+	    }
+
+	    close(s);
+
+	    return true;
+	}
 
 	std::string udp::Read(std::string & remoteHost)
 	{
-		struct sockaddr_in si_other;
-
-		//LOG_DEBUG("Waiting for data...", 0);
-	    fflush(stdout);
-
-		unsigned int slen = sizeof(sockaddr_in);
 		char cache[PACKAGESIZE] = {0};
 
 
