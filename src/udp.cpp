@@ -90,19 +90,20 @@ namespace bfu{
 			log::error << "recvfrom " << recvsize << std::endl;
 			return false;
 		}
+		
+		m_json.OverrideWriteCursorPos(recvsize);
+		//print details of the client/peer and the data received
+		log::debug << "Received udp json: >\n" << m_json.c_str() << "\n< from {"<< out.m_host <<":"<< out.m_port <<"}" << std::endl;
 
 
 		m_json >> out;
-		m_json.OverrideWriteCursorPos(recvsize);
 
 		char* tmp = inet_ntoa(si_other.sin_addr);
 
 		std::strncpy(out.m_host, tmp, HOSTSIZE);
 		out.m_port = ntohs(si_other.sin_port);
 
-	    //print details of the client/peer and the data received
-		log::debug << "Received udp json: >\n" << m_json.c_str() << "\n< from {"<< out.m_host <<":"<< out.m_port <<"}" << std::endl;
-
+	    
 		return true;
 	}
 

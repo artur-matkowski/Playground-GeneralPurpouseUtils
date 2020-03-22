@@ -57,7 +57,7 @@ bool EventTest(int argc, char** argv)
 	else
 	{		
 		int result = 1;
-		result = fork();
+		//result = fork();
 		
 		if(result==0)
 		{
