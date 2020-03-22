@@ -12,10 +12,25 @@ namespace bfu{
 		:m_port(Port)
 		,m_json(PACKAGESIZE)
 	{
+		if(Port>0)
+		{
+			StartListening(Port);
+		}
+	}
+	udp::~udp()
+	{
+		if( m_socket!=-1 )
+	    	close( m_socket );
+	}
+
+	bool udp::StartListening(int port)
+	{
+		m_port = port;
+
 		if ((m_socket=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
 		{
 			log::error << "Creating socket" << std::endl;
-			return;
+			return false;
 		}
 
 		// zero out the structure
@@ -29,14 +44,27 @@ namespace bfu{
 		if( bind(m_socket , (struct sockaddr*)&si_me, sizeof(si_me) ) == -1)
 		{
 			log::error << "Binding socket" << std::endl;
-			return;
+			return false;
 		}
-		log::info << "Listening for udp on port " << Port << std::endl;
+		log::info << "Listening for udp on port " << m_port << std::endl;
+
+		return true;
 	}
+
+	void udp::StopListening()
+	{
+	    close( m_socket );
+	    m_socket = -1;
+	}
+
 
 	bool udp::Read(packet &out, bool isBlocking)
 	{
-	    if(!isBlocking)
+		if( m_socket == -1 )
+		{
+			return false;
+		}
+	    else if(!isBlocking)
 	    {
 		    struct pollfd pollStruct;
 		    pollStruct.fd = m_socket;
@@ -45,7 +73,7 @@ namespace bfu{
 
 	        int rv = poll( &pollStruct, 1, 0 ); 
 
-	        if(rv!=1)
+	        if(rv<1)
 	        {
 	        	return false;
 	        }	    	
@@ -57,21 +85,12 @@ namespace bfu{
 
 	    int recvsize = recvfrom(m_socket, m_json.c_str(), PACKAGESIZE, 0, (struct sockaddr *) &si_other, &slen);
 
-		if (recvsize == -1 && recvsize != EAGAIN)
+		if (recvsize < 0)
 		{
-			log::error << "\nrecvfrom2 " << recvsize << std::endl;
-			//return false;
+			log::error << "recvfrom " << recvsize << std::endl;
+			return false;
 		}
 
-		if(recvsize == EAGAIN)
-		{
-			log::error << "EAGAIN" << std::endl;
-		}
-
-		if(recvsize == EWOULDBLOCK)
-		{
-			log::error << "EWOULDBLOCK" << std::endl;
-		}
 
 		m_json >> out;
 		m_json.OverrideWriteCursorPos(recvsize);
@@ -123,6 +142,48 @@ namespace bfu{
 
 	    return true;
 	}
+	
+	bool udp::Write( SerializableClassBase &in, const char* eventId, const char* host, int port)
+	{
+		m_cache.clear();
+		m_cache.m_id.GetRef() << eventId;
+		m_cache.m_data.GetRef() << in;
+
+		int s;
+
+	    if ( (s=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
+	    {
+			log::error << "Creating socket" << std::endl;
+			return false;
+	    }
+
+	    memset((char *) &si_other, 0, sizeof(si_other));
+	    si_other.sin_family = AF_INET;
+	    si_other.sin_port = htons( port );
+
+	    if (inet_aton( host, &si_other.sin_addr) == 0) 
+	    {
+			log::error << "inet_aton() failed" << std::endl;
+			return false;
+	    }
+
+	    m_json.clear();
+	    m_json << m_cache;
+
+	    log::debug << "Sending udp json: >\n" << m_json.c_str() << "\n< to {"<< host <<":"<< port <<"}" << std::endl;
+
+	    //send the message
+	    if (sendto(s, m_json.c_str(), m_json.size() , 0 , (struct sockaddr *) &si_other, slen)==-1)
+	    {
+			log::error << "sendto() Error while sending udp json: >\n" << m_json.c_str() << "\n< to {"<< host <<":"<< port <<"}" << std::endl;
+			return false;
+	    }
+
+	    close(s);
+
+	    return true;
+	}
+
 
 	std::string udp::Read(std::string & remoteHost)
 	{

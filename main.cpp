@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	//jsonTests();
 	//udpTests(argc, argv);
 
-	EventTest();
+	EventTest(argc, argv);
 	
 	
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;

@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <cstring>
+
 #include "SerializableVarVector.hpp"
 
 
@@ -86,16 +87,24 @@ namespace bfu{
 
 	class Event
 	{
-		CallbackList m_callbacks;
-		EventArgsBase* m_arg = 0;
-		char* m_token = 0;
+		CallbackList 									m_callbacks;
+		EventArgsBase* 									m_arg = 0;
+		char* 											m_token = 0;
+
+		//do not delete thouse pointers
+		std::vector<std::pair<const char*, const int>>* m_propagationTargets = 0;
+		bfu::udp* 										m_udp = 0;
 
 		friend EventSystem;
 
 		template<class ArgType>
-		inline void EnableNetworkPropagation(const char* token)
+		inline void EnableNetworkPropagation(const char* token, 
+											std::vector<std::pair<const char*, const int>>* propagationTarget,
+											bfu::udp* _udp)
 		{
-			m_arg = (EventArgsBase*) new ArgType();
+			m_arg = new ArgType();
+			m_propagationTargets = propagationTarget;
+			m_udp = _udp;
 
 			int size = std::strlen(token);
 			m_token = new char[size];
@@ -114,6 +123,35 @@ namespace bfu{
 			m_token = 0;
 		}
 
+		inline void InvokeLocaly(EventArgsBase& data) 
+		{
+			m_callbacks.Invoke(data);
+		}
+
+		inline void InvokeRemotly(EventArgsBase& data) 
+		{
+			if(m_propagationTargets==0)
+				return;
+
+			for(auto it = m_propagationTargets->begin(); it!=m_propagationTargets->end(); ++it)
+			{
+				m_udp->Write(data, m_token, it->first, it->second);
+			}
+		}
+
+
+		inline void Invoke(JSONStream& stream)
+		{
+			if(m_arg==0)
+			{
+				return;
+			}
+
+			stream >> *m_arg;
+
+			InvokeLocaly(*m_arg);
+		}
+
 	public:
 		~Event()
 		{
@@ -126,22 +164,9 @@ namespace bfu{
 
 		inline void Invoke(EventArgsBase& data) 
 		{
-			m_callbacks.Invoke(data);
+			InvokeLocaly(data);
+			InvokeRemotly(data);
 		}
-
-		inline void Invoke(JSONStream& stream)
-		{
-			if(m_arg==0)
-			{
-				return;
-			}
-
-			stream >> *m_arg;
-
-			Invoke(*m_arg);
-		}
-
-		
 
 		template<typename Func>
 		inline void RegisterCallback(CallbackId& callbackId, Func f)
@@ -157,13 +182,35 @@ namespace bfu{
 
 	class EventSystem
 	{
-		std::map<const char*, Event, cmpByStringLength> m_events;
+		std::map<const char*, Event, cmpByStringLength> 	m_events;
+		std::vector<std::pair<const char*, const int>> 		m_propagationTargets;
+
+		bfu::udp 											m_udp;
+		bfu::udp::packet 									m_pkg;
+
 
 	public:
 
-		void processNetworkQueuedEvents()
+		inline bool processNetworkQueuedEvents()
 		{
+			bool ret = false;
 
+			while(m_udp.Read(m_pkg, false))
+			{
+				auto it = m_events.find(m_pkg.m_id.GetRef().c_str());
+
+				if( it != m_events.end() )
+				{
+					it->second.Invoke(m_pkg.m_data.GetRef());
+					ret = true;
+				}
+				else
+				{
+					log::warning << "Can't find network event \"" << m_pkg.m_id.GetRef().c_str() << "\" from host: " << m_pkg.m_host << std::endl;
+				}
+			}
+
+			return ret;
 		}
 
 		inline Event& operator[](const char* token)
@@ -171,15 +218,35 @@ namespace bfu{
 			return m_events[token];
 		}
 
+		inline void EnableNetworkListening(int port)
+		{
+			m_udp.StartListening(port);
+		}
+
+		inline void DisableNetworkListening()
+		{
+			m_udp.StopListening();
+		}
+
 		template<class ArgType>
 		inline void EnableNetworkPropagation(const char* token)
 		{
-			m_events[token].EnableNetworkPropagation<ArgType>(token);
+			m_events[token].EnableNetworkPropagation<ArgType>(token, &m_propagationTargets, &m_udp);
 		}
 
 		inline void DisableNetworkPropagation(const char* token)
 		{
 			m_events[token].DisableNetworkPropagation();
+		}
+
+		inline void RegisterPropagationTarget(const char* host, const int port)
+		{
+			m_propagationTargets.push_back(std::pair<const char*, const int>(host, port));
+		}
+
+		inline void UnregisterPropagationTarget(const char* host, const int port)
+		{
+			//TBD
 		}
 	};
 }
