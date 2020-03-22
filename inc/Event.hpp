@@ -1,0 +1,187 @@
+#ifndef H_Event
+#define H_Event
+#include <vector>
+#include <map>
+#include <cstring>
+#include "SerializableVarVector.hpp"
+
+
+
+namespace bfu{
+
+	class EventArgsBase: public SerializableClassBase
+	{
+	public:
+		bool isComingFromNetwork = false;
+	};
+
+
+	class CallbackBase
+	{
+	public:
+		virtual void Execute(EventArgsBase& data) = 0;
+	};
+	typedef CallbackBase* CallbackId;
+
+	template<typename Func>
+	class Callback: public CallbackBase
+	{
+		Func m_callback;
+	public:
+		Callback(Func callback)
+			:m_callback(callback)
+		{}
+
+		virtual void Execute(EventArgsBase& data)
+		{
+			m_callback(data);
+		}
+	};
+
+	class CallbackList
+	{
+	protected:
+		std::vector< CallbackBase* > m_callbacks;
+
+	public:
+
+		~CallbackList()
+		{
+			for(int i=0; i<m_callbacks.size(); ++i)
+			{
+				delete m_callbacks[i];
+			}
+		}
+
+		inline void Invoke(EventArgsBase& args)
+		{
+			for(int i=0; i<m_callbacks.size(); ++i)
+			{
+				m_callbacks[i]->Execute(args);
+			}
+		}
+
+		template<typename Func>
+		inline void RegisterCallback(CallbackId& callbackId, Func f)
+		{
+			callbackId = new Callback<Func>(f);
+			m_callbacks.push_back( callbackId );
+		}
+
+		inline void UnregisterCallback(CallbackId& callbackId)
+		{
+			for (std::vector< CallbackBase* >::iterator it = m_callbacks.begin() ; it != m_callbacks.end(); ++it)
+			{
+				if(*it == callbackId)
+				{
+					delete *it;
+					m_callbacks.erase(it);
+					break;
+				}
+			}
+		}
+	};
+
+	class EventSystem;
+
+	class Event
+	{
+		CallbackList m_callbacks;
+		EventArgsBase* m_arg = 0;
+		char* m_token = 0;
+
+		friend EventSystem;
+
+		template<class ArgType>
+		inline void EnableNetworkPropagation(const char* token)
+		{
+			m_arg = (EventArgsBase*) new ArgType();
+
+			int size = std::strlen(token);
+			m_token = new char[size];
+			std::strcpy(m_token, token);
+		}
+
+		inline void DisableNetworkPropagation()
+		{
+			if(m_arg!=0)
+				delete m_arg;
+
+			if(m_token!=0)
+				delete m_token;
+
+			m_arg = 0;
+			m_token = 0;
+		}
+
+	public:
+		~Event()
+		{
+			if(m_arg!=0)
+				delete m_arg;
+
+			if(m_token!=0)
+				delete m_token;
+		}
+
+		inline void Invoke(EventArgsBase& data) 
+		{
+			m_callbacks.Invoke(data);
+		}
+
+		inline void Invoke(JSONStream& stream)
+		{
+			if(m_arg==0)
+			{
+				return;
+			}
+
+			stream >> *m_arg;
+
+			Invoke(*m_arg);
+		}
+
+		
+
+		template<typename Func>
+		inline void RegisterCallback(CallbackId& callbackId, Func f)
+		{
+			m_callbacks.RegisterCallback<Func>(callbackId, f);
+		}
+
+		inline void UnregisterCallback(CallbackId& callbackId)
+		{
+			m_callbacks.UnregisterCallback(callbackId);
+		}
+	};
+
+	class EventSystem
+	{
+		std::map<const char*, Event, cmpByStringLength> m_events;
+
+	public:
+
+		void processNetworkQueuedEvents()
+		{
+
+		}
+
+		inline Event& operator[](const char* token)
+		{
+			return m_events[token];
+		}
+
+		template<class ArgType>
+		inline void EnableNetworkPropagation(const char* token)
+		{
+			m_events[token].EnableNetworkPropagation<ArgType>(token);
+		}
+
+		inline void DisableNetworkPropagation(const char* token)
+		{
+			m_events[token].DisableNetworkPropagation();
+		}
+	};
+}
+
+#endif

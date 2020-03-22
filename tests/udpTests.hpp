@@ -48,15 +48,15 @@ bool udpTests(int argc, char** argv)
 		{
 			bfu::udp udp(8888);
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 			bool readed;
 
 			do
 			{
 				readed = udp.Read( msg, false);
-				printf( "gowno test:%s\n", msg.m_id.GetRef().c_str() );
-			}while(readed);
+				printf( "pudp pooling test:%s\n", msg.m_id.GetRef().c_str() );
+			}while(!readed);
 		}
 	}
 

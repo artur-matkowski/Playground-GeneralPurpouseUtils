@@ -9,6 +9,7 @@
 #include "tests/loggingTests.hpp"
 #include "tests/udpTests.hpp"
 #include "tests/jsonTests.hpp"
+#include "tests/EventTest.hpp"
 
 using namespace std;
 
@@ -21,9 +22,9 @@ int main(int argc, char** argv)
 	//loggingTests();
 
 	//jsonTests();
-	udpTests(argc, argv);
+	//udpTests(argc, argv);
 
-
+	EventTest();
 	
 	
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;

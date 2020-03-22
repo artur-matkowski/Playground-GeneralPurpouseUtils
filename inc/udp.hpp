@@ -50,6 +50,7 @@ namespace bfu{
 
 		bool Read( packet &out, bool isBlocking );
 		bool Write( packet &in );
+		bool Write( SerializableClassBase &in, const char* eventToken, const char* host, int port);
 
 		std::string Read(std::string & remoteHost);
 		void Read(char* outBuff, int buffSize);
