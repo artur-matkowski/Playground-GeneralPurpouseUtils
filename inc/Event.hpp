@@ -98,7 +98,7 @@ namespace bfu{
 		friend EventSystem;
 
 		template<class ArgType>
-		inline void EnableNetworkPropagation(const char* token, 
+		inline void EnableNetworkBehaviour(const char* token, 
 											std::vector<std::pair<const char*, const int>>* propagationTarget,
 											bfu::udp* _udp)
 		{
@@ -111,7 +111,7 @@ namespace bfu{
 			std::strcpy(m_token, token);
 		}
 
-		inline void DisableNetworkPropagation()
+		inline void DisableNetworkBehaviour()
 		{
 			if(m_arg!=0)
 				delete m_arg;
@@ -229,14 +229,14 @@ namespace bfu{
 		}
 
 		template<class ArgType>
-		inline void EnableNetworkPropagation(const char* token)
+		inline void EnableNetworkBehaviour(const char* token)
 		{
-			m_events[token].EnableNetworkPropagation<ArgType>(token, &m_propagationTargets, &m_udp);
+			m_events[token].EnableNetworkBehaviour<ArgType>(token, &m_propagationTargets, &m_udp);
 		}
 
-		inline void DisableNetworkPropagation(const char* token)
+		inline void DisableNetworkBehaviour(const char* token)
 		{
-			m_events[token].DisableNetworkPropagation();
+			m_events[token].DisableNetworkBehaviour();
 		}
 
 		inline void RegisterPropagationTarget(const char* host, const int port)

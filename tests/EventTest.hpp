@@ -47,7 +47,7 @@ bool EventTest(int argc, char** argv)
 
 		log::info << "Invoking Remote Event" << std::endl;
 
-		es.EnableNetworkPropagation<EventArgs>("testEvent");
+		es.EnableNetworkBehaviour<EventArgs>("testEvent");
 		es.RegisterPropagationTarget("127.0.0.1", 8888);
     	es["testEvent"].Invoke(args);
 
@@ -57,7 +57,7 @@ bool EventTest(int argc, char** argv)
 	else
 	{		
 		int result = 1;
-		//result = fork();
+		result = fork();
 		
 		if(result==0)
 		{
@@ -69,7 +69,7 @@ bool EventTest(int argc, char** argv)
 		else
 		{
 			es.EnableNetworkListening( 8888 );
-			es.EnableNetworkPropagation<EventArgs>("testEvent");
+			es.EnableNetworkBehaviour<EventArgs>("testEvent");
 
 			es["testEvent"].RegisterCallback(id, [&](EventArgsBase& a) 
 		    {
