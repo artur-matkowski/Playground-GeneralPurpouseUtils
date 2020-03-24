@@ -7,23 +7,23 @@ void LambdaTest(Func f) {
     f(10);
 }
 
-class EventArgs: public EventArgsBase
+class EventArgs: public bfu::EventArgsBase
 {
 public:
-	SerializableVar<int> m_var;
+	bfu::SerializableVar<int> m_var;
 
 
 
 public:
 	EventArgs()
-		:EventArgsBase()
+		:bfu::EventArgsBase()
 		,m_var("m_var",this)
 	{
 		m_var = 11;
 	}
 
 	EventArgs(const EventArgs& copy)
-		:EventArgsBase()
+		:bfu::EventArgsBase()
 		,m_var("m_var",this)
 	{
 		m_var = copy.m_var;
@@ -35,9 +35,9 @@ bool EventTest(int argc, char** argv)
 
 	int test = 5;
 
-	EventSystem es;
+	bfu::EventSystem es;
 
-    CallbackId id;
+    bfu::CallbackId id;
 
     EventArgs args;
 
@@ -71,7 +71,7 @@ bool EventTest(int argc, char** argv)
 			es.EnableNetworkListening( 8888 );
 			es.EnableNetworkBehaviour<EventArgs>("testEvent");
 
-			es["testEvent"].RegisterCallback(id, [&](EventArgsBase& a) 
+			es["testEvent"].RegisterCallback(id, [&](bfu::EventArgsBase& a) 
 		    {
 		    	EventArgs* args = (EventArgs*)&a;
 		    	test += args->m_var; 

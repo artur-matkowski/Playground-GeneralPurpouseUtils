@@ -6,10 +6,6 @@
 #include <time.h>
 
 
-using namespace bfu;
-
-
-
 float randf()
 {
 	return (rand() % 100) * 0.01 + rand() % 100 - 50;
@@ -33,10 +29,10 @@ bool randb()
 template<typename T>
 bool _TESTJSONStream(const char* _typename, const T& val)
 {
-	JSONStream json;
-	JSONStream json2;
-	SerializableVar<T> tt(_typename, 0);
-	SerializableVar<T> tt2(_typename, 0);
+	bfu::JSONStream json;
+	bfu::JSONStream json2;
+	bfu::SerializableVar<T> tt(_typename, 0);
+	bfu::SerializableVar<T> tt2(_typename, 0);
 	tt = val;
 
 	json << tt;
@@ -71,11 +67,11 @@ bool _TESTJSONStream(const char* _typename, const T& val)
 template<typename T>
 bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 {
-	JSONStream json;
-	JSONStream json2;
+	bfu::JSONStream json;
+	bfu::JSONStream json2;
 
-	SerializableVarVector<T> var("var",0);
-	SerializableVarVector<T> var2("var2",0);
+	bfu::SerializableVarVector<T> var("var",0);
+	bfu::SerializableVarVector<T> var2("var2",0);
 	var = input;
 
 	json << var;
@@ -108,19 +104,19 @@ bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 bool _TESTclass()
 {
 
-	class testClass: public SerializableClassBase
+	class testClass: public bfu::SerializableClassBase
 	{
 	public:
-		SerializableVar<bool> m_var;
-		SerializableVar<float> m_var2;
-		SerializableVarVector<float> m_var3;
-		SerializableVar<std::string> m_var4;
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
+		bfu::SerializableVarVector<float> m_var3;
+		bfu::SerializableVar<std::string> m_var4;
 
 
 
 	public:
 		testClass()
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -136,7 +132,7 @@ bool _TESTclass()
 		}
 
 		testClass(const testClass& copy)
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -151,8 +147,8 @@ bool _TESTclass()
 		}
 	};
 
-	JSONStream json;
-	JSONStream json2;
+	bfu::JSONStream json;
+	bfu::JSONStream json2;
 	testClass tt;
 	testClass tt2;
 	//tt = val;
@@ -197,19 +193,19 @@ bool _TESTclass()
 bool _TESTclassNested()
 {
 
-	class testClassChild: public SerializableClassBase
+	class testClassChild: public bfu::SerializableClassBase
 	{
 	public:
-		SerializableVar<bool> m_var;
-		SerializableVar<float> m_var2;
-		SerializableVarVector<float> m_var3;
-		SerializableVar<std::string> m_var4;
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
+		bfu::SerializableVarVector<float> m_var3;
+		bfu::SerializableVar<std::string> m_var4;
 
 
 
 	public:
 		testClassChild()
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -225,7 +221,7 @@ bool _TESTclassNested()
 		}
 
 		testClassChild(const testClassChild& copy)
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -241,21 +237,21 @@ bool _TESTclassNested()
 	};
 
 
-	class testClass: public SerializableClassBase
+	class testClass: public bfu::SerializableClassBase
 	{
 	public:
-		SerializableVar<bool> m_var;
-		SerializableVar<float> m_var2;
-		SerializableVarVector<float> m_var3;
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
+		bfu::SerializableVarVector<float> m_var3;
 
-		SerializableVar<testClassChild> m_var4;
-		SerializableVarVector<testClassChild> m_var5;
+		bfu::SerializableVar<testClassChild> m_var4;
+		bfu::SerializableVarVector<testClassChild> m_var5;
 
 
 
 	public:
 		testClass()
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -277,8 +273,8 @@ bool _TESTclassNested()
 		}
 	};
 
-	JSONStream json;
-	JSONStream json2;
+	bfu::JSONStream json;
+	bfu::JSONStream json2;
 	testClass tt;
 	testClass tt2;
 	//tt = val;
@@ -311,19 +307,19 @@ bool _TESTclassNested()
 
 bool _TESTclassNestedJSON()
 {
-	class testClassChild: public SerializableClassBase
+	class testClassChild: public bfu::SerializableClassBase
 	{
 	public:
-		SerializableVar<bool> m_var;
-		SerializableVar<float> m_var2;
-		SerializableVarVector<float> m_var3;
-		SerializableVar<std::string> m_var4;
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
+		bfu::SerializableVarVector<float> m_var3;
+		bfu::SerializableVar<std::string> m_var4;
 
 
 
 	public:
 		testClassChild()
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -339,7 +335,7 @@ bool _TESTclassNestedJSON()
 		}
 
 		testClassChild(const testClassChild& copy)
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var3("m_var3",this)
@@ -355,19 +351,19 @@ bool _TESTclassNestedJSON()
 	};
 
 
-	class testClass: public SerializableClassBase
+	class testClass: public bfu::SerializableClassBase
 	{
 	public:
-		SerializableVar<bool> m_var;
-		SerializableVar<float> m_var2;
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
 
-		SerializableVar<JSONStream> m_var4;
+		bfu::SerializableVar<bfu::JSONStream> m_var4;
 
 
 
 	public:
 		testClass()
-			:SerializableClassBase()
+			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
 			,m_var4("m_var4",this)
@@ -378,8 +374,8 @@ bool _TESTclassNestedJSON()
 	};
 
 
-	JSONStream json;
-	JSONStream json2;
+	bfu::JSONStream json;
+	bfu::JSONStream json2;
 	testClassChild serializableObj;
 	testClass tt;
 	testClass tt2;
