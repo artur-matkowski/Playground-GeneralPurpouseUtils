@@ -2,16 +2,11 @@
 #define _H_EventTest
 #include "bfu.hpp"
 
-template<typename Func>
-void LambdaTest(Func f) {
-    f(10);
-}
 
 class EventArgs: public bfu::EventArgsBase
 {
 public:
 	bfu::SerializableVar<int> m_var;
-
 
 
 public:
@@ -30,34 +25,61 @@ public:
 	}
 };
 
+
 bool EventTest(int argc, char** argv)
 {
 
 	int test = 5;
-
-	bfu::EventSystem es;
-
     bfu::CallbackId id;
+/*
 
-    EventArgs args;
+    bfu::EventSystem::InitEvent<EventArgs>("testEvent");
+    bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+    {
+	    EventArgs* args = (EventArgs*)&a;
+    	test += args->m_var; 
+		log::info << "testEvent invoked " << test << std::endl;
+    });
+    bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+    {
+	    EventArgs* args = (EventArgs*)&a;
+    	test += args->m_var; 
+		log::info << "testEvent invoked " << test << std::endl;
+    });
+
+
+    bfu::EventSystem::UnregisterCallback<EventArgs>(id);
+
+	bfu::EventSystem::Invoke<EventArgs>([&](EventArgs& args) 
+    {
+    	args.m_var = 11; 
+    });
+*/
 
 	if(argc>1 && strcmp(argv[1], "sender") == 0 )
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-		log::info << "Invoking Remote Event" << std::endl;
+		bfu::EventSystem::RegisterPropagationTarget("127.0.0.1", 8888);
+    	bfu::EventSystem::InitEvent<EventArgs>("testEvent");
+    	bfu::EventSystem::EnableNetworkBoadcast<EventArgs>();
 
-		es.EnableNetworkBehaviour<EventArgs>("testEvent");
-		es.RegisterPropagationTarget("127.0.0.1", 8888);
-    	es["testEvent"].Invoke(args);
+    	bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+	    {
+		    EventArgs* args = (EventArgs*)&a;
+	    	test += args->m_var; 
+			log::info << "testEvent invoked " << test << std::endl;
+	    });
 
-    	//while(1);
-    	exit(0);
+    	bfu::EventSystem::Invoke<EventArgs>([&](EventArgs& args) 
+	    {
+	    	args.m_var = 11; 
+	    });
 	}
 	else
-	{		
-		int result = 1;
-		//result = fork();
+	{
+		
+		int result = fork();
 		
 		if(result==0)
 		{
@@ -68,25 +90,23 @@ bool EventTest(int argc, char** argv)
 		}
 		else
 		{
-			es.EnableNetworkListening( 8888 );
-			es.EnableNetworkBehaviour<EventArgs>("testEvent");
-
-			es["testEvent"].RegisterCallback(id, [&](bfu::EventArgsBase& a) 
+    		bfu::EventSystem::EnableNetworkListening(8888);
+    		bfu::EventSystem::InitEvent<EventArgs>("testEvent");
+    		bfu::EventSystem::EnableNetworkListen<EventArgs>();
+    		bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
 		    {
-		    	EventArgs* args = (EventArgs*)&a;
+			    EventArgs* args = (EventArgs*)&a;
 		    	test += args->m_var; 
-    			log::info << "testEvent invoked " << test << std::endl;
+				log::info << "testEvent invoked " << test << std::endl;
 		    });
 
-			while(!es.processNetworkQueuedEvents());
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+			while(!bfu::EventSystem::ProcessNetworkQueuedEvents());
 		}
 	}
-
-
-
     
 
-    //es.UnregisterCallback(id);
 
 
 
