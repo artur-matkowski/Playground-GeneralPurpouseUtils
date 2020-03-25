@@ -31,37 +31,15 @@ bool EventTest(int argc, char** argv)
 
 	int test = 5;
     bfu::CallbackId id;
-/*
+    int result;
 
-    bfu::EventSystem::InitEvent<EventArgs>("testEvent");
-    bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
-    {
-	    EventArgs* args = (EventArgs*)&a;
-    	test += args->m_var; 
-		log::info << "testEvent invoked " << test << std::endl;
-    });
-    bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
-    {
-	    EventArgs* args = (EventArgs*)&a;
-    	test += args->m_var; 
-		log::info << "testEvent invoked " << test << std::endl;
-    });
-
-
-    bfu::EventSystem::UnregisterCallback<EventArgs>(id);
-
-	bfu::EventSystem::Invoke<EventArgs>([&](EventArgs& args) 
-    {
-    	args.m_var = 11; 
-    });
-*/
 
 	if(argc>1 && strcmp(argv[1], "sender") == 0 )
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 		bfu::EventSystem::RegisterPropagationTarget("127.0.0.1", 8888);
-		bfu::EventSystem::UnregisterPropagationTarget("127.0.0.1", 8888);
+		//bfu::EventSystem::UnregisterPropagationTarget("127.0.0.1", 8888);
     	bfu::EventSystem::InitEvent<EventArgs>("testEvent");
     	bfu::EventSystem::EnableNetworkBoadcast<EventArgs>();
 
@@ -76,11 +54,12 @@ bool EventTest(int argc, char** argv)
 	    {
 	    	args.m_var = 11; 
 	    });
+
 	}
 	else
 	{
 		
-		int result = fork();
+		result = fork();
 		
 		if(result==0)
 		{
@@ -110,9 +89,14 @@ bool EventTest(int argc, char** argv)
 
 
 
-
-
-    log::info << "lambda test " << test << std::endl;
+	if(result==0)
+	{
+    	log::info << "Test on sneder site, local invoke result: " << test << std::endl;
+	}
+	else
+	{
+		log::info << "Test on receiver site, remote invoke result: " << test << std::endl;
+	}
 
     if( test==16 )
 	{
