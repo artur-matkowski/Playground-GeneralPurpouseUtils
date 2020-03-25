@@ -376,7 +376,16 @@ namespace bfu{
 
 		static void UnregisterPropagationTarget(const char* host, const int port)
 		{
-			//TBD
+			for(auto it = EventSystem::m_propagationTargets.begin();
+				it != EventSystem::m_propagationTargets.end();
+				++it)
+			{
+				if( strcmp(it->first.c_str(), host)==0 && it->second == port)
+				{
+					EventSystem::m_propagationTargets.erase(it);
+					return;
+				}
+			}
 		}
 
 	};

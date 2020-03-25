@@ -61,6 +61,7 @@ bool EventTest(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 		bfu::EventSystem::RegisterPropagationTarget("127.0.0.1", 8888);
+		bfu::EventSystem::UnregisterPropagationTarget("127.0.0.1", 8888);
     	bfu::EventSystem::InitEvent<EventArgs>("testEvent");
     	bfu::EventSystem::EnableNetworkBoadcast<EventArgs>();
 
