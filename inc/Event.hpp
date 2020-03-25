@@ -161,7 +161,11 @@ namespace bfu{
 
 			stream >> *m_arg;
 
+			m_arg->isComingFromNetwork = true;
+
 			InvokeLocaly(*m_arg);
+
+			m_arg->isComingFromNetwork = false;
 		}
 
 	public:

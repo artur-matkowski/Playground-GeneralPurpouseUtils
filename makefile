@@ -1,4 +1,4 @@
-OUT		 = logger
+OUT		 = BFutils
 VERSION	 = .1.0.0
 
 
@@ -40,8 +40,8 @@ release: $(SOURCES) $(OUT)
 	
 
 $(OUT): $(OBJECTS)
-	#$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(OBJDIR)* $(DEPOBJ) 
-	#$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(BUILDPATH)$@.so $(DEPOBJ) main.cpp 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(OBJDIR)* $(DEPOBJ) 
+	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(BUILDPATH)$@.so $(DEPOBJ) main.cpp 
 	$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(OBJDIR)* $(DEPOBJ) main.cpp 
 
 
