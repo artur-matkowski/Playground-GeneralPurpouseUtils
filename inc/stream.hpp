@@ -234,6 +234,13 @@ namespace bfu{
 			return *this;
 		}
 
+		stream& operator<<(const unsigned char* val)
+		{
+			this->sprintf("%s", val);
+
+			return *this;
+		}
+
 		stream& operator<<(const int& val)
 		{
 			this->sprintf("%d", val);

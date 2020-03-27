@@ -55,6 +55,7 @@ test:
 clean: 
 	rm -fr build/*
 	./prebuild.sh
+	rm Logs/*
 
 remove:
 	rm -rf $(HEADERDIR)$(OUT)  
