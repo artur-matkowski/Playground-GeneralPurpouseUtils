@@ -221,8 +221,8 @@ namespace bfu{
 		}
 	};
 
-
-	class EventSystem
+/*
+	class StaticEventSystem
 	{
 		static std::map<const char*, EventBase*, cmpByStringLength> 	
 																m_events;
@@ -387,6 +387,180 @@ namespace bfu{
 				if( strcmp(it->first.c_str(), host)==0 && it->second == port)
 				{
 					EventSystem::m_propagationTargets.erase(it);
+					return;
+				}
+			}
+		}
+
+	};
+
+*/
+
+	class EventSystem
+	{
+		std::map<const char*, EventBase*, cmpByStringLength> 	
+																m_events;
+		std::vector<std::pair<std::string, int>> 		m_propagationTargets;
+
+		bfu::udp 										m_udp;
+		bfu::udp::packet 								m_pkg;
+
+		template<class ArgT>
+		static Event<ArgT>& GetEventRef()
+		{
+			static Event<ArgT> ev;
+			return ev;
+		}
+
+		template<class ArgT>
+		void RegisterEvent(const char* token, ArgT& ev)
+		{
+			auto it = m_events.find(token);
+
+			if( it != m_events.end() )
+			{
+				m_events[token] = &ev;
+			}
+			else
+			{
+				log::warning << "Attempting te reinitialize Event \"" << token << "\", breaking." << std::endl;
+			}
+		}
+	public:
+
+		template<class ArgT>
+		void InitEvent(const char* token)
+		{
+			auto it = m_events.find(token);
+
+			if( it != m_events.end() )
+			{
+				log::warning << "Attempting te reinitialize Event \"" << token << "\", breaking." << std::endl;
+				return;
+			}
+
+			EventSystem::GetEventRef<ArgT>().Init(token, &m_propagationTargets, &m_udp);
+			m_events[token] = & EventSystem::GetEventRef<ArgT>();
+		}
+
+		template<class ArgT, typename Func>
+		void RegisterCallback(CallbackId& callbackId, Func f)
+		{
+			EventSystem::GetEventRef<ArgT>().template RegisterCallback<Func>(callbackId, f);
+		}
+
+		template<class ArgT>
+		void UnregisterCallback(CallbackId& callbackId)
+		{
+			EventSystem::GetEventRef<ArgT>().UnregisterCallback(callbackId);
+		}
+
+		template<class ArgT, typename Func>
+		void Invoke(Func func)
+		{
+			static ArgT arg;
+			Event<ArgT> &ev = EventSystem::GetEventRef<ArgT>();
+
+			if( !ev.IsInitialized() )
+			{
+				log::error << "Traying to invoke unitialized Event, breaking" << std::endl;
+				return;
+			}
+
+			func( arg );
+			ev.Invoke( arg );
+		}
+
+		template<class ArgT>
+		void Invoke(ArgT& arg)
+		{
+			Event<ArgT> &ev = EventSystem::GetEventRef<ArgT>();
+
+			if( !ev.IsInitialized() )
+			{
+				log::error << "Traying to invoke unitialized Event, breaking" << std::endl;
+				return;
+			}
+
+			ev.Invoke( arg );
+		}
+
+
+
+	
+		bool ProcessNetworkQueuedEvents()
+		{
+
+			bool ret = false;
+
+			while(m_udp.Read(m_pkg, false))
+			{
+				auto it = m_events.find(m_pkg.m_id.GetRef().c_str());
+
+				if( it != m_events.end() )
+				{
+					it->second->Invoke(m_pkg.m_data.GetRef());
+					ret = true;
+				}
+				else
+				{
+					log::warning << "Can't find network event \"" << m_pkg.m_id.GetRef().c_str() << "\" from host: " << m_pkg.m_host << 
+						"Did you initialized event?" << std::endl;
+				}
+			}
+
+			return ret;
+		}
+
+
+		void EnableNetworkListening(int port)
+		{
+			m_udp.StartListening(port);
+		}
+
+		void DisableNetworkListening()
+		{
+			m_udp.StopListening();
+		}
+
+		template<class ArgT>
+		void EnableNetworkBoadcast()
+		{
+			EventSystem::GetEventRef<ArgT>().EnableNetworkBoadcast();
+		}
+
+		template<class ArgT>
+		void DisableNetworkBoadcast()
+		{
+			EventSystem::GetEventRef<ArgT>().DisableNetworkBoadcast();
+		}
+
+		template<class ArgT>
+		void EnableNetworkListen()
+		{
+			EventSystem::GetEventRef<ArgT>().EnableNetworkListen();
+		}
+
+		template<class ArgT>
+		void DisableNetworkListen()
+		{
+			EventSystem::GetEventRef<ArgT>().DisableNetworkListen();
+		}
+
+		void RegisterPropagationTarget(const char* host, const int port)
+		{
+			m_propagationTargets.push_back(std::pair<std::string, int>(host, port));
+		}
+
+		void UnregisterPropagationTarget(const char* host, const int port)
+		{
+			for(auto it = m_propagationTargets.begin();
+				it != m_propagationTargets.end();
+				++it)
+			{
+				if( strcmp(it->first.c_str(), host)==0 && it->second == port)
+				{
+					m_propagationTargets.erase(it);
 					return;
 				}
 			}

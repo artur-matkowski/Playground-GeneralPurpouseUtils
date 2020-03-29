@@ -19,12 +19,12 @@ int main(int argc, char** argv)
 {
 	//log::Log.EnableFileLogging();
 	//streamTests();
-	loggingTests();
+	//loggingTests();
 
 	//jsonTests();
 	//udpTests(argc, argv);
 
-	//EventTest(argc, argv);
+	EventTest(argc, argv);
 	
 	
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;

@@ -33,24 +33,26 @@ bool EventTest(int argc, char** argv)
     bfu::CallbackId id;
     int result;
 
+    bfu::EventSystem es;
+
 
 	if(argc>1 && strcmp(argv[1], "sender") == 0 )
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-		bfu::EventSystem::RegisterPropagationTarget("127.0.0.1", 8888);
-		//bfu::EventSystem::UnregisterPropagationTarget("127.0.0.1", 8888);
-    	bfu::EventSystem::InitEvent<EventArgs>("testEvent");
-    	bfu::EventSystem::EnableNetworkBoadcast<EventArgs>();
+		es.RegisterPropagationTarget("127.0.0.1", 8888);
+		//es.UnregisterPropagationTarget("127.0.0.1", 8888);
+    	es.InitEvent<EventArgs>("testEvent");
+    	es.EnableNetworkBoadcast<EventArgs>();
 
-    	bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+    	es.RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
 	    {
 		    EventArgs* args = (EventArgs*)&a;
 	    	test += args->m_var; 
 			log::info << "testEvent invoked " << test << std::endl;
 	    });
 
-    	bfu::EventSystem::Invoke<EventArgs>([&](EventArgs& args) 
+    	es.Invoke<EventArgs>([&](EventArgs& args) 
 	    {
 	    	args.m_var = 11; 
 	    });
@@ -70,10 +72,10 @@ bool EventTest(int argc, char** argv)
 		}
 		else
 		{
-    		bfu::EventSystem::EnableNetworkListening(8888);
-    		bfu::EventSystem::InitEvent<EventArgs>("testEvent");
-    		bfu::EventSystem::EnableNetworkListen<EventArgs>();
-    		bfu::EventSystem::RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+    		es.EnableNetworkListening(8888);
+    		es.InitEvent<EventArgs>("testEvent");
+    		es.EnableNetworkListen<EventArgs>();
+    		es.RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
 		    {
 			    EventArgs* args = (EventArgs*)&a;
 		    	test += args->m_var; 
@@ -82,7 +84,7 @@ bool EventTest(int argc, char** argv)
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-			while(!bfu::EventSystem::ProcessNetworkQueuedEvents());
+			while(!es.ProcessNetworkQueuedEvents());
 		}
 	}
     
