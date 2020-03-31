@@ -248,6 +248,27 @@ namespace bfu{
 			return *this;
 		}
 
+		stream& operator<<(const uint32_t& val)
+		{
+			this->sprintf("%d", val);
+
+			return *this;
+		}
+
+		stream& operator<<(const uint16_t& val)
+		{
+			this->sprintf("%d", val);
+
+			return *this;
+		}
+
+		stream& operator<<(const uint8_t& val)
+		{
+			this->sprintf("%d", val);
+
+			return *this;
+		}
+
 		stream& operator<<(const float& val)
 		{
 			this->sprintf("%f", val);
