@@ -166,6 +166,30 @@ namespace bfu{
 			m_writeCursor += t;
 		}
 
+		inline void sscanf(const char* str, ...)
+		{
+			va_list args1;
+			va_start(args1, str);
+			va_list args2;
+    		va_copy(args2, args1);
+
+			int t = vsnprintf(m_writeCursor, m_last-m_writeCursor, str, args1);
+
+			va_end(args1);
+
+			if(t >= m_last-m_writeCursor)
+			{
+				t = next_power_of_two(m_writeCursor-m_first+t+2);
+				resize(t);
+
+				t = vsnprintf(m_writeCursor, m_last-m_writeCursor, str, args2);
+
+			}
+    		va_end(args2);
+
+			m_writeCursor += t;
+		}
+
 		inline char peak(int offset = 0) const
 		{
 			return m_readCursor[offset];

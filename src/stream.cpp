@@ -23,7 +23,7 @@ namespace bfu{
 	    :m_buffsize( std::max( {size, (int)strlen(input), m_minimalbuffsize} ) )
 	    ,m_first(new char[m_buffsize])
 	    ,m_last(m_first+m_buffsize)
-	    ,m_writeCursor(m_first)
+	    ,m_writeCursor( m_first+std::max( size, (int)strlen(input)) )
 	    ,m_readCursor(m_first)
 	{
 		std::memcpy(m_first, input, m_buffsize);
