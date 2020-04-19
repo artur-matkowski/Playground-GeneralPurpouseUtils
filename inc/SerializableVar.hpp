@@ -183,13 +183,13 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVar<bfu::stream>: public SerializableBase, public bfu::stream
+	class SerializableVar<bfu::stream>: public SerializableBase
 	{
-		//bfu::stream m_var;
+		bfu::stream m_var;
 	public:
 
 		SerializableVar(const bfu::stream& val)
-			:bfu::stream(val)
+			:m_var(val)
 		{}
 
 		SerializableVar(const char* Name, SerializableClassBase* parent)
@@ -197,31 +197,31 @@ namespace bfu{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
-/*
+
 		inline operator bfu::stream() const
 		{
 			return m_var;
 		}
-*/
+
 		inline bfu::stream& GetRef()
 		{
-			return *this;
+			return m_var;
 		}
 
 		inline SerializableVar<bfu::stream>& operator=(const bfu::stream& val)
 		{
-			*this = val;
+			m_var = val;
 			return *this;
 		}
 
 		virtual void Serialize(JSONStream& stream)
 		{
-			stream.Serialize(*this);
+			stream.Serialize(m_var);
 		}
 		
 		virtual void Deserialize(JSONStream& stream)
 		{
-			stream.Deserialize(*this);
+			stream.Deserialize(m_var);
 		}
 	};
 
