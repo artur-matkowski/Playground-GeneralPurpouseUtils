@@ -20,6 +20,9 @@ namespace bfu{
 				parent->PushReferenceToMap(Name, this);
 		}
 
+		virtual ~SerializableVarVector()
+		{}
+
 
 		//TODO optimize me:
 		SerializableVarVector<T>& operator=(const std::vector<T>& in)
@@ -76,6 +79,99 @@ namespace bfu{
 			{
 				//deserializationCache.Deserialize(stream);
 				stream.Deserialize( cache );
+
+				this->push_back( cache );
+			}
+
+
+		}
+	};
+
+
+
+	template<class T>
+	class SerializableVarVector<T*>: public std::vector<T*>, public SerializableBase
+	{
+		SerializableVarVector()
+			:std::vector<T*>()
+		{}
+	public:
+
+		SerializableVarVector(const char* Name, SerializableClassBase* parent)
+			:std::vector<T*>()
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		virtual ~SerializableVarVector()
+		{
+			for(auto it = this->begin(); it!=this->end(); ++it)
+			{
+				delete *it;
+			}
+		}
+
+
+		//TODO optimize me:
+		SerializableVarVector<T*>& operator=(const std::vector<T*>& in)
+		{
+			this->clear();
+
+			for(auto it = in.begin(); it != in.end(); ++it)
+			{
+				this->push_back(*it);
+			}
+
+			return *this;
+		}
+
+		void Serialize(JSONStream& stream) override
+		{
+			stream.sprintf("[");
+
+			if( this->begin() != this->end() )
+			{
+				for(auto it = this->begin(); ; )
+				{
+					//stream << *it;
+					stream.Serialize(**it);
+
+					++it;
+
+					if( it != this->end() )
+					{
+						stream.sprintf(", ");
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+			stream.sprintf("]");
+		}
+
+
+		void Deserialize(JSONStream& stream) override
+		{
+			for(auto it = this->begin(); it!=this->end(); ++it)
+			{
+				delete *it;
+			}
+			this->clear();
+
+			stream.skipTo('[');
+			stream.skip( 1 );
+
+			//SerializableVar<T> deserializationCache("", 0);
+
+			while(stream.peak() != ']')
+			{
+				T* cache = new T;
+				//deserializationCache.Deserialize(stream);
+				stream.Deserialize( *cache );
 
 				this->push_back( cache );
 			}

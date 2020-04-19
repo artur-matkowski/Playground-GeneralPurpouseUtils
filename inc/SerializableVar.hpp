@@ -25,6 +25,7 @@ namespace bfu{
 				parent->PushReferenceToMap(Name, this);
 		}
 
+
 		inline operator T() const
 		{
 			return m_var;
