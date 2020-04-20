@@ -11,6 +11,9 @@ namespace bfu{
 	{
 		
 	public:
+
+		virtual ~SerializableBase(){}
+		
 		virtual void Serialize(JSONStream& stream) = 0;
 
 		virtual void Deserialize(JSONStream& stream) = 0;

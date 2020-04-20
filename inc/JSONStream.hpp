@@ -71,6 +71,12 @@ namespace bfu{
       return *this;
     }
 
+    JSONStream& Deserialize( SerializableBase& val )
+    {
+      val.Deserialize(*this);
+      return *this;
+    }
+
 
     JSONStream& Deserialize(std::string& val)
     {
@@ -206,6 +212,12 @@ namespace bfu{
     JSONStream& Serialize(const bool& val)
     {
       this->sprintf("%s", (val ? "true" : "false") );
+      return *this;
+    }
+
+    JSONStream& Serialize( SerializableBase& val)
+    {
+      val.Serialize(*this);
       return *this;
     }
 

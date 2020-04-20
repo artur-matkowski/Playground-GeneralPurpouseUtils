@@ -21,10 +21,10 @@ int main(int argc, char** argv)
 	//streamTests();
 	//loggingTests();
 
-	//jsonTests();
+	jsonTests();
 	//udpTests(argc, argv);
 
-	EventTest(argc, argv);
+	//EventTest(argc, argv);
 	
 	
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;

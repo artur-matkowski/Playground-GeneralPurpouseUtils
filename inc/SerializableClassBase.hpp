@@ -33,6 +33,9 @@ namespace bfu{
 			:m_token()
 		{};
 
+		virtual ~SerializableClassBase()
+		{};
+
 		virtual void Serialize(JSONStream& stream);
 
 		virtual void Deserialize(JSONStream& stream);
