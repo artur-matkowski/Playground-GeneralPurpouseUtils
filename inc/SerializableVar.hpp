@@ -44,187 +44,15 @@ namespace bfu{
 
 		virtual void Serialize(JSONStream& stream)
 		{
-			stream << m_var;
+			stream << (m_var);
 		}
 		
 		virtual void Deserialize(JSONStream& stream)
 		{
-			stream >> m_var;
+			stream >> (m_var);
 		}
 	};
 
-	template<>
-	class SerializableVar<int>: public SerializableBase
-	{
-		int m_var;
-	public:
-
-		SerializableVar(const int& val)
-			:m_var(val)
-		{}
-
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator int() const
-		{
-			return m_var;
-		}
-		inline int& GetRef()
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<int>& operator=(const int& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual void Serialize(JSONStream& stream)
-		{
-			stream.Serialize(m_var);
-		}
-		
-		virtual void Deserialize(JSONStream& stream)
-		{
-			stream.Deserialize(m_var);
-		}
-	};
-
-	template<>
-	class SerializableVar<float>: public SerializableBase
-	{
-		float m_var;
-	public:
-
-		SerializableVar(const float& val)
-			:m_var(val)
-		{}
-
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator float() const
-		{
-			return m_var;
-		}
-
-		inline float& GetRef()
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<float>& operator=(const float& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual void Serialize(JSONStream& stream)
-		{
-			stream.Serialize(m_var);
-		}
-		
-		virtual void Deserialize(JSONStream& stream)
-		{
-			stream.Deserialize(m_var);
-		}
-	};
-
-	template<>
-	class SerializableVar<bool>: public SerializableBase
-	{
-		bool m_var;
-		char buff[6] = {0};
-	public:
-
-		SerializableVar(const bool& val)
-			:m_var(val)
-		{}
-
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator bool() const
-		{
-			return m_var;
-		}
-
-		inline bool& GetRef()
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<bool>& operator=(const bool& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual void Serialize(JSONStream& stream)
-		{
-			stream.Serialize(m_var);
-		}
-
-
-		virtual void Deserialize(JSONStream& stream)
-		{
-			stream.Deserialize(m_var);
-		}
-	};
-
-	template<>
-	class SerializableVar<bfu::stream>: public SerializableBase
-	{
-		bfu::stream m_var;
-	public:
-
-		SerializableVar(const bfu::stream& val)
-			:m_var(val)
-		{}
-
-		SerializableVar(const char* Name, SerializableClassBase* parent)
-		{
-			if(parent!=0)
-				parent->PushReferenceToMap(Name, this);
-		}
-
-		inline operator bfu::stream() const
-		{
-			return m_var;
-		}
-
-		inline bfu::stream& GetRef()
-		{
-			return m_var;
-		}
-
-		inline SerializableVar<bfu::stream>& operator=(const bfu::stream& val)
-		{
-			m_var = val;
-			return *this;
-		}
-
-		virtual void Serialize(JSONStream& stream)
-		{
-			stream.Serialize(m_var);
-		}
-		
-		virtual void Deserialize(JSONStream& stream)
-		{
-			stream.Deserialize(m_var);
-		}
-	};
 
 
 	template<>
@@ -247,7 +75,12 @@ namespace bfu{
 				parent->PushReferenceToMap(Name, this);
 		}
 
-		inline operator std::string() const
+		explicit inline operator std::string() const 
+		{
+			return *this;
+		}
+
+		inline std::string& GetRef()
 		{
 			return *this;
 		}
