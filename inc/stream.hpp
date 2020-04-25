@@ -4,6 +4,7 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <cinttypes>
 #include "bfuObject.hpp"
 //#include <iostream>
 	
@@ -241,33 +242,48 @@ namespace bfu{
 			return *this;
 		}
 
-		stream& operator<<(const int& val)
+		stream& operator<<(const int64_t& val)
 		{
-			this->sprintf("%d", val);
-
+			this->sprintf("%" PRId64, val);
+			return *this;
+		}
+		stream& operator<<(const int32_t& val)
+		{
+			this->sprintf("%" PRId32, val);
+			return *this;
+		}
+		stream& operator<<(const int16_t& val)
+		{
+			this->sprintf("%" PRId16, val);
+			return *this;
+		}
+		stream& operator<<(const int8_t& val)
+		{
+			this->sprintf("%" PRId8, val);
 			return *this;
 		}
 
+		stream& operator<<(const uint64_t& val)
+		{
+			this->sprintf("%" PRIu64, val);
+			return *this;
+		}
 		stream& operator<<(const uint32_t& val)
 		{
-			this->sprintf("%d", val);
-
+			this->sprintf("%" PRIu32, val);
 			return *this;
 		}
-
 		stream& operator<<(const uint16_t& val)
 		{
-			this->sprintf("%d", val);
-
+			this->sprintf("%" PRIu16, val);
 			return *this;
 		}
-
 		stream& operator<<(const uint8_t& val)
 		{
-			this->sprintf("%d", val);
-
+			this->sprintf("%" PRIu8, val);
 			return *this;
 		}
+
 
 		stream& operator<<(const float& val)
 		{

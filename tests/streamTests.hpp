@@ -20,6 +20,12 @@ bool streamTests()
 	str << OUT(int, 3) << std::endl;
 
 
+	str << OUT(uint64_t, 87394827) << std::endl;
+	str << OUT(uint64_t, 3) << std::endl;
+
+	str << OUT(int8_t, -2) << std::endl;
+	str << OUT(int8_t, 3) << std::endl;
+
 	str << OUT(bool, true) << std::endl;
 	str << OUT(bool, false) << std::endl;
 
