@@ -54,12 +54,12 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVar<int>: public SerializableBase
+	class SerializableVar<int64_t>: public SerializableBase
 	{
-		int m_var;
+		int64_t m_var;
 	public:
 
-		SerializableVar(const int& val)
+		SerializableVar(const int64_t& val)
 			:m_var(val)
 		{}
 
@@ -69,16 +69,304 @@ namespace bfu{
 				parent->PushReferenceToMap(Name, this);
 		}
 
-		inline operator int() const
+		inline operator int64_t() const
 		{
 			return m_var;
 		}
-		inline int& GetRef()
+		inline int64_t& GetRef()
 		{
 			return m_var;
 		}
 
-		inline SerializableVar<int>& operator=(const int& val)
+		inline SerializableVar<int64_t>& operator=(const int64_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<int32_t>: public SerializableBase
+	{
+		int32_t m_var;
+	public:
+
+		SerializableVar(const int32_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator int32_t() const
+		{
+			return m_var;
+		}
+		inline int32_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<int32_t>& operator=(const int32_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<int16_t>: public SerializableBase
+	{
+		int16_t m_var;
+	public:
+
+		SerializableVar(const int16_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator int16_t() const
+		{
+			return m_var;
+		}
+		inline int16_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<int16_t>& operator=(const int16_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<int8_t>: public SerializableBase
+	{
+		int8_t m_var;
+	public:
+
+		SerializableVar(const int8_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator int8_t() const
+		{
+			return m_var;
+		}
+		inline int8_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<int8_t>& operator=(const int8_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+
+	template<>
+	class SerializableVar<uint64_t>: public SerializableBase
+	{
+		uint64_t m_var;
+	public:
+
+		SerializableVar(const uint64_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator uint64_t() const
+		{
+			return m_var;
+		}
+		inline uint64_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<uint64_t>& operator=(const uint64_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<uint32_t>: public SerializableBase
+	{
+		uint32_t m_var;
+	public:
+
+		SerializableVar(const uint32_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator uint32_t() const
+		{
+			return m_var;
+		}
+		inline uint32_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<uint32_t>& operator=(const uint32_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<uint16_t>: public SerializableBase
+	{
+		uint16_t m_var;
+	public:
+
+		SerializableVar(const uint16_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator uint16_t() const
+		{
+			return m_var;
+		}
+		inline uint16_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<uint16_t>& operator=(const uint16_t& val)
+		{
+			m_var = val;
+			return *this;
+		}
+
+		virtual void Serialize(JSONStream& stream)
+		{
+			stream.Serialize(m_var);
+		}
+		
+		virtual void Deserialize(JSONStream& stream)
+		{
+			stream.Deserialize(m_var);
+		}
+	};
+	template<>
+	class SerializableVar<uint8_t>: public SerializableBase
+	{
+		uint8_t m_var;
+	public:
+
+		SerializableVar(const uint8_t& val)
+			:m_var(val)
+		{}
+
+		SerializableVar(const char* Name, SerializableClassBase* parent)
+		{
+			if(parent!=0)
+				parent->PushReferenceToMap(Name, this);
+		}
+
+		inline operator uint8_t() const
+		{
+			return m_var;
+		}
+		inline uint8_t& GetRef()
+		{
+			return m_var;
+		}
+
+		inline SerializableVar<uint8_t>& operator=(const uint8_t& val)
 		{
 			m_var = val;
 			return *this;

@@ -43,11 +43,81 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(int& val)
+    JSONStream& Deserialize(int64_t& val)
     {
       skipToOneOf("-0123456789");
 
-      m_readCursor += sscanf(m_readCursor, "%d", &val);
+      m_readCursor += sscanf(m_readCursor, "%" SCNd64, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(int32_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNd32, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(int16_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNd16, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(int8_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNd8, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(uint64_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNu64, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(uint32_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNu32, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(uint16_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNu16, &val);
+      skipToOneOf(",]}");
+
+      return *this;
+    }
+
+    JSONStream& Deserialize(uint8_t& val)
+    {
+      skipToOneOf("-0123456789");
+
+      m_readCursor += sscanf(m_readCursor, "%" SCNu8, &val);
       skipToOneOf(",]}");
 
       return *this;
@@ -203,9 +273,45 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Serialize(const int& val)
+    JSONStream& Serialize(const int64_t& val)
     {
-      this->sprintf("%d", val);
+      this->sprintf("%" PRId64, val);
+      return *this;
+    }
+    JSONStream& Serialize(const int32_t& val)
+    {
+      this->sprintf("%" PRId32, val);
+      return *this;
+    }
+    JSONStream& Serialize(const int16_t& val)
+    {
+      this->sprintf("%" PRId16, val);
+      return *this;
+    }
+    JSONStream& Serialize(const int8_t& val)
+    {
+      this->sprintf("%" PRId8, val);
+      return *this;
+    }
+
+    JSONStream& Serialize(const uint64_t& val)
+    {
+      this->sprintf("%" PRIu64, val);
+      return *this;
+    }
+    JSONStream& Serialize(const uint32_t& val)
+    {
+      this->sprintf("%" PRIu32, val);
+      return *this;
+    }
+    JSONStream& Serialize(const uint16_t& val)
+    {
+      this->sprintf("%" PRIu16, val);
+      return *this;
+    }
+    JSONStream& Serialize(const uint8_t& val)
+    {
+      this->sprintf("%" PRIu8, val);
       return *this;
     }
 

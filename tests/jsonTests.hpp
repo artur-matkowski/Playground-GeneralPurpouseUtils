@@ -61,7 +61,7 @@ bool _TESTJSONStream(const char* _typename, const T& val)
 }
 
 
-#define TESTJSONStream(T,v) _TESTJSONStream<T>(#T, v)
+#define TESTJSONStream(T,v) _TESTJSONStream<T>(#T, (T)v)
 
 
 template<typename T>
@@ -435,6 +435,30 @@ void jsonTests()
 
 	test = test && TESTJSONStream(int, randi() );
 	test = test && TESTJSONStream(int, randi() );
+
+	test = test && TESTJSONStream(int64_t, randi() );
+	test = test && TESTJSONStream(int64_t, randi() );
+
+	test = test && TESTJSONStream(uint64_t, (randi()+50) );
+	test = test && TESTJSONStream(uint64_t, (randi()+50) );
+
+	test = test && TESTJSONStream(int32_t, randi() );
+	test = test && TESTJSONStream(int32_t, randi() );
+
+	test = test && TESTJSONStream(uint32_t, (randi()+50) );
+	test = test && TESTJSONStream(uint32_t, (randi()+50) );
+
+	test = test && TESTJSONStream(int16_t, randi() );
+	test = test && TESTJSONStream(int16_t, randi() );
+
+	test = test && TESTJSONStream(uint16_t, (randi()+50) );
+	test = test && TESTJSONStream(uint16_t, (randi()+50) );
+
+	test = test && TESTJSONStream(int8_t, randi() );
+	test = test && TESTJSONStream(int8_t, randi() );
+
+	test = test && TESTJSONStream(uint8_t, (randi()+50) );
+	test = test && TESTJSONStream(uint8_t, (randi()+50) );
 
 
 	test = test && TESTJSONStream(bool, randb() );
