@@ -33,7 +33,7 @@ namespace bfu{
     {
     }
 
-    JSONStream& Deserialize(float& val)
+    JSONStream& operator>> (float& val)
     {
       skipToOneOf("-.0123456789");
 
@@ -43,7 +43,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(int64_t& val)
+    JSONStream& operator>> (int64_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -53,7 +53,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(int32_t& val)
+    JSONStream& operator>> (int32_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -63,7 +63,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(int16_t& val)
+    JSONStream& operator>> (int16_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -73,7 +73,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(int8_t& val)
+    JSONStream& operator>> (int8_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -83,7 +83,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(uint64_t& val)
+    JSONStream& operator>> (uint64_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -93,7 +93,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(uint32_t& val)
+    JSONStream& operator>> (uint32_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -103,7 +103,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(uint16_t& val)
+    JSONStream& operator>> (uint16_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -113,7 +113,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(uint8_t& val)
+    JSONStream& operator>> (uint8_t& val)
     {
       skipToOneOf("-0123456789");
 
@@ -123,7 +123,7 @@ namespace bfu{
       return *this;
     }
 
-    JSONStream& Deserialize(bool& val)
+    JSONStream& operator>> (bool& val)
     {
       skipToOneOf("tf");
 
@@ -140,13 +140,13 @@ namespace bfu{
 
       return *this;
     }
-
-    JSONStream& Deserialize( SerializableBase& val )
+/*
+    JSONStream& operator>> ( SerializableBase& val )
     {
       val.Deserialize(*this);
       return *this;
     }
-
+*/
 
     JSONStream& Deserialize(std::string& val)
     {
@@ -253,13 +253,51 @@ namespace bfu{
     JSONStream& operator>> ( SerializableBase& val)
     {
       val.Deserialize(*this);
-
       return *this;
     }
 
-    JSONStream& operator>> ( JSONStream& val)
+    JSONStream& operator>> ( stream& val)
     {
-      this->Deserialize( val );
+      if(m_status < status::OK)
+      {
+        return *this;        
+      }
+
+      skipTo('\"');
+
+      char* skipper = m_readCursor+1;
+
+      while( m_readCursor!=m_last )
+      {
+        if( skipper[0] == '\"' && skipper[-1] != '\\' )
+        {
+          break;
+        }
+
+        ++skipper;
+      }
+
+      int size = skipper-m_readCursor+1;
+
+      val.grow( size );
+
+      for(char* cursor = m_readCursor+1; cursor<skipper; ++cursor)
+      {
+        if( cursor[0]=='\\' && cursor[1]=='\"' )
+        {
+          ++cursor;
+        }
+        else if( cursor[0]=='\"' && cursor[-1]!='\\' )
+        {
+          val.put( '\0' );
+          break;
+        }
+        val.put( *cursor );
+      }
+      
+
+      m_readCursor = skipper;
+      skipToOneOf(":,]}");
 
       return *this;
     }
@@ -267,66 +305,66 @@ namespace bfu{
 
 
 
-    JSONStream& Serialize(const float& val)
+    JSONStream& operator<<(const float& val)
     {
       this->sprintf("%f", val);
       return *this;
     }
 
-    JSONStream& Serialize(const int64_t& val)
+    JSONStream& operator<<(const int64_t& val)
     {
       this->sprintf("%" PRId64, val);
       return *this;
     }
-    JSONStream& Serialize(const int32_t& val)
+    JSONStream& operator<<(const int32_t& val)
     {
       this->sprintf("%" PRId32, val);
       return *this;
     }
-    JSONStream& Serialize(const int16_t& val)
+    JSONStream& operator<<(const int16_t& val)
     {
       this->sprintf("%" PRId16, val);
       return *this;
     }
-    JSONStream& Serialize(const int8_t& val)
+    JSONStream& operator<<(const int8_t& val)
     {
       this->sprintf("%" PRId8, val);
       return *this;
     }
 
-    JSONStream& Serialize(const uint64_t& val)
+    JSONStream& operator<<(const uint64_t& val)
     {
       this->sprintf("%" PRIu64, val);
       return *this;
     }
-    JSONStream& Serialize(const uint32_t& val)
+    JSONStream& operator<<(const uint32_t& val)
     {
       this->sprintf("%" PRIu32, val);
       return *this;
     }
-    JSONStream& Serialize(const uint16_t& val)
+    JSONStream& operator<<(const uint16_t& val)
     {
       this->sprintf("%" PRIu16, val);
       return *this;
     }
-    JSONStream& Serialize(const uint8_t& val)
+    JSONStream& operator<<(const uint8_t& val)
     {
       this->sprintf("%" PRIu8, val);
       return *this;
     }
 
-    JSONStream& Serialize(const bool& val)
+    JSONStream& operator<<(const bool& val)
     {
       this->sprintf("%s", (val ? "true" : "false") );
       return *this;
     }
-
-    JSONStream& Serialize( SerializableBase& val)
+/*
+    JSONStream& operator<<( SerializableBase& val)
     {
       val.Serialize(*this);
       return *this;
     }
-
+*/
     JSONStream& Serialize(const std::string& val)
     {
       const char* buff = val.c_str();
@@ -371,13 +409,25 @@ namespace bfu{
     JSONStream& operator<< ( SerializableBase& val)
     {
       val.Serialize(*this);
-
       return *this;
     }
 
-    JSONStream& operator<< ( JSONStream& val)
+    JSONStream& operator<< ( bfu::stream& val)
     {
-      this->Serialize( val );
+      int buffsize = val.size();
+
+      put('\"');
+
+      for(int i=0; i<buffsize; ++i)
+      {
+        if( val[i] == '\"' )
+        {
+          put('\\');
+        }
+        put(val[i]);
+      }
+
+      put('\"');
 
       return *this;
     }

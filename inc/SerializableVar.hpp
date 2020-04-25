@@ -44,12 +44,12 @@ namespace bfu{
 
 		virtual void Serialize(JSONStream& stream)
 		{
-			stream.Serialize(m_var);
+			stream << (m_var);
 		}
 		
 		virtual void Deserialize(JSONStream& stream)
 		{
-			stream.Deserialize(m_var);
+			stream >> (m_var);
 		}
 	};
 
@@ -75,7 +75,7 @@ namespace bfu{
 				parent->PushReferenceToMap(Name, this);
 		}
 
-		inline operator std::string() const
+		explicit inline operator std::string() const 
 		{
 			return *this;
 		}
