@@ -80,6 +80,11 @@ namespace bfu{
 			return *this;
 		}
 
+		inline std::string& GetRef()
+		{
+			return *this;
+		}
+
 		inline SerializableVar<std::string>& operator=(const std::string& val)
 		{
 			this->assign(val);
