@@ -33,8 +33,7 @@ namespace bfu{
 			:m_token()
 		{};
 
-		virtual ~SerializableClassBase()
-		{};
+		virtual ~SerializableClassBase();
 
 		virtual void Serialize(JSONStream& stream);
 
@@ -42,7 +41,10 @@ namespace bfu{
 
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
 		{
-			m_membersMap[memberName] = memberReference;
+			char* token = new char[ strlen(memberName) ];
+			strcpy( token, memberName );
+
+			m_membersMap[token] = memberReference;
 		}
 
 

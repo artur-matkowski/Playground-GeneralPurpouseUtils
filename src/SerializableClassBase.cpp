@@ -4,7 +4,15 @@
 
 
 namespace bfu{
+	SerializableClassBase::~SerializableClassBase()
+	{
+		auto last = m_membersMap.end();
 
+		for(auto it = m_membersMap.begin(); it != last; ++it)
+		{
+			delete (char*)it->first;
+		}
+	}
 	void SerializableClassBase::Serialize(JSONStream& stream)
 	{
 		stream.sprintf("{");
