@@ -6,12 +6,6 @@
 namespace bfu{
 	SerializableClassBase::~SerializableClassBase()
 	{
-		auto last = m_membersMap.end();
-
-		for(auto it = m_membersMap.begin(); it != last; ++it)
-		{
-			delete (char*)it->first;
-		}
 	}
 	void SerializableClassBase::Serialize(JSONStream& stream)
 	{
@@ -21,7 +15,7 @@ namespace bfu{
 
 		for(auto it = m_membersMap.begin(); it != last; )
 		{
-			stream.sprintf("\n\"%s\": ", it->first );
+			stream.sprintf("\n\"%s\": ", it->first.c_str() );
 
 			it->second->Serialize( stream );
 
@@ -47,7 +41,7 @@ namespace bfu{
 
 			stream.Deserialize( m_token );
 
-			m_membersMap[ m_token.c_str() ]->Deserialize( stream );
+			m_membersMap[ m_token.str() ]->Deserialize( stream );
 
 			stream.skipToOneOf("\"}");
 

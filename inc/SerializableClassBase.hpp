@@ -20,7 +20,7 @@ namespace bfu{
 	{
     	stream m_token;
 		//member name, member reference
-		std::map<const char*, SerializableBase*, cmpByStringLength> m_membersMap;
+		std::map<std::string, SerializableBase*> m_membersMap;
 
 		friend class JSONStream;
 
@@ -41,10 +41,7 @@ namespace bfu{
 
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
 		{
-			char* token = new char[ strlen(memberName) ];
-			strcpy( token, memberName );
-
-			m_membersMap[token] = memberReference;
+			m_membersMap[memberName] = memberReference;
 		}
 
 
