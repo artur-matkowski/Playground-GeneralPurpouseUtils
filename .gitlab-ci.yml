@@ -13,8 +13,15 @@ build:
     script:
         - make debug
         - make release
+        - make test
     only:
         - master
     tags:
         - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
 
