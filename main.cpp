@@ -17,7 +17,7 @@ using namespace bfu;
 
 int main(int argc, char** argv)
 {
-	if( arc < 2 )
+	if( argc < 2 )
 	{
 		cout << "\nUsage:";
 		cout << "\n\t" << argv[0] << " [1] [2]";

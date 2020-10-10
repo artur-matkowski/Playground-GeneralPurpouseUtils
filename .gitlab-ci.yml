@@ -13,6 +13,7 @@ build-rel:
         - ./prebuild.sh
     script:
         - make release
+        - find
     only:
         - master
     tags:
@@ -31,6 +32,7 @@ build-dbg:
         - ./prebuild.sh
     script:
         - make debug
+        - find
     only:
         - master
     tags:
@@ -44,10 +46,11 @@ build-dbg:
 
 
 
-tests:
+tests-json:
     stage: tests
     script:
         - ./build/rel/BFutils_tests
+        - find
     only:
         - master
     tags:
