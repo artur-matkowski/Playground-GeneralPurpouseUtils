@@ -49,8 +49,8 @@ build-dbg:
 tests-json:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests
         - find
+        - ./build/rel/BFutils_tests json
     only:
         - master
     tags:
