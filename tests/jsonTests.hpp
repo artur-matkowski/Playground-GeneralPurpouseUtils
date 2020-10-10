@@ -413,7 +413,7 @@ bool _TESTclassNestedJSON()
 	}
 }
 
-void jsonTests()
+bool jsonTests()
 {
 
 #define SEED 1584641152
@@ -493,6 +493,8 @@ void jsonTests()
 	{
 		log::error << "<<<<<<<<<<<<<<<< JOSN TESTS concluded : FAILED\n" << std::endl;	
 	}
+
+	return test;
 }
 
 #endif

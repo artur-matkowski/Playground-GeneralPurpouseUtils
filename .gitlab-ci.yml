@@ -3,6 +3,7 @@ variables:
 
 stages:
     - build
+    - tests
 
 
 
@@ -13,7 +14,23 @@ build:
     script:
         - make debug
         - make release
-        - make test
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+            - build
+
+
+
+tests:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests
     only:
         - master
     tags:

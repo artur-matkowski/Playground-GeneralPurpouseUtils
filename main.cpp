@@ -17,11 +17,14 @@ using namespace bfu;
 
 int main(int argc, char** argv)
 {
+	bool test = true;
+
 	//log::Log.EnableFileLogging();
 	//streamTests();
 	//loggingTests();
 
-	jsonTests();
+	
+	test = test && jsonTests();
 	//udpTests(argc, argv);
 
 	//EventTest(argc, argv);
@@ -30,8 +33,10 @@ int main(int argc, char** argv)
 	//cout << "\nProject Name: " << getenv("PROJECT_NAME") << std::endl;
 
 
-
-	return 0;
+	if(test)
+		return 0;
+	else
+		return -1;
 }
 
 
