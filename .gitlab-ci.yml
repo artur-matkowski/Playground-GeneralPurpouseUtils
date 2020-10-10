@@ -12,8 +12,25 @@ build:
     before_script:
         - ./prebuild.sh
     script:
-        - make debug
         - make release
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+            - build
+
+
+build:
+    stage: build
+    before_script:
+        - ./prebuild.sh
+    script:
+        - make debug
     only:
         - master
     tags:
