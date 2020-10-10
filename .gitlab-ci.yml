@@ -7,7 +7,7 @@ stages:
 
 
 
-build:
+build-rel:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -25,7 +25,7 @@ build:
             - build
 
 
-build:
+build-dbg:
     stage: build
     before_script:
         - ./prebuild.sh
