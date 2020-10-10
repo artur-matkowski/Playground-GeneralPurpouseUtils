@@ -58,6 +58,24 @@ int main(int argc, char** argv)
 		else
 			return -1;
 	}
+	else if( strcmp(argv[1], "udp") == 0 )
+	{
+		bool ret = loggingTests();
+
+		if(ret)
+			return 0;
+		else
+			return -1;
+	}
+	else if( strcmp(argv[1], "event") == 0 )
+	{
+		bool ret = loggingTests();
+
+		if(ret)
+			return 0;
+		else
+			return -1;
+	}
 
 	//log::Log.EnableFileLogging();
 	//streamTests();
@@ -77,7 +95,7 @@ int main(int argc, char** argv)
 	cout << "\n\t" << argv[0] << " [1] [2]";
 	cout << "\n\t[1]:";
 	cout << "\n\t\t- json    - runs json tests";
-	cout << "\n\t\t- strema  - runs stream rests";
+	cout << "\n\t\t- stream  - runs stream rests";
 	cout << "\n\t\t- logging - runs logging tests";
 	cout << "\n\t\t- udp     - runs udp tests";
 	cout << "\n\t\t- event   - event tests";

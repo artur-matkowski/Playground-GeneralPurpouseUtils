@@ -13,7 +13,6 @@ build-rel:
         - ./prebuild.sh
     script:
         - make release
-        - find
     only:
         - master
     tags:
@@ -32,7 +31,6 @@ build-dbg:
         - ./prebuild.sh
     script:
         - make debug
-        - find
     only:
         - master
     tags:
@@ -49,8 +47,71 @@ build-dbg:
 tests-json:
     stage: tests
     script:
-        - find
         - ./build/rel/BFutils_tests json
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-stream:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests stream
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-logging:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests logging
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-udp:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests udp
+    only:
+        - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-event:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests event
     only:
         - master
     tags:
