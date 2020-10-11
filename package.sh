@@ -55,4 +55,4 @@ mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf.deb
 
 scp deb/$HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
 
-rm -rf package deb
+rm -rf package
