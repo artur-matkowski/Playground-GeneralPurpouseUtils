@@ -114,7 +114,6 @@ tests-event:
 deploy:
     stage: deploy
     script:
-        - pwd
         - ./package.sh $CI_COMMIT_BRANCH
     only:
         - stable
@@ -125,6 +124,6 @@ deploy:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
         paths:
-            - Logs
+            - *.deb
 
 

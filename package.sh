@@ -1,10 +1,19 @@
 #!/bin/bash
 
-
 HIGH_NAME="high"
 LOW_NAME="low"
 BUILD_NAME="build"
 HERE=${PWD##*/}
+
+PREFIX="Package: linuxconfig
+\nVersion: "
+SUFFIX="Section: custom
+\nPriority: optional
+\nArchitecture: armhf
+\nEssential: no
+\nInstalled-Size: 1024
+\nMaintainer: bitforge.pl
+\nDescription: test package"
 
 echo Modifier: $1
 echo "Getting version for $HERE"
@@ -28,4 +37,21 @@ VERIOSN_STRING="$HIGH_NAME.$LOW_NAME.$BUILD_NUMBER"
 
 ssh debian@147.135.211.223 bash -c "'echo $BUILD_NUMBER > ./versions/$HERE-$BUILD_NAME'"
 
-echo $VERIOSN_STRING
+
+############## Creating package
+mkdir package
+mkdir package/DEBIAN
+
+echo -e $PREFIX$VERIOSN_STRING > package/DEBIAN/control
+echo -e $SUFFIX >> package/DEBIAN/control
+cat package/DEBIAN/control
+
+mkdir package/usr
+mkdir package/usr/lib
+cp build/rel/*.so package/usr/lib/$HERE.so
+dpkg-deb --build package
+mv package.deb $HERE-"$VERIOSN_STRING"_armhf.deb
+
+scp $HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
+
+rm -rf package
