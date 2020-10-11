@@ -54,6 +54,6 @@ mkdir deb
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf.deb
 
 scp deb/$HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
-ssh debian@147.135.211.223 'dpkg-scanpackages /var/www/html/debian /dev/null > /var/www/html/debian/Packages'
+ssh debian@147.135.211.223 'cd  /var/www/html/debian && dpkg-scanpackages . /dev/null > Packages'
 
 rm -rf package
