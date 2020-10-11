@@ -124,6 +124,6 @@ deploy:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
         paths:
-            - *.deb
+            - deb
 
 

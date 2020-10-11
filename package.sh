@@ -50,8 +50,9 @@ mkdir package/usr
 mkdir package/usr/lib
 cp build/rel/*.so package/usr/lib/$HERE.so
 dpkg-deb --build package
-mv package.deb $HERE-"$VERIOSN_STRING"_armhf.deb
+mkdir deb
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf.deb
 
-scp $HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
+scp deb/$HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
 
-rm -rf package
+rm -rf package deb
