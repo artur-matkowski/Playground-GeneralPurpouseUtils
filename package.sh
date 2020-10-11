@@ -5,7 +5,7 @@ LOW_NAME="low"
 BUILD_NAME="build"
 HERE=${PWD##*/}
 
-PREFIX="Package: bitforge_test
+PREFIX="Package: bitforgetest
 \nVersion: "
 SUFFIX="Section: custom
 \nPriority: optional
