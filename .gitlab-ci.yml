@@ -114,6 +114,7 @@ tests-event:
 deploy:
     stage: deploy
     script:
+        - pwd
         - ./package.sh $CI_COMMIT_BRANCH
     only:
         - stable
