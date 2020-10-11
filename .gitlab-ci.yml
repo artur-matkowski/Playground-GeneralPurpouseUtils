@@ -4,6 +4,7 @@ variables:
 stages:
     - build
     - tests
+    - deploy
 
 
 
@@ -114,6 +115,23 @@ tests-event:
         - ./build/rel/BFutils_tests event
     only:
         - master
+    tags:
+        - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+deploy:
+    stage: deploy
+    script:
+        - ./package.sh $CI_COMMIT_BRANCH
+    only:
+        - stable
+        - test
     tags:
         - rpi-biurko
     artifacts:
