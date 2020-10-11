@@ -5,15 +5,15 @@ LOW_NAME="low"
 BUILD_NAME="build"
 HERE=${PWD##*/}
 
-PREFIX="Package: bitforgetest
-\nVersion: "
+PACKAGE="Package: $HERE"
+PREFIX="\nVersion: "
 SUFFIX="Section: custom
 \nPriority: optional
 \nArchitecture: armhf
 \nEssential: no
 \nInstalled-Size: 1024
 \nMaintainer: bitforge.pl
-\nDescription: test package"
+\nDescription: BitForge utilities support package (json, events, networked events (RPC), advanced logging"
 
 echo Modifier: $1
 echo "Getting version for $HERE"
@@ -42,18 +42,48 @@ ssh debian@147.135.211.223 bash -c "'echo $BUILD_NUMBER > ./versions/$HERE-$BUIL
 mkdir package
 mkdir package/DEBIAN
 
-echo -e $PREFIX$VERIOSN_STRING > package/DEBIAN/control
+
+echo -e $PACKAGE$PREFIX$VERIOSN_STRING > package/DEBIAN/control
 echo -e $SUFFIX >> package/DEBIAN/control
 cat package/DEBIAN/control
 
 mkdir package/usr
 mkdir package/usr/lib
-cp build/rel/*.so package/usr/lib/$HERE.so
+mkdir package/usr/lib/bitforge
+cp build/rel/*.so package/usr/lib/bitforge/$HERE.so
 dpkg-deb --build package
 mkdir deb
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf.deb
 
+
+############## Creating dev package
+echo -e $PACKAGE-dev$PREFIX$VERIOSN_STRING > package/DEBIAN/control
+echo -e $SUFFIX >> package/DEBIAN/control
+cat package/DEBIAN/control
+
+mkdir package/usr/include
+mkdir package/usr/include/bitforge
+mkdir package/usr/include/bitforge/utils
+cp inc/* package/usr/include/bitforge/utils/
+dpkg-deb --build package
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf-dev.deb
+
+
+############## Creating dev-dbg package
+echo -e $PACKAGE-dev-dbg$PREFIX$VERIOSN_STRING > package/DEBIAN/control
+echo -e $SUFFIX >> package/DEBIAN/control
+cat package/DEBIAN/control
+
+cp build/dbg/*.so package/usr/lib/bitforge/$HERE-dev-dbg.so
+dpkg-deb --build package
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb
+
+
+
+
 scp deb/$HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
+scp deb/$HERE-"$VERIOSN_STRING"_armhf-dev.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf-dev.deb
+scp deb/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb
 ssh debian@147.135.211.223 'cd  /var/www/html/debian && dpkg-scanpackages . /dev/null > Packages'
 
 rm -rf package

@@ -22,6 +22,7 @@ build-rel:
         paths:
             - Logs
             - build
+            - inc
 
 
 build-dbg:
@@ -38,6 +39,7 @@ build-dbg:
         paths:
             - Logs
             - build
+            - inc
 
 
 
