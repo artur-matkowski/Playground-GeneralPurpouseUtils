@@ -4,6 +4,7 @@ HIGH_NAME="high"
 LOW_NAME="low"
 BUILD_NAME="build"
 HERE=${PWD##*/}
+ARCHITECTURE=`dpkg --print-architecture`
 
 PACKAGE="Package: $HERE"
 PREFIX="\nVersion: "
@@ -12,7 +13,8 @@ SUFFIX="Section: custom
 \nArchitecture: armhf
 \nEssential: no
 \nInstalled-Size: 1024
-\nMaintainer: bitforge.pl
+\nMaintainer: artur.matkowski.zan@gmail.com
+\nHomepage: bitforge.pl
 \nDescription: BitForge utilities support package (json, events, networked events (RPC), advanced logging"
 
 echo Modifier: $1
@@ -35,6 +37,9 @@ fi
 
 VERIOSN_STRING="$HIGH_NAME.$LOW_NAME.$BUILD_NUMBER"
 
+echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE"
+exit 0
+
 ssh debian@147.135.211.223 bash -c "'echo $BUILD_NUMBER > ./versions/$HERE-$BUILD_NAME'"
 
 
@@ -53,37 +58,42 @@ mkdir package/usr/lib/bitforge
 cp build/rel/*.so package/usr/lib/bitforge/$HERE.so
 dpkg-deb --build package
 mkdir deb
-mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf.deb
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
 
 
 ############## Creating dev package
 echo -e $PACKAGE-dev$PREFIX$VERIOSN_STRING > package/DEBIAN/control
 echo -e $SUFFIX >> package/DEBIAN/control
+echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
+rm -rf package/usr/lib
 mkdir package/usr/include
 mkdir package/usr/include/bitforge
 mkdir package/usr/include/bitforge/utils
 cp inc/* package/usr/include/bitforge/utils/
 dpkg-deb --build package
-mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf-dev.deb
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
 
 
 ############## Creating dev-dbg package
 echo -e $PACKAGE-dev-dbg$PREFIX$VERIOSN_STRING > package/DEBIAN/control
 echo -e $SUFFIX >> package/DEBIAN/control
+echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE-dev" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
+mkdir package/usr/lib
+mkdir package/usr/lib/bitforge
 cp build/dbg/*.so package/usr/lib/bitforge/$HERE-dev-dbg.so
 dpkg-deb --build package
-mv package.deb deb/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb
+mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 
 
 
 
-scp deb/$HERE-"$VERIOSN_STRING"_armhf.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf.deb
-scp deb/$HERE-"$VERIOSN_STRING"_armhf-dev.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf-dev.deb
-scp deb/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_armhf-dev-dbg.deb
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 ssh debian@147.135.211.223 'cd  /var/www/html/debian && dpkg-scanpackages . /dev/null > Packages'
 
 rm -rf package
