@@ -62,7 +62,7 @@ mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
 ############## Creating dev package
 echo -e $PACKAGE-dev$PREFIX$VERIOSN_STRING > package/DEBIAN/control
 echo -e $SUFFIX >> package/DEBIAN/control
-echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE" >> package/DEBIAN/control
+echo "Depends: $HERE" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
 rm -rf package/usr/lib
@@ -77,7 +77,7 @@ mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
 ############## Creating dev-dbg package
 echo -e $PACKAGE-dev-dbg$PREFIX$VERIOSN_STRING > package/DEBIAN/control
 echo -e $SUFFIX >> package/DEBIAN/control
-echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE-dev" >> package/DEBIAN/control
+echo "Depends: $HERE-dev" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
 mkdir package/usr/lib
