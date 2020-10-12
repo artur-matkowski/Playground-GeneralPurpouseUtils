@@ -37,8 +37,6 @@ fi
 
 VERIOSN_STRING="$HIGH_NAME.$LOW_NAME.$BUILD_NUMBER"
 
-echo "Depends: $HERE-${VERIOSN_STRING}_$ARCHITECTURE"
-exit 0
 
 ssh debian@147.135.211.223 bash -c "'echo $BUILD_NUMBER > ./versions/$HERE-$BUILD_NAME'"
 
@@ -84,7 +82,7 @@ cat package/DEBIAN/control
 
 mkdir package/usr/lib
 mkdir package/usr/lib/bitforge
-cp build/dbg/*.so package/usr/lib/bitforge/$HERE-dev-dbg.so
+cp build/dbg/*.so package/usr/lib/bitforge/$HERE-dbg.so
 dpkg-deb --build package
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 
