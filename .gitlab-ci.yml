@@ -118,7 +118,6 @@ deploy-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - deb
 
