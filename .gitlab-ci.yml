@@ -18,7 +18,6 @@ build-rel-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -36,7 +35,6 @@ build-dbg-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -52,7 +50,6 @@ tests-json-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -66,7 +63,6 @@ tests-stream-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -80,7 +76,6 @@ tests-logging-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -94,7 +89,6 @@ tests-udp-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -108,7 +102,6 @@ tests-event-armhf:
         - rpi-biurko
     cache:
         key: armhf
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -142,7 +135,6 @@ build-rel-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -160,7 +152,6 @@ build-dbg-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -176,7 +167,6 @@ tests-json-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -190,7 +180,6 @@ tests-stream-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -204,7 +193,6 @@ tests-logging-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -218,7 +206,6 @@ tests-udp-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -232,7 +219,6 @@ tests-event-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - Logs
 
@@ -249,7 +235,6 @@ deploy-amd64:
         - amd64
     cache:
         key: amd64
-        expire_in: 1 week
         paths:
             - deb
 
