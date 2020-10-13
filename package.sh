@@ -5,6 +5,8 @@ LOW_NAME="low"
 BUILD_NAME="build"
 HERE=${PWD##*/}
 ARCHITECTURE=`dpkg --print-architecture`
+DISTRO=`lsb_release -a 2>/dev/null | grep Codename: | awk '{print $2}'`
+
 
 PACKAGE="Package: $HERE"
 PREFIX="\nVersion: "
@@ -89,9 +91,9 @@ mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 
 
 
-scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
-scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
-scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb debian@147.135.211.223:/var/www/html/debian/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
-ssh debian@147.135.211.223 'cd  /var/www/html/debian && dpkg-scanpackages . /dev/null > Packages'
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
+scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
+ssh debian@147.135.211.223 "cd /var/www/html/repo/$1 && dpkg-scanpackages . /dev/null > Packages"
 
 rm -rf package
