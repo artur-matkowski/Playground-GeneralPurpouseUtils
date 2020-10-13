@@ -8,7 +8,7 @@ stages:
 
 
 
-build-rel:
+build-rel-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -25,7 +25,8 @@ build-rel:
             - inc
 
 
-build-dbg:
+
+build-dbg-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -43,7 +44,7 @@ build-dbg:
 
 
 
-tests-json:
+tests-json-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests json
@@ -57,7 +58,7 @@ tests-json:
 
 
 
-tests-stream:
+tests-stream-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests stream
@@ -71,7 +72,7 @@ tests-stream:
 
 
 
-tests-logging:
+tests-logging-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests logging
@@ -85,7 +86,7 @@ tests-logging:
 
 
 
-tests-udp:
+tests-udp-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests udp
@@ -99,7 +100,7 @@ tests-udp:
 
 
 
-tests-event:
+tests-event-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests event
@@ -113,7 +114,7 @@ tests-event:
 
 
 
-deploy:
+deploy-armhf:
     stage: deploy
     script:
         - ./package.sh $CI_COMMIT_BRANCH
@@ -122,6 +123,130 @@ deploy:
         - test
     tags:
         - rpi-biurko
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - deb
+
+
+
+
+build-rel-amd64:
+    stage: build
+    before_script:
+        - ./prebuild.sh
+    script:
+        - make release
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+            - build
+            - inc
+
+
+
+build-dbg-amd64:
+    stage: build
+    before_script:
+        - ./prebuild.sh
+    script:
+        - make debug
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+            - build
+            - inc
+
+
+
+tests-json-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests json
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-stream-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests stream
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-logging-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests logging
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-udp-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests udp
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+tests-event-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests event
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+
+
+deploy-amd64:
+    stage: deploy
+    script:
+        - ./package.sh $CI_COMMIT_BRANCH
+    only:
+        - stable
+        - test
+    tags:
+        - amd64
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
