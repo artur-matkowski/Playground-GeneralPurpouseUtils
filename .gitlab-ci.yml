@@ -16,8 +16,8 @@ build-rel-armhf:
         - make release
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -34,8 +34,8 @@ build-dbg-armhf:
         - make debug
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -50,8 +50,8 @@ tests-json-armhf:
         - ./build/rel/BFutils_tests json
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -64,8 +64,8 @@ tests-stream-armhf:
         - ./build/rel/BFutils_tests stream
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -78,8 +78,8 @@ tests-logging-armhf:
         - ./build/rel/BFutils_tests logging
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -92,8 +92,8 @@ tests-udp-armhf:
         - ./build/rel/BFutils_tests udp
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -106,8 +106,8 @@ tests-event-armhf:
         - ./build/rel/BFutils_tests event
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - Logs
@@ -123,8 +123,8 @@ deploy-armhf:
         - test
     tags:
         - rpi-biurko
-    artifacts:
-        name: armhf-OBJ_$COMMIT_TIME
+    cache:
+        key: armhf
         expire_in: 1 week
         paths:
             - deb
@@ -140,8 +140,8 @@ build-rel-amd64:
         - make release
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -158,8 +158,8 @@ build-dbg-amd64:
         - make debug
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -174,8 +174,8 @@ tests-json-amd64:
         - ./build/rel/BFutils_tests json
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -188,8 +188,8 @@ tests-stream-amd64:
         - ./build/rel/BFutils_tests stream
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -202,8 +202,8 @@ tests-logging-amd64:
         - ./build/rel/BFutils_tests logging
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -216,8 +216,8 @@ tests-udp-amd64:
         - ./build/rel/BFutils_tests udp
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -230,8 +230,8 @@ tests-event-amd64:
         - ./build/rel/BFutils_tests event
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - Logs
@@ -247,8 +247,8 @@ deploy-amd64:
         - test
     tags:
         - amd64
-    artifacts:
-        name: amd64-OBJ_$COMMIT_TIME
+    cache:
+        key: amd64
         expire_in: 1 week
         paths:
             - deb
