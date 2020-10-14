@@ -5,127 +5,110 @@ stages:
     - build
     - tests
     - deploy
+    - updateRepo
 
 
 
-build-rel:
+build-rel-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
     script:
         - make release
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
             - build
+            - inc
 
 
-build-dbg:
+
+build-dbg-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
     script:
         - make debug
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
             - build
+            - inc
 
 
 
-tests-json:
+tests-json-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests json
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
 
 
 
-tests-stream:
+tests-stream-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests stream
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
 
 
 
-tests-logging:
+tests-logging-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests logging
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
 
 
 
-tests-udp:
+tests-udp-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests udp
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
 
 
 
-tests-event:
+tests-event-armhf:
     stage: tests
     script:
         - ./build/rel/BFutils_tests event
-    only:
-        - master
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
         paths:
             - Logs
 
 
 
-deploy:
+deploy-armhf:
     stage: deploy
     script:
         - ./package.sh $CI_COMMIT_BRANCH
@@ -134,10 +117,137 @@ deploy:
         - test
     tags:
         - rpi-biurko
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
+    cache:
+        key: armhf
+        paths:
+            - deb
+
+
+
+
+build-rel-amd64:
+    stage: build
+    before_script:
+        - ./prebuild.sh
+    script:
+        - make release
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+            - build
+            - inc
+
+
+
+build-dbg-amd64:
+    stage: build
+    before_script:
+        - ./prebuild.sh
+    script:
+        - make debug
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+            - build
+            - inc
+
+
+
+tests-json-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests json
+    tags:
+        - amd64
+    cache:
+        key: amd64
         paths:
             - Logs
 
 
+
+tests-stream-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests stream
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+
+
+
+tests-logging-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests logging
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+
+
+
+tests-udp-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests udp
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+
+
+
+tests-event-amd64:
+    stage: tests
+    script:
+        - ./build/rel/BFutils_tests event
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - Logs
+
+
+
+deploy-amd64:
+    stage: deploy
+    script:
+        - ./package.sh $CI_COMMIT_BRANCH
+    only:
+        - stable
+        - test
+    tags:
+        - amd64
+    cache:
+        key: amd64
+        paths:
+            - deb
+
+
+
+
+updateRepo:
+    stage: updateRepo
+    script:
+        - ssh debian@147.135.211.223 "cd /var/www/html/repo/$CI_COMMIT_BRANCH && dpkg-scanpackages --multiversion . /dev/null > Packages"
+        - ./increment_version.sh $CI_COMMIT_BRANCH
+    only:
+        - stable
+        - test
+    tags:
+        - amd64
