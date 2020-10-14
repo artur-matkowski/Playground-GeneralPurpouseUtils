@@ -12,7 +12,7 @@ PACKAGE="Package: $HERE"
 PREFIX="\nVersion: "
 SUFFIX="Section: custom
 \nPriority: optional
-\nArchitecture: armhf
+\nArchitecture: $ARCHITECTURE
 \nEssential: no
 \nInstalled-Size: 1024
 \nMaintainer: artur.matkowski.zan@gmail.com
