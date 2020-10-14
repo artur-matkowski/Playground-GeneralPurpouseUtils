@@ -244,8 +244,8 @@ deploy-amd64:
 updateRepo:
     stage: updateRepo
     script:
-        - ssh debian@147.135.211.223 "cd /var/www/html/repo/test && dpkg-scanpackages . /dev/null > Packages"
-        - ssh debian@147.135.211.223 "cd /var/www/html/repo/stable && dpkg-scanpackages . /dev/null > Packages"
+        - ssh debian@147.135.211.223 "cd /var/www/html/repo/test && dpkg-scanpackages --multiversion . /dev/null > Packages"
+        - ssh debian@147.135.211.223 "cd /var/www/html/repo/stable && dpkg-scanpackages --multiversion . /dev/null > Packages"
         - ./increment_version.sh $CI_COMMIT_BRANCH
     only:
         - stable
