@@ -94,6 +94,6 @@ mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
 scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev.deb
 scp deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb debian@147.135.211.223:/var/www/html/repo/$1/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
-#ssh debian@147.135.211.223 "cd /var/www/html/repo/$1 && dpkg-scanpackages . /dev/null > Packages"
+ssh debian@147.135.211.223 "cd /var/www/html/repo/$1 && dpkg-scanpackages . /dev/null > Packages"
 
 rm -rf package
