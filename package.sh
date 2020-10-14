@@ -54,8 +54,7 @@ cat package/DEBIAN/control
 
 mkdir package/usr
 mkdir package/usr/lib
-mkdir package/usr/lib/bitforge
-cp build/rel/*.so package/usr/lib/bitforge/$HERE.so
+cp build/rel/*.so package/usr/lib/lib$HERE.so
 dpkg-deb --build package
 mkdir deb
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
@@ -83,8 +82,7 @@ echo "Depends: $HERE-dev" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
 mkdir package/usr/lib
-mkdir package/usr/lib/bitforge
-cp build/dbg/*.so package/usr/lib/bitforge/$HERE-dbg.so
+cp build/dbg/*.so package/usr/lib/lib$HERE-dbg.so
 dpkg-deb --build package
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 
