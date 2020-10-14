@@ -1,0 +1,31 @@
+#!/bin/bash
+
+HIGH_NAME="high"
+LOW_NAME="low"
+BUILD_NAME="build"
+HERE=${PWD##*/}
+ARCHITECTURE=`dpkg --print-architecture`
+DISTRO=`lsb_release -a 2>/dev/null | grep Codename: | awk '{print $2}'`
+
+
+echo "Getting version for $HERE"
+
+
+HIGH_NAME=`ssh debian@147.135.211.223 cat ./versions/$HERE-$HIGH_NAME`
+LOW_NAME=`ssh debian@147.135.211.223 cat ./versions/$HERE-$LOW_NAME`
+BUILD_NUMBER=`ssh debian@147.135.211.223 cat ./versions/$HERE-$BUILD_NAME`
+
+
+let "BUILD_NUMBER++"
+
+
+if [ "$1" = "stable" ]; then
+	echo Incrementing stable build counter
+	let "LOW_NAME++"
+	ssh debian@147.135.211.223 bash -c "'echo $LOW_NAME > ./versions/$HERE-$LOW_NAME'"
+fi
+
+VERIOSN_STRING="$HIGH_NAME.$LOW_NAME.$BUILD_NUMBER"
+
+
+ssh debian@147.135.211.223 bash -c "'echo $BUILD_NUMBER > ./versions/$HERE-$BUILD_NAME'"
