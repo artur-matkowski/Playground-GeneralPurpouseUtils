@@ -46,7 +46,7 @@ build-dbg-armhf:
 tests-json-armhf:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests json
+        - ./build/armhf/rel/BFutils_tests json
     tags:
         - rpi-biurko
     cache:
