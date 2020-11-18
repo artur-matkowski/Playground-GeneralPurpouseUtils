@@ -13,6 +13,7 @@ INSTALLDIR	= /usr/lib/
 HEADERDIR	= /usr/include/
 
 SOURCES	= $(shell ls $(SRCDIR))
+ARCHITECTURE = $(shell dpkg --print-architecture)
 
 DEPOBJ =  
 
@@ -25,15 +26,15 @@ all:
 	make release
 
 debug: CC += -g -DLOG_LEVEL=DebugLevel::ALL
-debug: BUILDPATH = build/dbg/
-debug: OBJDIR = build/dbg/obj/
+debug: BUILDPATH = build/$(ARCHITECTURE)/dbg/
+debug: OBJDIR = build/$(ARCHITECTURE)/dbg/obj/
 debug: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
 #debug: DEPS_OBJ		= 	$(addsuffix /build/dbg/obj/*,$(DEPS))
 debug: $(SOURCES) $(OUT) 
 
 release: CC += -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
-release: BUILDPATH = build/rel/
-release: OBJDIR = build/rel/obj/
+release: BUILDPATH = build/$(ARCHITECTURE)/rel/
+release: OBJDIR = build/$(ARCHITECTURE)/rel/obj/
 release: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
 #release: DEPS_OBJ		= 	$(addsuffix /build/rel/obj/*,$(DEPS))
 release: $(SOURCES) $(OUT) 
