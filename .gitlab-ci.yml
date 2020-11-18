@@ -59,7 +59,7 @@ tests-json-armhf:
 tests-stream-armhf:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests stream
+        - ./build/armhf/rel/BFutils_tests stream
     tags:
         - rpi-biurko
     cache:
@@ -72,7 +72,7 @@ tests-stream-armhf:
 tests-logging-armhf:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests logging
+        - ./build/armhf/rel/BFutils_tests logging
     tags:
         - rpi-biurko
     cache:
@@ -85,7 +85,7 @@ tests-logging-armhf:
 tests-udp-armhf:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests udp
+        - ./build/armhf/rel/BFutils_tests udp
     tags:
         - rpi-biurko
     cache:
@@ -98,7 +98,7 @@ tests-udp-armhf:
 tests-event-armhf:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests event
+        - ./build/armhf/rel/BFutils_tests event
     tags:
         - rpi-biurko
     cache:
@@ -162,7 +162,7 @@ build-dbg-amd64:
 tests-json-amd64:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests json
+        - ./build/amd64/rel/BFutils_tests json
     tags:
         - amd64
     cache:
@@ -175,7 +175,7 @@ tests-json-amd64:
 tests-stream-amd64:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests stream
+        - ./build/amd64/rel/BFutils_tests stream
     tags:
         - amd64
     cache:
@@ -188,7 +188,7 @@ tests-stream-amd64:
 tests-logging-amd64:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests logging
+        - ./build/amd64/rel/BFutils_tests logging
     tags:
         - amd64
     cache:
@@ -201,7 +201,7 @@ tests-logging-amd64:
 tests-udp-amd64:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests udp
+        - ./build/amd64/rel/BFutils_tests udp
     tags:
         - amd64
     cache:
@@ -214,7 +214,7 @@ tests-udp-amd64:
 tests-event-amd64:
     stage: tests
     script:
-        - ./build/rel/BFutils_tests event
+        - ./build/amd64/rel/BFutils_tests event
     tags:
         - amd64
     cache:
