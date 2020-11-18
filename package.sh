@@ -54,7 +54,7 @@ cat package/DEBIAN/control
 
 mkdir package/usr
 mkdir package/usr/lib
-cp build/rel/*.so package/usr/lib/lib$HERE.so
+cp build/$ARCHITECTURE/rel/*.so package/usr/lib/lib$HERE.so
 dpkg-deb --build package
 mkdir deb
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE.deb
@@ -82,7 +82,7 @@ echo "Depends: $HERE-dev" >> package/DEBIAN/control
 cat package/DEBIAN/control
 
 mkdir package/usr/lib
-cp build/dbg/*.so package/usr/lib/lib$HERE-dbg.so
+cp build/$ARCHITECTURE/dbg/*.so package/usr/lib/lib$HERE-dbg.so
 dpkg-deb --build package
 mv package.deb deb/$HERE-"$VERIOSN_STRING"_$ARCHITECTURE-dev-dbg.deb
 
