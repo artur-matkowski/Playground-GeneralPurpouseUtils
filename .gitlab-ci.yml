@@ -16,7 +16,7 @@ build-rel-armhf:
     script:
         - make release
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -33,7 +33,7 @@ build-dbg-armhf:
     script:
         - make debug
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -48,7 +48,7 @@ tests-json-armhf:
     script:
         - ./build/armhf/rel/BFutils_tests json
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -61,7 +61,7 @@ tests-stream-armhf:
     script:
         - ./build/armhf/rel/BFutils_tests stream
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -74,7 +74,7 @@ tests-logging-armhf:
     script:
         - ./build/armhf/rel/BFutils_tests logging
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -87,7 +87,7 @@ tests-udp-armhf:
     script:
         - ./build/armhf/rel/BFutils_tests udp
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -100,7 +100,7 @@ tests-event-armhf:
     script:
         - ./build/armhf/rel/BFutils_tests event
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
@@ -116,7 +116,7 @@ deploy-armhf:
         - stable
         - test
     tags:
-        - rpi-biurko
+        - testpi0
     cache:
         key: armhf
         paths:
