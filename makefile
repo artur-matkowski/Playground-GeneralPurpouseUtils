@@ -64,6 +64,7 @@ remove:
 
 
 install:
-	cp build/dbg/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
-	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
-	cp -r inc $(HEADERDIR)$(OUT)  
+	sudo ./install.sh
+	#cp build/dbg/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
+	#ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
+	#cp -r inc $(HEADERDIR)$(OUT)  
