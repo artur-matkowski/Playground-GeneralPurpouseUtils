@@ -18,7 +18,8 @@ build-rel-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -35,7 +36,8 @@ build-dbg-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -50,7 +52,8 @@ tests-json-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -63,7 +66,8 @@ tests-stream-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -76,7 +80,8 @@ tests-logging-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -89,7 +94,8 @@ tests-udp-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -102,7 +108,8 @@ tests-event-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -118,7 +125,8 @@ deploy-armhf:
     tags:
         - testpi0
     artifacts:
-        key: armhf
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - deb
 
@@ -134,7 +142,8 @@ build-rel-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -151,7 +160,8 @@ build-dbg-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
             - build
@@ -166,7 +176,8 @@ tests-json-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -179,7 +190,8 @@ tests-stream-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -192,7 +204,8 @@ tests-logging-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -205,7 +218,8 @@ tests-udp-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -218,7 +232,8 @@ tests-event-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - Logs
 
@@ -234,7 +249,8 @@ deploy-amd64:
     tags:
         - amd64
     artifacts:
-        key: amd64
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
         paths:
             - deb
 
