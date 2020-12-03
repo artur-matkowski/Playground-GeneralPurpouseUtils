@@ -17,7 +17,7 @@ build-rel-armhf:
         - make release
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -34,7 +34,7 @@ build-dbg-armhf:
         - make debug
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -49,7 +49,7 @@ tests-json-armhf:
         - ./build/armhf/rel/BFutils_tests json
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -62,7 +62,7 @@ tests-stream-armhf:
         - ./build/armhf/rel/BFutils_tests stream
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -75,7 +75,7 @@ tests-logging-armhf:
         - ./build/armhf/rel/BFutils_tests logging
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -88,7 +88,7 @@ tests-udp-armhf:
         - ./build/armhf/rel/BFutils_tests udp
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -101,7 +101,7 @@ tests-event-armhf:
         - ./build/armhf/rel/BFutils_tests event
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - Logs
@@ -117,7 +117,7 @@ deploy-armhf:
         - test
     tags:
         - testpi0
-    cache:
+    artifacts:
         key: armhf
         paths:
             - deb
@@ -133,7 +133,7 @@ build-rel-amd64:
         - make release
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -150,7 +150,7 @@ build-dbg-amd64:
         - make debug
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -165,7 +165,7 @@ tests-json-amd64:
         - ./build/amd64/rel/BFutils_tests json
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -178,7 +178,7 @@ tests-stream-amd64:
         - ./build/amd64/rel/BFutils_tests stream
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -191,7 +191,7 @@ tests-logging-amd64:
         - ./build/amd64/rel/BFutils_tests logging
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -204,7 +204,7 @@ tests-udp-amd64:
         - ./build/amd64/rel/BFutils_tests udp
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -217,7 +217,7 @@ tests-event-amd64:
         - ./build/amd64/rel/BFutils_tests event
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - Logs
@@ -233,7 +233,7 @@ deploy-amd64:
         - test
     tags:
         - amd64
-    cache:
+    artifacts:
         key: amd64
         paths:
             - deb
