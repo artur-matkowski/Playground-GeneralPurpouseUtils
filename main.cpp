@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "udp") == 0 )
 	{
-		bool ret = loggingTests();
+		bool ret = udpTests(argc, argv);
 
 		if(ret)
 			return 0;
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "event") == 0 )
 	{
-		bool ret = loggingTests();
+		bool ret = EventTest();
 
 		if(ret)
 			return 0;
