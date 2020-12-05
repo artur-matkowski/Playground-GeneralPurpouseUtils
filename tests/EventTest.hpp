@@ -30,14 +30,15 @@ bool EventTest()
 {
 
 	int test = 5;
-    bfu::CallbackId id;
-    int result;
+    bfu::CallbackId id = 0;
+    int result = 0;
 
-    bfu::EventSystem es;
+    bfu::EventSystem es = bfu::EventSystem();
 
 
 	if(fork() == 0)
 	{
+		
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 		es.RegisterPropagationTarget("127.0.0.1", 8888);
@@ -58,7 +59,7 @@ bool EventTest()
 	    });
 
 	    exit(0);
-
+		
 	}
 	else
 	{

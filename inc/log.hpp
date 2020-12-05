@@ -45,7 +45,7 @@ public:
                 bfu::stream     	stream;
                 DebugLevel 			level = DebugLevel::ALL;
                 bool 				loggingToFile = false;
-                char*        		LogFileName;
+                char*        		LogFileName = 0;
                 const char*			path = "./Logs/";
                	std::ofstream 		outfile;
 
@@ -72,7 +72,12 @@ public:
 
                     LogFileName = new char[ stm.size() ];
 
-                    sprintf(LogFileName, stm.str().c_str());
+                    memcpy(LogFileName, stm.str().c_str(), stm.size() );
+                }
+                ~OutStream()
+                {
+                    if(LogFileName!=0) 
+                        delete[] LogFileName;
                 }
             	OutStream& operator()(const char* file, int line)
             	{

@@ -191,14 +191,15 @@ namespace bfu{
 
 		inline void resize(int newsize)
 		{
-			newsize = std::max(newsize, m_minimalbuffsize);
+			newsize = std::max(newsize+1, m_minimalbuffsize);
 			char* newbuff = new char[newsize];
 			int toCopy = std::min(newsize, (int)(m_writeCursor-m_first));
 
-			std::memset(newbuff, ' ', newsize);
+			std::memset(newbuff, '\0', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
 
-			delete[] m_first;
+			if(m_first!=0)
+				delete[] m_first;
 
 			int readOffset = m_readCursor - m_first;
 
