@@ -48,7 +48,7 @@ build-dbg-armhf:
 tests-json-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/BFutils_tests json
+        - ./build/armhf/rel/bitforgeutils_tests json
     tags:
         - testpi0
     artifacts:
@@ -62,7 +62,7 @@ tests-json-armhf:
 tests-stream-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/BFutils_tests stream
+        - ./build/armhf/rel/bitforgeutils_tests stream
     tags:
         - testpi0
     artifacts:
@@ -76,7 +76,7 @@ tests-stream-armhf:
 tests-logging-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/BFutils_tests logging
+        - ./build/armhf/rel/bitforgeutils_tests logging
     tags:
         - testpi0
     artifacts:
@@ -90,7 +90,7 @@ tests-logging-armhf:
 tests-udp-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/BFutils_tests udp
+        - ./build/armhf/rel/bitforgeutils_tests udp
     tags:
         - testpi0
     artifacts:
@@ -104,7 +104,7 @@ tests-udp-armhf:
 tests-event-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/BFutils_tests event
+        - ./build/armhf/rel/bitforgeutils_tests event
     tags:
         - testpi0
     artifacts:
@@ -172,7 +172,7 @@ build-dbg-amd64:
 tests-json-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/BFutils_tests json
+        - ./build/amd64/rel/bitforgeutils_tests json
     tags:
         - amd64
     artifacts:
@@ -186,7 +186,7 @@ tests-json-amd64:
 tests-stream-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/BFutils_tests stream
+        - ./build/amd64/rel/bitforgeutils_tests stream
     tags:
         - amd64
     artifacts:
@@ -200,7 +200,7 @@ tests-stream-amd64:
 tests-logging-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/BFutils_tests logging
+        - ./build/amd64/rel/bitforgeutils_tests logging
     tags:
         - amd64
     artifacts:
@@ -214,7 +214,7 @@ tests-logging-amd64:
 tests-udp-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/BFutils_tests udp
+        - ./build/amd64/rel/bitforgeutils_tests udp
     tags:
         - amd64
     artifacts:
@@ -228,7 +228,7 @@ tests-udp-amd64:
 tests-event-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/BFutils_tests event
+        - ./build/amd64/rel/bitforgeutils_tests event
     tags:
         - amd64
     artifacts:
