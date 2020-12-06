@@ -1,4 +1,4 @@
-OUT		 = BFutils
+OUT		 = bitforgeutils
 VERSION	 = .1.0.0
 
 
@@ -59,12 +59,13 @@ clean:
 	rm Logs/*
 
 remove:
-	rm -rf $(HEADERDIR)$(OUT)  
+	rm -rf $(HEADERDIR)bitforge/utils
 	rm ${INSTALLDIR}lib${OUT}.so*
 
 
 install:
-	sudo ./install.sh
-	#cp build/dbg/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
-	#ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
-	#cp -r inc $(HEADERDIR)$(OUT)  
+	mkdir -p $(HEADERDIR)bitforge
+	mkdir -p $(HEADERDIR)bitforge/utils
+	cp build/${ARCHITECTURE}/dbg/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
+	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
+	cp -r inc/* $(HEADERDIR)bitforge/utils

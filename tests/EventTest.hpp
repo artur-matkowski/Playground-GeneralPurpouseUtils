@@ -26,18 +26,19 @@ public:
 };
 
 
-bool EventTest(int argc, char** argv)
+bool EventTest()
 {
 
 	int test = 5;
-    bfu::CallbackId id;
-    int result;
+    bfu::CallbackId id = 0;
+    int result = 0;
 
-    bfu::EventSystem es;
+    bfu::EventSystem es = bfu::EventSystem();
 
 
-	if(argc>1 && strcmp(argv[1], "sender") == 0 )
+	if(fork() == 0)
 	{
+		
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 		es.RegisterPropagationTarget("127.0.0.1", 8888);
@@ -49,7 +50,7 @@ bool EventTest(int argc, char** argv)
 	    {
 		    EventArgs* args = (EventArgs*)&a;
 	    	test += args->m_var; 
-			log::info << "testEvent invoked " << test << std::endl;
+			log::info << "testEvent invoked1 " << test << std::endl;
 	    });
 
     	es.Invoke<EventArgs>([&](EventArgs& args) 
@@ -57,35 +58,30 @@ bool EventTest(int argc, char** argv)
 	    	args.m_var = 11; 
 	    });
 
+	    exit(0);
+		
 	}
 	else
 	{
-		
-		result = fork();
-		
-		if(result==0)
-		{
-			char cmd[128] = {0};
-			sprintf(cmd, "xterm -e \"%s sender\"", argv[0]);
-			system(cmd);
-			exit(0);
-		}
-		else
-		{
-    		es.EnableNetworkListening(8888);
-    		es.InitEvent<EventArgs>("testEvent");
-    		es.EnableNetworkListen<EventArgs>();
-    		es.RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
-		    {
-			    EventArgs* args = (EventArgs*)&a;
-		    	test += args->m_var; 
-				log::info << "testEvent invoked " << test << std::endl;
-		    });
+		es.EnableNetworkListening(8888);
+		es.InitEvent<EventArgs>("testEvent");
+		es.EnableNetworkListen<EventArgs>();
+		es.RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+	    {
+		    EventArgs* args = (EventArgs*)&a;
+	    	test += args->m_var; 
+			log::info << "testEvent invoked2 " << test << std::endl;
+	    });
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		es.RegisterCallback<EventArgs>(id, [&](bfu::EventArgsBase& a)
+	    {
+			log::info << "testEvent invoked3 " << test << std::endl;
+	    });
 
-			while(!es.ProcessNetworkQueuedEvents());
-		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+		while(!es.ProcessNetworkQueuedEvents());
 	}
     
 

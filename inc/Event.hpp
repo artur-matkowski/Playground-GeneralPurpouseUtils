@@ -125,13 +125,16 @@ namespace bfu{
 				m_arg = new ArgT();
 
 			if( m_token != 0 )
-				delete m_token;
+			{
+				delete[] m_token;
+				m_token = 0;
+			}
 
 			m_propagationTargets = propagationTarget;
 			m_udp = _udp;
 
 			int size = std::strlen(token);
-			m_token = new char[size];
+			m_token = new char[size+1];
 			std::strcpy(m_token, token);
 		}
 
@@ -175,7 +178,7 @@ namespace bfu{
 				delete m_arg;
 
 			if(m_token!=0)
-				delete m_token;
+				delete[] m_token;
 		}
 
 		inline void Invoke(EventArgsBase& data) 
@@ -253,6 +256,12 @@ namespace bfu{
 			}
 		}
 	public:
+		EventSystem(){};
+		~EventSystem()
+		{
+			m_propagationTargets.clear();
+			m_events.clear();
+		}
 
 		template<class ArgT>
 		void InitEvent(const char* token)
@@ -375,7 +384,8 @@ namespace bfu{
 
 		void RegisterPropagationTarget(const char* host, const int port)
 		{
-			m_propagationTargets.push_back(std::pair<std::string, int>(host, port));
+			std::string t(host);
+			m_propagationTargets.push_back(std::pair<std::string, int>(t, port));
 		}
 
 		void UnregisterPropagationTarget(const char* host, const int port)
