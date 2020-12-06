@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "udp") == 0 )
 	{
-		bool ret = udpTests(argc, argv);
+		bool ret = udpTests();
 
 		if(ret)
 			return 0;

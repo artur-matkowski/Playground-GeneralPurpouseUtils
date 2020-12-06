@@ -12,7 +12,7 @@
 
 #define TEST_STRING "{kupa \"msg type\"}"
 
-bool udpTests(int argc, char** argv)
+bool udpTests()
 {
 
 	bfu::udp::packet out;
@@ -22,7 +22,9 @@ bool udpTests(int argc, char** argv)
 	out.m_port = 8888;
 	out.m_id.GetRef() << TEST_STRING;
 
-	if(argc>1 && strcmp(argv[1], "sender") == 0 )
+	int result = fork();
+
+	if( result == 0 ) //parent
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
@@ -31,33 +33,21 @@ bool udpTests(int argc, char** argv)
 		udp.Write( out );
 		udp.Write( out );
 
+		return false; // irrelevent
 	}
-	else
+	else //child
 	{
-		
-		int result = fork();
-		
-		if(result==0)
+		bfu::udp udp(8888);
+
+		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+		bool readed;
+
+		do
 		{
-			char cmd[128] = {0};
-			sprintf(cmd, "xterm -e \"%s sender\"", argv[0]);
-			system(cmd);
-			exit(0);
-		}
-		else
-		{
-			bfu::udp udp(8888);
-
-			//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-			bool readed;
-
-			do
-			{
-				readed = udp.Read( msg, false);
-				printf( "pudp pooling test:%s\n", msg.m_id.GetRef().c_str() );
-			}while(!readed);
-		}
+			readed = udp.Read( msg, false);
+			//printf( "pudp pooling test:%s\n", msg.m_id.GetRef().c_str() );
+		}while(!readed);
 	}
 
 	if( std::strcmp(TEST_STRING, msg.m_id.GetRef().c_str() )==0 )
