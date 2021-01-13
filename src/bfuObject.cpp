@@ -7,26 +7,31 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-//static uint32_t mem = 0;
-void* operator new(size_t size)
-{
-	void* ptr = std::malloc(size);
-/*
-	mem += size;
-	
-	struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    std::cout.width( w.ws_col -64);
 
-	std::cout << std::right << "alocated " << size << " bytes of memory in " << ptr << "total: " << (double)mem/1024.0 << "kb\n" << std::flush;
-*/
-	return ptr;
-}
+int alocations = 0;
+int dealocations = 0;
 
 
-void operator delete(void* where) noexcept
-{
-	//std::cout << "released " << where << " memory chunk\n" << std::flush;
 
-	std::free(where);
+void * operator new(std::size_t size)
+{ 
+	++alocations;
+    void * p = malloc(size); 
+    std::cout << "\nMemory alocations:   " << alocations << "<" <<
+    		     "\nMemory dealocations: " << dealocations <<
+    		     "\nMemory addr: " << p << " " << size << "b" << std::endl;
+    		     //"\nAlocation called from: " << file << ":" << line << std::endl; 
+    std::cout.flush();
+    return p; 
+} 
+  
+void operator delete(void * p) noexcept
+{ 
+	++dealocations;
+    std::cout << "\nMemory alocations:   " << alocations << 
+    		     "\nMemory dealocations: " << dealocations << "<" <<
+    		     "\nMemory addr: " << p <<  std::endl;
+    		     //"\nAlocation called from: " << file << ":" << line << std::endl; 
+    std::cout.flush();
+    free(p); 
 }

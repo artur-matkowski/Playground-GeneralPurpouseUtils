@@ -9,16 +9,19 @@
 //#include <iostream>
 	
 namespace bfu{
+
+	template<int stackAlloc>
 	class stream
 	{
 	protected:
-		const int m_minimalbuffsize = 64;
 		//lazy alocation if buffsize = 0 and not constructing with size
 		int m_buffsize = 0;
 		char* m_first = 0;
 		char* m_last = 0;
 		char* m_writeCursor = 0;
 		char* m_readCursor = 0;
+
+		char initialbuff[stackAlloc];
 
 
 		enum class status{NOK = -1, OK = 0};
@@ -39,7 +42,7 @@ namespace bfu{
 		stream();
 	    stream(const char* input, int size = -1);
 	    stream(const stream& input);
-	    stream(const int size);
+	    //stream(const int size);
 
 	    ~stream();
 
@@ -191,14 +194,17 @@ namespace bfu{
 
 		inline void resize(int newsize)
 		{
-			newsize = std::max(newsize+1, m_minimalbuffsize);
-			char* newbuff = new char[newsize];
+			if(newsize < m_buffsize)
+				return;
+
+			newsize =  newsize+1;
+			char* newbuff = TRACE_NEW char[newsize];
 			int toCopy = std::min(newsize, (int)(m_writeCursor-m_first));
 
 			std::memset(newbuff, '\0', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
 
-			if(m_first!=0)
+			if(m_first!=initialbuff)
 				delete[] m_first;
 
 			int readOffset = m_readCursor - m_first;
