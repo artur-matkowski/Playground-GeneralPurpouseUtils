@@ -19,7 +19,9 @@ namespace bfu{
 			:m_var(val)
 		{}
 
-		SerializableVar(const char* Name, SerializableClassBase* parent)
+		template<typename... Targs>
+		SerializableVar(const char* Name, SerializableClassBase* parent, Targs... Fargs)
+			:m_var(Fargs...)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);

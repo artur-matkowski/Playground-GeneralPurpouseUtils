@@ -3,14 +3,13 @@
 #include <algorithm>
 #include <poll.h>
 
-#define PACKAGESIZE 65507
 
 
 namespace bfu{
 
 	udp::udp(int Port)
 		:m_port(Port)
-		,m_json(PACKAGESIZE)
+		,m_json()
 	{
 		if(Port>0)
 		{

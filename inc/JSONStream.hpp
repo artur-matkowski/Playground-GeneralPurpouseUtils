@@ -14,13 +14,9 @@ namespace bfu{
 
   class JSONStream: public stream{
   public:
+    char  m_buff[1024] = {'0'};
     JSONStream()
-      :stream()
-    {
-    }
-
-    JSONStream(const int size)
-      :stream(size)
+      :stream(m_buff, 1024)
     {
     }
 

@@ -10,7 +10,6 @@
 	
 namespace bfu{
 
-	template<int stackAlloc>
 	class stream
 	{
 	protected:
@@ -20,8 +19,7 @@ namespace bfu{
 		char* m_last = 0;
 		char* m_writeCursor = 0;
 		char* m_readCursor = 0;
-
-		char initialbuff[stackAlloc];
+		bool using_prealocated;
 
 
 		enum class status{NOK = -1, OK = 0};
@@ -39,8 +37,8 @@ namespace bfu{
 
 	public:
 
-		stream();
-	    stream(const char* input, int size = -1);
+		//stream();
+	    stream(char* prealocatedBuff, int size);
 	    stream(const stream& input);
 	    //stream(const int size);
 
@@ -204,7 +202,7 @@ namespace bfu{
 			std::memset(newbuff, '\0', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
 
-			if(m_first!=initialbuff)
+			if(m_first!=0 && !using_prealocated)
 				delete[] m_first;
 
 			int readOffset = m_readCursor - m_first;
@@ -215,6 +213,7 @@ namespace bfu{
 			m_readCursor = readOffset + m_first; 
 			m_last = m_first + newsize;
 			m_buffsize = newsize;
+			using_prealocated = false;
 		}
 
 		inline void grow(int minSize)

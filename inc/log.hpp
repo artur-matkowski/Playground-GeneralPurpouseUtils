@@ -42,12 +42,13 @@ public:
         // out stream object
         static struct OutStream {
 
+                char  m_buff[1024] = {'0'};
                 bfu::stream     	stream;
                 DebugLevel 			level = DebugLevel::ALL;
                 bool 				loggingToFile = false;
-                char*        		LogFileName = 0;
-                const char*			path = "./Logs/";
+                char           		LogFileName[1024] = {'0'};
                	std::ofstream 		outfile;
+                const char*         path = "./Logs/";
 
                 inline const char* LogLvl(DebugLevel lvl)
                 {
@@ -65,20 +66,16 @@ public:
                 	return "UNKNOWN";
                 }
             public:
-                OutStream(){
-                    bfu::stream   stm;
+                OutStream()
+                    :stream(m_buff, 1024)
+                {
+                    stream << path << "LOG " << log::getDate() << " " << log::getTime() << ".txt";
 
-                    stm << path << "LOG " << std::string(log::getDate()) << " " << std::string(log::getTime()) << ".txt";
-
-                    LogFileName = new char[ stm.size() ];
-
-                    memcpy(LogFileName, stm.str().c_str(), stm.size() );
+                    memcpy(LogFileName, stream.c_str(), stream.size() );
                 }
                 ~OutStream()
-                {
-                    if(LogFileName!=0) 
-                        delete[] LogFileName;
-                }
+                {}
+                
             	OutStream& operator()(const char* file, int line)
             	{
                     #ifndef NOTRACE

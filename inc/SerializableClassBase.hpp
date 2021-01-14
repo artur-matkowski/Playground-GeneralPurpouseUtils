@@ -18,6 +18,7 @@ namespace bfu{
 
 	class SerializableClassBase: public SerializableBase
 	{
+    	char  m_buff[1024] = {'0'};
     	stream m_token;
 		//member name, member reference
 		std::map<std::string, SerializableBase*> m_membersMap;
@@ -30,7 +31,7 @@ namespace bfu{
 	public:
 
 		SerializableClassBase()
-			:m_token()
+			:m_token(m_buff, 1024)
 		{};
 
 		virtual ~SerializableClassBase();

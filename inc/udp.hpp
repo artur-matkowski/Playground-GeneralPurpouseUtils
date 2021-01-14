@@ -9,12 +9,16 @@
 
 #include "SerializableVarVector.hpp"
 
+#define PACKAGESIZE 65507
+
+
 namespace bfu{
 	class udp
 	{
 	public:
 		class packet: public SerializableClassBase
 		{
+    		char  m_buff[PACKAGESIZE] = {'0'};
 		public:
 			SerializableVar<stream> m_id;
 			SerializableVar<JSONStream> m_data;
@@ -24,13 +28,13 @@ namespace bfu{
 
 			packet()
 				:SerializableClassBase()
-				,m_id("m_id",this)
+				,m_id("m_id",this, m_buff, PACKAGESIZE)
 				,m_data("m_data",this)
 			{}
 
 			packet(const packet& cp)
 				:SerializableClassBase()
-				,m_id("m_id",this)
+				,m_id("m_id",this, m_buff, PACKAGESIZE)
 				,m_data("m_data",this)
 			{
 				m_id = cp.m_id;
