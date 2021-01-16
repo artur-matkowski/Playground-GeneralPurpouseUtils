@@ -15,8 +15,26 @@ using namespace std;
 
 using namespace bfu;
 
+
+class Prealocator10mb: public MonotonicAllocator<1024*1024*10>{};
+
 int main(int argc, char** argv)
 {
+	/*
+	//vector<float, custom_allocator<float, Prealocator10mb >> v_floats;
+	vector<float> v_floats;
+	float f = 1.0;
+	v_floats.push_back(++f);
+	v_floats.push_back(++f);
+	v_floats.push_back(++f);
+	v_floats.push_back(++f);
+
+
+	for(int i=0; i<v_floats.size(); ++i)
+		cout << v_floats[i] << " ";
+*/
+
+
 	if( argc < 2 )
 	{
 		cout << "\nUsage:";
