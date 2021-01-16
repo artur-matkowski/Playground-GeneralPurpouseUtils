@@ -25,17 +25,20 @@ namespace bfu{
 			#define HOSTSIZE 16
 			char m_host[HOSTSIZE] = {0};
 			int m_port;
+			std::allocator<char> m_alloc;
 
-			packet()
+			packet(std::allocator<char> alloc = std::allocator<char>())
 				:SerializableClassBase()
-				,m_id("m_id",this, m_buff, PACKAGESIZE)
+				,m_id("m_id",this, m_buff, PACKAGESIZE, alloc)
 				,m_data("m_data",this)
+				,m_alloc(alloc)
 			{}
 
 			packet(const packet& cp)
 				:SerializableClassBase()
-				,m_id("m_id",this, m_buff, PACKAGESIZE)
+				,m_id("m_id",this, m_buff, PACKAGESIZE, cp.m_alloc)
 				,m_data("m_data",this)
+				,m_alloc(cp.m_alloc)
 			{
 				m_id = cp.m_id;
 				m_data = cp.m_data;

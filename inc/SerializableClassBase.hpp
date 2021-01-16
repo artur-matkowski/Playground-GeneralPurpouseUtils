@@ -30,8 +30,8 @@ namespace bfu{
 
 	public:
 
-		SerializableClassBase()
-			:m_token(m_buff, 1024)
+		SerializableClassBase(std::allocator<char> alloc = std::allocator<char>() )
+			:m_token(m_buff, 1024, alloc)
 		{};
 
 		virtual ~SerializableClassBase();

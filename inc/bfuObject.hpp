@@ -85,6 +85,9 @@ public:
 
 
 
+void convert(int& gb, int& mb, int& kb, int& b);
+
+
 template <class T, class Allocator>
 struct custom_allocator {
 
@@ -109,9 +112,16 @@ struct custom_allocator {
 
 	T* allocate (std::size_t n) 
 	{ 
+		int bytes = 0;
+    	int gb = 0, mb = 0, kb = 0;
+
   		static MonotonicAlocatorBase* allocator = Allocator::GetAllocator();
   		T* ret = static_cast<T*>(allocator->allocate<T>(n));
-  		std::cout << "allocate() remaining memory: " << allocator->getFreeMemory()/1024.0f << "kb" << std::endl;
+  		bytes = (int)allocator->getFreeMemory();
+  		convert(gb, mb, kb, bytes);
+
+  		std::cout << "allocate() remaining memory: " << gb << "Gb, "
+  				<< mb << "Mb, " << kb << "kb, " << bytes << "b, "  << std::endl;
   		std::cout.flush();  		
 		return ret; 
 	}

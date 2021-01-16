@@ -20,6 +20,7 @@ namespace bfu{
 		char* m_writeCursor = 0;
 		char* m_readCursor = 0;
 		bool using_prealocated;
+		std::allocator<char> m_alloc;
 
 
 		enum class status{NOK = -1, OK = 0};
@@ -38,7 +39,7 @@ namespace bfu{
 	public:
 
 		//stream();
-	    stream(char* prealocatedBuff, int size);
+	    stream(char* prealocatedBuff, int size, std::allocator<char> alloc = std::allocator<char>() );
 	    stream(const stream& input);
 	    //stream(const int size);
 
@@ -196,14 +197,14 @@ namespace bfu{
 				return;
 
 			newsize =  newsize+1;
-			char* newbuff = TRACE_NEW char[newsize];
+			char* newbuff = m_alloc.allocate( newsize );
 			int toCopy = std::min(newsize, (int)(m_writeCursor-m_first));
 
 			std::memset(newbuff, '\0', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
 
 			if(m_first!=0 && !using_prealocated)
-				delete[] m_first;
+				m_alloc.deallocate( m_first, (size_t)m_last-(size_t)m_first );
 
 			int readOffset = m_readCursor - m_first;
 

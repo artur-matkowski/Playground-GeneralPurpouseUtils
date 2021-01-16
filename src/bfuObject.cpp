@@ -12,6 +12,21 @@ int alocations = 0;
 int dealocations = 0;
 
 
+namespace bfu
+{
+    void convert(int& big, int& small)
+    {
+        big = small / 1024;
+        small = small % 1024;
+    }
+
+    void convert(int& gb, int& mb, int& kb, int& b)
+    {
+        convert(kb, b);
+        convert(mb, kb);
+        convert(gb, mb);
+    }
+}
 
 void * operator new(std::size_t size)
 { 
