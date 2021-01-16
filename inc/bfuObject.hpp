@@ -8,95 +8,82 @@
 namespace bfu
 {
 
-class MonotonicAlocatorBase
-{
-protected:
-	void* m_buffStartPtr = 0;
-	void* m_buffFreePtr = 0;
-	void* m_buffEndPtr = 0;
-
-public:
-	MonotonicAlocatorBase(){};
-	~MonotonicAlocatorBase(){};
-
-	template <typename T>
-	T* allocate (int elements = 1, std::size_t offset = alignof(T))
-    {
-    	size_t size = getFreeMemory();
-        if (std::align(offset, sizeof(T), m_buffFreePtr, size ))
-        {
-            T* result = reinterpret_cast<T*>(m_buffFreePtr);
-            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + sizeof(T) * elements);
-            return result;
-        }
-        return nullptr;
-    }
-
-	template <typename T>
-	void deallocate (T* p, std::size_t n) 
+	class MemBlockBase
 	{
+	public:
+		virtual void* allocate (int elements, std::size_t offset, std::size_t sizeOf) = 0;
+		virtual void deallocate (void* p, std::size_t n){};
+		virtual size_t getFreeMemory() = 0;
+	};
 
-	}
 
-	void free()
+	template <int stackSize>
+	class MonotonicMemBlock: public MemBlockBase
 	{
-		m_buffFreePtr = m_buffStartPtr;
-	}
+	protected:
+		void* m_buffStartPtr = 0;
+		void* m_buffFreePtr = 0;
+		void* m_buffEndPtr = 0;
+		char buff[stackSize];
+
+	public:
+		MonotonicMemBlock()
+		{
+			m_buffFreePtr = m_buffStartPtr = buff;
+			m_buffEndPtr = (void*)((size_t)m_buffStartPtr + (size_t)stackSize);
+		};
+		~MonotonicMemBlock(){};
+
+		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
+		{
+			size_t size = getFreeMemory();
+	        if (std::align(alignOf, sizeOf, m_buffFreePtr, size ))
+	        {
+	            void* result = m_buffFreePtr;
+	            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + sizeOf * elements);
+	            return result;
+	        }
+	        return nullptr;
+		}
+
+		virtual void deallocate (void* p, std::size_t n) 
+		{
+
+		}
+
+		void free()
+		{
+			m_buffFreePtr = m_buffStartPtr;
+		}
 
 
-	size_t getFreeMemory()
-	{
-		return (size_t)m_buffEndPtr- (size_t)m_buffFreePtr;
-	}
-};
+		size_t getFreeMemory()
+		{
+			return (size_t)m_buffEndPtr- (size_t)m_buffFreePtr;
+		}
 
-template <int stackSize>
-class MonotonicAllocator: public MonotonicAlocatorBase
-{
-	char buff[stackSize];
-public:
-
-	MonotonicAllocator()
-	{
-		m_buffFreePtr = m_buffStartPtr = buff;
-		m_buffEndPtr = (void*)((size_t)m_buffStartPtr + (size_t)stackSize);
-
-		/*
-		m_size = size;
-		m_buffEnd = m_buffStart = mmap((void*)0x10000, m_size, 
-                    PROT_READ | PROT_WRITE, 
-                    MAP_PRIVATE | MAP_ANONYMOUS, 
-                    -1, 0);*/
-	}
-
-	virtual ~MonotonicAllocator()
-	{
-  		//munmap(m_buffStart, m_size);
-	}
-
-
-
-	static MonotonicAlocatorBase* GetAllocator()
-	{
-		static MonotonicAllocator<stackSize> _this;
-		return &_this;
-	}
-};
-
+		static MonotonicMemBlock* GetMemBlock()
+		{
+			static MonotonicMemBlock<stackSize> _this;
+			return &_this;
+		}
+	};
 
 
 void convert(int& gb, int& mb, int& kb, int& b);
 
 
-template <class T, class Allocator>
+template <class T, class MemBlockType>
 struct custom_allocator {
 
 	typedef T value_type;
+	MemBlockBase* m_memBlock = 0;
 
-	custom_allocator() noexcept 
+	custom_allocator(MemBlockBase* memBlock = MemBlockType::GetMemBlock()) noexcept 
 	{
   		std::cout << "\tcustom_allocator()\n";
   		std::cout.flush();
+  		m_memBlock = memBlock;
 	}
 	~custom_allocator() noexcept 
 	{
@@ -104,10 +91,11 @@ struct custom_allocator {
   		std::cout.flush();
 	}
 
-	template <class U, class A> custom_allocator (const custom_allocator<U, A>&) noexcept 
+	template <class U, class A> custom_allocator (const custom_allocator<U, A>& cp) noexcept 
 	{
   		std::cout << "\tcustom_allocator(&)\n";
   		std::cout.flush();
+  		m_memBlock = cp.m_memBlock;
   	}
 
 	T* allocate (std::size_t n) 
@@ -115,9 +103,8 @@ struct custom_allocator {
 		int bytes = 0;
     	int gb = 0, mb = 0, kb = 0;
 
-  		static MonotonicAlocatorBase* allocator = Allocator::GetAllocator();
-  		T* ret = static_cast<T*>(allocator->allocate<T>(n));
-  		bytes = (int)allocator->getFreeMemory();
+  		T* ret = static_cast<T*>(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
+  		bytes = (int)m_memBlock->getFreeMemory();
   		convert(gb, mb, kb, bytes);
 
   		std::cout << "allocate() remaining memory: " << gb << "Gb, "
@@ -128,8 +115,7 @@ struct custom_allocator {
 
 	void deallocate (T* p, std::size_t n) 
 	{
-  		static MonotonicAlocatorBase* allocator = Allocator::GetAllocator();
-  		allocator->deallocate(p, n);
+  		m_memBlock->deallocate(p, n);
   		std::cout << "deallocate()\n";
   		std::cout.flush();
 		//::delete(p); 
