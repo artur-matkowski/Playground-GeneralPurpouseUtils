@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <sys/mman.h>
+#include <stdlib.h>
 
 namespace bfu
 {
@@ -11,9 +12,23 @@ namespace bfu
 	class MemBlockBase
 	{
 	public:
-		virtual void* allocate (int elements, std::size_t offset, std::size_t sizeOf) = 0;
+		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) = 0;
 		virtual void deallocate (void* p, std::size_t n){};
 		virtual size_t getFreeMemory() = 0;
+	};
+
+	class StdAllocatorMemBlock: public MemBlockBase
+	{
+	public:
+		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf);
+		virtual void deallocate (void* p, std::size_t n);
+		virtual size_t getFreeMemory();
+
+		static StdAllocatorMemBlock* GetMemBlock()
+		{
+			static StdAllocatorMemBlock _this;
+			return &_this;
+		}
 	};
 
 
@@ -70,41 +85,39 @@ namespace bfu
 	};
 
 
-void convert(int& gb, int& mb, int& kb, int& b);
+void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b);
 
 
-template <class T, class MemBlockType>
+template <class T>
 struct custom_allocator {
 
 	typedef T value_type;
 	MemBlockBase* m_memBlock = 0;
 
-	custom_allocator(MemBlockBase* memBlock = MemBlockType::GetMemBlock()) noexcept 
+	custom_allocator(MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock()) noexcept 
 	{
-  		std::cout << "\tcustom_allocator()\n";
-  		std::cout.flush();
+  		//std::cout << "\tcustom_allocator()\n";
+  		//std::cout.flush();
   		m_memBlock = memBlock;
 	}
 	~custom_allocator() noexcept 
 	{
-  		std::cout << "\t~custom_allocator()\n";
-  		std::cout.flush();
+  		//std::cout << "\t~custom_allocator()\n";
+  		//std::cout.flush();
 	}
 
-	template <class U, class A> custom_allocator (const custom_allocator<U, A>& cp) noexcept 
+	template <class U> custom_allocator (const custom_allocator<U>& cp) noexcept 
 	{
-  		std::cout << "\tcustom_allocator(&)\n";
-  		std::cout.flush();
   		m_memBlock = cp.m_memBlock;
   	}
 
 	T* allocate (std::size_t n) 
 	{ 
-		int bytes = 0;
-    	int gb = 0, mb = 0, kb = 0;
+		size_t bytes = 0;
+    	size_t gb = 0, mb = 0, kb = 0;
 
   		T* ret = static_cast<T*>(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
-  		bytes = (int)m_memBlock->getFreeMemory();
+  		bytes = m_memBlock->getFreeMemory();
   		convert(gb, mb, kb, bytes);
 
   		std::cout << "allocate() remaining memory: " << gb << "Gb, "
@@ -116,9 +129,7 @@ struct custom_allocator {
 	void deallocate (T* p, std::size_t n) 
 	{
   		m_memBlock->deallocate(p, n);
-  		std::cout << "deallocate()\n";
-  		std::cout.flush();
-		//::delete(p); 
+  		//std::cout << "deallocate()\n";
 	}
 
   	/*

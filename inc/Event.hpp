@@ -14,6 +14,10 @@ namespace bfu{
 	{
 	public:
 		bool isComingFromNetwork = false;
+
+		EventArgsBase(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:bfu::SerializableClassBase(mBlock)
+		{};
 	};
 
 
@@ -105,7 +109,7 @@ namespace bfu{
 	{
 		CallbackList 									m_callbacks;
 		EventArgsBase* 									m_arg = 0;
-		char* 											m_token = 0;
+		char 											m_token[256] = {'0'};
 
 		//do not delete thouse pointers
 		std::vector<std::pair<std::string, int>>* 		m_propagationTargets = 0;
@@ -124,17 +128,10 @@ namespace bfu{
 			if( m_arg == 0 )
 				m_arg = new ArgT();
 
-			if( m_token != 0 )
-			{
-				delete[] m_token;
-				m_token = 0;
-			}
 
 			m_propagationTargets = propagationTarget;
 			m_udp = _udp;
 
-			int size = std::strlen(token);
-			m_token = new char[size+1];
 			std::strcpy(m_token, token);
 		}
 
@@ -176,9 +173,6 @@ namespace bfu{
 		{
 			if(m_arg!=0)
 				delete m_arg;
-
-			if(m_token!=0)
-				delete[] m_token;
 		}
 
 		inline void Invoke(EventArgsBase& data) 

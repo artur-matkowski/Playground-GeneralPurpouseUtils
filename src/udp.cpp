@@ -7,14 +7,23 @@
 
 namespace bfu{
 
-	udp::udp(int Port)
+	udp::udp(int Port, MemBlockBase* mBlock)
 		:m_port(Port)
-		,m_json()
+		,m_mBlock(mBlock)
+		,m_cache(mBlock)
+		,m_json(mBlock)
 	{
 		if(Port>0)
 		{
 			StartListening(Port);
 		}
+	}
+	udp::udp(MemBlockBase* mBlock)
+		:m_port(-1)
+		,m_mBlock(mBlock)
+		,m_cache(mBlock)
+		,m_json(mBlock)
+	{
 	}
 	udp::~udp()
 	{

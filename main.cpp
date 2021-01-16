@@ -41,7 +41,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 
 
 
-class Prealocator10mb: public MonotonicAllocator<1024*1024*10>{};
+class Prealocator10mb: public MonotonicMemBlock<1024*1024*10>{};
 
 int main(int argc, char** argv)
 {
@@ -64,8 +64,13 @@ int main(int argc, char** argv)
 	// process_mem_usage(vm, rss);
 	// cout << "VM: " << vm << "; RSS: " << rss << endl;
 
-	//	return 0;
+	// 	return 0;
 
+		std::map<std::string
+				, SerializableBase*
+				, std::less<std::string>
+				, custom_allocator<std::pair<const std::string, SerializableBase*> > 
+				 > m_membersMap;
 	if( argc < 2 )
 	{
 		cout << "\nUsage:";

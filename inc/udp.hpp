@@ -25,20 +25,20 @@ namespace bfu{
 			#define HOSTSIZE 16
 			char m_host[HOSTSIZE] = {0};
 			int m_port;
-			std::allocator<char> m_alloc;
+			MemBlockBase* m_mBlock;
 
-			packet(std::allocator<char> alloc = std::allocator<char>())
-				:SerializableClassBase()
-				,m_id("m_id",this, m_buff, PACKAGESIZE, alloc)
-				,m_data("m_data",this)
-				,m_alloc(alloc)
+			packet( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+				:SerializableClassBase(mBlock)
+				,m_id("m_id",this, m_buff, PACKAGESIZE, mBlock)
+				,m_data("m_data",this, mBlock)
+				,m_mBlock(mBlock)
 			{}
 
 			packet(const packet& cp)
-				:SerializableClassBase()
-				,m_id("m_id",this, m_buff, PACKAGESIZE, cp.m_alloc)
-				,m_data("m_data",this)
-				,m_alloc(cp.m_alloc)
+				:SerializableClassBase(cp.m_mBlock)
+				,m_id("m_id",this, m_buff, PACKAGESIZE, cp.m_mBlock)
+				,m_data("m_data",this, cp.m_mBlock)
+				,m_mBlock(cp.m_mBlock)
 			{
 				m_id = cp.m_id;
 				m_data = cp.m_data;
@@ -74,16 +74,17 @@ namespace bfu{
 	private:
 		int m_socket = -1; 
 		int m_port = -1;
+		MemBlockBase* m_mBlock;
+		unsigned int slen = sizeof(sockaddr_in);
+		packet m_cache;
 		struct sockaddr_in si_me, si_other;
 		JSONStream m_json;
-		unsigned int slen = sizeof(sockaddr_in);
-
-		packet m_cache;
 
 	
 	public:
 
-		udp(int Port = -1);
+		udp(int Port = -1, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
+		udp(MemBlockBase* mBlock);
 		~udp();
 
 		bool StartListening(int port);

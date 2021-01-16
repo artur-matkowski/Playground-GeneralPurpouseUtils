@@ -15,8 +15,8 @@ namespace bfu{
   class JSONStream: public stream{
   public:
     char  m_buff[1024] = {'0'};
-    JSONStream(std::allocator<char> alloc = std::allocator<char>() )
-      :stream(m_buff, 1024, alloc )
+    JSONStream(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+      :stream(m_buff, 1024, mBlock )
     {
     }
 

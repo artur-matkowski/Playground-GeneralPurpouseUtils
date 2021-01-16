@@ -15,7 +15,7 @@ namespace bfu{
 		{}
 	public:
 
-		SerializableVar(const T& val)
+		SerializableVar(const T& val, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock())
 			:m_var(val)
 		{}
 
