@@ -31,12 +31,15 @@ namespace bfu{
 
 		//you need to have a copy constructor in your class for that to work
 		//virtual SerializableClassBase(const SerializableClassBase& ) = 0;
+	protected:
+		MemBlockBase* m_mBlock;
 
 	public:
 
 		SerializableClassBase( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:m_token(m_buff, 1024, mBlock)
 			,m_membersMap( custom_allocator<std::pair<const std::string, SerializableBase*> >(mBlock) )
+			,m_mBlock(mBlock)
 		{};
 
 		virtual ~SerializableClassBase();

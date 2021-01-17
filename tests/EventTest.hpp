@@ -10,16 +10,16 @@ public:
 
 
 public:
-	EventArgs()
-		:bfu::EventArgsBase()
+	EventArgs(bfu::MemBlockBase* mBlock)
+		:bfu::EventArgsBase(mBlock)
 		,m_var("m_var",this)
 	{
 		m_var = 11;
 	}
 
 	EventArgs(const EventArgs& copy)
-		:bfu::EventArgsBase()
-		,m_var("m_var",this)
+		:bfu::EventArgsBase(copy.m_mBlock)
+		,m_var("m_var", this)
 	{
 		m_var = copy.m_var;
 	}
@@ -28,12 +28,12 @@ public:
 
 bool EventTest()
 {
-
+	bfu::MonotonicMemBlock<1024*1024> memBlock;
 	int test = 5;
     bfu::CallbackId id = 0;
     int result = 0;
 
-    bfu::EventSystem es = bfu::EventSystem();
+    bfu::EventSystem es = bfu::EventSystem(&memBlock);
 
 
 	if(fork() == 0)

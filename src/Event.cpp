@@ -1,5 +1,6 @@
 #include "Event.hpp"
 
+bfu::MemBlockBase* 	bfu::EventSystem::m_mBlock = 0;
 /*
 std::map<const char*, bfu::EventBase*, bfu::cmpByStringLength> 	
 														bfu::EventSystem::m_events;

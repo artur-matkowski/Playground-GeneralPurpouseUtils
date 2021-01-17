@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <cstring>
+#include <memory>
 #include "udp.hpp"
 #include "log.hpp"
 #include "SerializableVarVector.hpp"
@@ -49,15 +50,21 @@ namespace bfu{
 	class CallbackList
 	{
 	protected:
-		std::vector< CallbackBase* > m_callbacks;
+		std::vector< CallbackBase*, custom_allocator<CallbackBase*> > 
+													m_callbacks;
+		MemBlockBase* 								m_mBlock;
 
 	public:
+		CallbackList(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:m_callbacks( custom_allocator<CallbackBase*>(mBlock) )
+			,m_mBlock(mBlock)
+		{};
 
 		~CallbackList()
 		{
 			for(int i=0; i<m_callbacks.size(); ++i)
 			{
-				delete m_callbacks[i];
+				m_mBlock->deallocate(m_callbacks[i], 1);
 			}
 		}
 
@@ -72,17 +79,18 @@ namespace bfu{
 		template<typename Func>
 		inline void RegisterCallback(CallbackId& callbackId, Func f)
 		{
-			callbackId = new Callback<Func>(f);
+			callbackId = (Callback<Func>*)m_mBlock->allocate(1, sizeof(Callback<Func>), alignof(Callback<Func>) );
+			new (callbackId) Callback<Func>(f);
 			m_callbacks.push_back( callbackId );
 		}
 
 		inline void UnregisterCallback(CallbackId& callbackId)
 		{
-			for (std::vector< CallbackBase* >::iterator it = m_callbacks.begin() ; it != m_callbacks.end(); ++it)
+			for (std::vector< CallbackBase*, custom_allocator<CallbackBase*> >::iterator it = m_callbacks.begin() ; it != m_callbacks.end(); ++it)
 			{
 				if(*it == callbackId)
 				{
-					delete *it;
+					m_mBlock->deallocate(*it, 1);
 					m_callbacks.erase(it);
 					break;
 				}
@@ -98,7 +106,9 @@ namespace bfu{
 
 
 		virtual void Init(const char* token, 
-							std::vector<std::pair<std::string, int>>* propagationTarget,
+							std::vector<std::pair<std::string, int>
+										, custom_allocator<std::pair<std::string, int>>
+										>* 			propagationTarget,
 							bfu::udp* _udp) = 0;
 
 		virtual void Invoke(bfu::JSONStream& stream) = 0;
@@ -108,11 +118,12 @@ namespace bfu{
 	class Event: public EventBase
 	{
 		CallbackList 									m_callbacks;
-		EventArgsBase* 									m_arg = 0;
+		ArgT		 									m_arg;
 		char 											m_token[256] = {'0'};
 
 		//do not delete thouse pointers
-		std::vector<std::pair<std::string, int>>* 		m_propagationTargets = 0;
+		std::vector<std::pair<std::string, int>, custom_allocator<std::pair<std::string, int>> >*
+												 		m_propagationTargets = 0;
 		bfu::udp* 										m_udp = 0;
 
 		bool 											m_networkBroadcast = false;
@@ -122,13 +133,11 @@ namespace bfu{
 
 
 		virtual void Init(const char* token, 
-							std::vector<std::pair<std::string, int>>* propagationTarget,
+							std::vector<std::pair<std::string, int>
+										, custom_allocator<std::pair<std::string, int>>
+										>* 			propagationTarget,
 							bfu::udp* _udp)
 		{
-			if( m_arg == 0 )
-				m_arg = new ArgT();
-
-
 			m_propagationTargets = propagationTarget;
 			m_udp = _udp;
 
@@ -159,20 +168,22 @@ namespace bfu{
 				return;
 			}
 
-			stream >> *m_arg;
+			stream >> m_arg;
 
-			m_arg->isComingFromNetwork = true;
+			m_arg.isComingFromNetwork = true;
 
-			InvokeLocaly(*m_arg);
+			InvokeLocaly(m_arg);
 
-			m_arg->isComingFromNetwork = false;
+			m_arg.isComingFromNetwork = false;
 		}
 
 	public:
+		Event(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:m_callbacks(mBlock)
+			,m_arg(mBlock)
+		{};
 		~Event()
 		{
-			if(m_arg!=0)
-				delete m_arg;
 		}
 
 		inline void Invoke(EventArgsBase& data) 
@@ -214,25 +225,39 @@ namespace bfu{
 
 		inline bool IsInitialized()
 		{
-			return m_arg != 0;
+			return m_udp != 0;
 		}
 	};
 
 
 	class EventSystem
 	{
-		std::map<const char*, EventBase*, cmpByStringLength> 	
-																m_events;
-		std::vector<std::pair<std::string, int>> 		m_propagationTargets;
+		std::map<const char*
+				, EventBase*
+				, cmpByStringLength
+				, custom_allocator< std::pair<const char* const, EventBase*>>  
+				> 	 	
+														m_events;
+
+		std::vector<std::pair<std::string, int>
+				, custom_allocator<std::pair<std::string, int>> 
+				> 				
+														m_propagationTargets;
 
 		bfu::udp 										m_udp;
 		bfu::udp::packet 								m_pkg;
+		static MemBlockBase* 							m_mBlock;
 
 		template<class ArgT>
 		static Event<ArgT>& GetEventRef()
 		{
-			static Event<ArgT> ev;
-			return ev;
+			static Event<ArgT>* ev = 0;
+			if( ev==0 )
+			{
+				ev = (Event<ArgT>*)m_mBlock->allocate(1, sizeof(Event<ArgT>), alignof(Event<ArgT>) );
+				new (ev) Event<ArgT>(m_mBlock);
+			}
+			return *ev;
 		}
 
 		template<class ArgT>
@@ -250,7 +275,14 @@ namespace bfu{
 			}
 		}
 	public:
-		EventSystem(){};
+		EventSystem( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:m_events( custom_allocator< std::pair<const char* const, EventBase*>>(mBlock) )
+			,m_propagationTargets( custom_allocator<std::pair<std::string, int>>(mBlock) )
+			,m_udp(mBlock)
+			,m_pkg(mBlock)
+		{
+			m_mBlock = mBlock;
+		};
 		~EventSystem()
 		{
 			m_propagationTargets.clear();
@@ -287,7 +319,7 @@ namespace bfu{
 		template<class ArgT, typename Func>
 		void Invoke(Func func)
 		{
-			static ArgT arg;
+			static ArgT arg( m_mBlock );
 			Event<ArgT> &ev = EventSystem::GetEventRef<ArgT>();
 
 			if( !ev.IsInitialized() )

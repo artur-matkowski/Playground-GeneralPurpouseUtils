@@ -45,7 +45,6 @@ class Prealocator10mb: public MonotonicMemBlock<1024*1024*10>{};
 
 int main(int argc, char** argv)
 {
-	
 	// vector<float, custom_allocator<float, Prealocator10mb >> v_floats;
 	// //vector<float, std::allocator<float> > v_floats;
 	// //vector<float> v_floats;
