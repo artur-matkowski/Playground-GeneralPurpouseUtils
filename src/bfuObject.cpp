@@ -44,12 +44,12 @@ namespace bfu
 
         if(ret == nullptr)
         {
-            log::error << "Failed to allocate memory by StdAllocatorMemBlock, requested size: " << sizeOf * elements << std::endl;
+            log::error << "Failed to allocate memory by StdAllocatorMemBlock, requested size: " << (int)(sizeOf * elements) << std::endl;
         }
 
         log::warning << "\n\t\tMemory alocations: " << alocations << " caling global aligned_alloc()" <<
              "\n\t\tMemory dealocations: " << dealocations <<
-             "\n\t\tMemory addr: " << (size_t)ret << " " << sizeOf * elements << "b\n" << 
+             "\n\t\tMemory addr: " << (size_t)ret << " " << (int)(sizeOf * elements) << "b\n" << 
              "\n\t\tGlobaly alocated " << (int)gb << "Gb, " << (int)mb << "Mb, " << (int)kb << "kb, " << (int)bytes << "b, " << std::endl;
 
         return ret;
@@ -78,11 +78,10 @@ void * operator new(std::size_t size)
 	++alocations;
     alocatedBytes += size;
     void * p = malloc(size); 
-    //std::cout << "\033[1;31m";
-    std::cout << "\n\t\tMemory alocations:   " << alocations << " caling global operator NEW" <<
+    log::warning << "\n\t\tMemory alocations:   " << alocations << " caling global operator NEW" <<
     		     "\n\t\tMemory dealocations: " << dealocations <<
-                 "\n\t\tMemory addr: " <<  std::hex <<(size_t)p << std::dec << " " << size << "b\n" << "b" << 
-                 "\n\t\tMemory end addr: " <<  std::hex << (size_t)p + size << std::dec << "b\n" << "b" << 
+                 "\n\t\tMemory addr: " <<  (size_t)p << " " << (int)size << "b" << 
+                 "\n\t\tMemory end addr: " <<  (size_t)p + size << 
              "\n\t\tGlobaly alocated " << (int)gb << "Gb, " << (int)mb << "Mb, " << (int)kb << "kb, " << (int)bytes << "b, " << std::endl;
     return p; 
 } 
@@ -92,6 +91,6 @@ void operator delete(void * p) noexcept
 	++dealocations;
     log::warning << "\n\t\tMemory alocations:   " << alocations << 
     		     "\n\t\tMemory dealocations: " << dealocations << " caling global operator DELETE" <<
-    		     "\n\t\tMemory addr: " << std::hex << (size_t)p  << std::dec << "\n" <<  std::endl;
+    		     "\n\t\tMemory addr: " << (size_t)p  << "\n" <<  std::endl;
     free(p); 
 }

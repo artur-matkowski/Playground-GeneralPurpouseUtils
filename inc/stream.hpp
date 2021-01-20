@@ -9,6 +9,7 @@
 //#include <iostream>
 	
 namespace bfu{
+	
 
 	class stream
 	{

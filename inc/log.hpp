@@ -105,6 +105,18 @@ public:
                     return *this;
                 }
 
+                OutStream& operator<<(const size_t& value) {
+                    if(LOG_LEVEL <= level)
+                        stream.sprintf("%16x", value );
+                    return *this;
+                }
+                OutStream& operator<<(size_t value) {
+                    if(LOG_LEVEL <= level)
+                        stream.sprintf("%16x", value );
+                    return *this;
+                }
+
+
                 // this overload intercept std::endl, to flush the stream and send all to std::cout
                 OutStream& operator<<(std::ostream& (*os)(std::ostream&)) {
 

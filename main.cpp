@@ -43,6 +43,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 
 class Prealocator10mb: public MonotonicMemBlock<1024*1024*10>{};
 
+
 int main(int argc, char** argv)
 {
 	// vector<float, custom_allocator<float, Prealocator10mb >> v_floats;
@@ -65,6 +66,9 @@ int main(int argc, char** argv)
 
 	// 	return 0;
 
+	bfu::string sss = "fasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdf";
+	
+
 
 	if( argc < 2 )
 	{
@@ -75,7 +79,7 @@ int main(int argc, char** argv)
 		cout << "\n\t\t- stream  - runs stream rests";
 		cout << "\n\t\t- logging - runs logging tests";
 		cout << "\n\t\t- udp     - runs udp tests";
-		cout << "\n\t\t- event   - event tests";
+		cout << "\n\t\t- event   - event tests\n";
 
 		return -1;
 	}

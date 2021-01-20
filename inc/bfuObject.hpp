@@ -101,71 +101,74 @@ namespace bfu
 	};
 
 
-void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b);
+	void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b);
 
 
-template <class T>
-struct custom_allocator {
+	template <class T>
+	struct custom_allocator {
 
-	typedef T value_type;
-	MemBlockBase* m_memBlock = 0;
+		typedef T value_type;
+		MemBlockBase* m_memBlock = 0;
 
-	custom_allocator(MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock()) noexcept 
-	{
-  		//std::cout << "\tcustom_allocator()\n";
-  		//std::cout.flush();
-  		m_memBlock = memBlock;
-	}
-	~custom_allocator() noexcept 
-	{
-  		//std::cout << "\t~custom_allocator()\n";
-  		//std::cout.flush();
-	}
+		custom_allocator(MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock()) noexcept 
+		{
+	  		//std::cout << "\tcustom_allocator()\n";
+	  		//std::cout.flush();
+	  		m_memBlock = memBlock;
+		}
+		~custom_allocator() noexcept 
+		{
+	  		//std::cout << "\t~custom_allocator()\n";
+	  		//std::cout.flush();
+		}
 
-	template <class U> custom_allocator (const custom_allocator<U>& cp) noexcept 
-	{
-  		m_memBlock = cp.m_memBlock;
-  	}
+		template <class U> custom_allocator (const custom_allocator<U>& cp) noexcept 
+		{
+	  		m_memBlock = cp.m_memBlock;
+	  	}
 
-	T* allocate (std::size_t n) 
-	{ 
-		size_t bytes = 0;
-    	size_t gb = 0, mb = 0, kb = 0;
+		T* allocate (std::size_t n) 
+		{ 
+			size_t bytes = 0;
+	    	size_t gb = 0, mb = 0, kb = 0;
 
-  		T* ret = (T*)(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
-  		bytes = m_memBlock->getFreeMemory();
-  		convert(gb, mb, kb, bytes);
+	  		T* ret = (T*)(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
+	  		bytes = m_memBlock->getFreeMemory();
+	  		convert(gb, mb, kb, bytes);
 
-  		std::cout << /*typeid(T).name() <<*/ " allocate(" << n << ") sizeof(" << sizeof(T) << ")\talignof(" << alignof(T) << ") " << (size_t)ret << " remaining memory: " << gb << "Gb, "
-  				<< mb << "Mb, " << kb << "kb, " << bytes << "b, "  << std::endl;
-  		std::cout.flush();  		
-		return ret; 
-	}
+	  		std::cout << /*typeid(T).name() <<*/ " allocate(" << n << ") sizeof(" << sizeof(T) << ")\talignof(" << alignof(T) << ") " << 
+	  				std::hex << (size_t)ret << std::dec << " remaining memory: " << gb << "Gb, "
+	  				<< mb << "Mb, " << kb << "kb, " << bytes << "b, "  << std::endl;
+	  		std::cout.flush();  		
+			return ret; 
+		}
 
-	void deallocate (T* p, std::size_t n) 
-	{
-  		m_memBlock->deallocate(p, n * sizeof(T));
-  		std::cout << "deallocate() " << (size_t)p << std::endl;
-  		std::cout.flush();  		
-	}
+		void deallocate (T* p, std::size_t n) 
+		{
+	  		m_memBlock->deallocate(p, n * sizeof(T));
+	  		std::cout << "deallocate() " << std::hex <<(size_t)p << std::dec << std::endl;
+	  		std::cout.flush();  		
+		}
 
-  	/*
-	T* allocate (std::size_t n) 
-	{ 
-		return static_cast<T*>(::operator new(n*sizeof(T))); 
-	}
+	  	/*
+		T* allocate (std::size_t n) 
+		{ 
+			return static_cast<T*>(::operator new(n*sizeof(T))); 
+		}
 
-	void deallocate (T* p, std::size_t n) 
-	{
-		::delete(p); 
-	}*/
-};
+		void deallocate (T* p, std::size_t n) 
+		{
+			::delete(p); 
+		}*/
+	};
 
-template <class T, class U>
-bool operator==(const custom_allocator<T>&, const custom_allocator<U>&) { return true; }
-template <class T, class U>
-bool operator!=(const custom_allocator<T>&, const custom_allocator<U>&) { return false; }
+	template <class T, class U>
+	bool operator==(const custom_allocator<T>&, const custom_allocator<U>&) { return true; }
+	template <class T, class U>
+	bool operator!=(const custom_allocator<T>&, const custom_allocator<U>&) { return false; }
 
+
+	typedef std::basic_string<char, std::char_traits<char>, custom_allocator<char> > string;
 }
 
 
@@ -183,6 +186,8 @@ static bool LineRaport(char const* file, int line)
 #define TRACE_NEW LineRaport(__FILE__,__LINE__)?0:new 
 
 #define ALLOC(T,n) MonotonicAllocator::GetAllocator().Alloc<T>(n)
+
+
 
 
 

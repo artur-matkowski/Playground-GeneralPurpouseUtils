@@ -24,7 +24,6 @@ bool randb()
 
 
 bfu::MonotonicMemBlock<1024*1024 * 2> memBlock;
-//bfu::StdAllocatorMemBlock memBlock;
 
 
 
@@ -173,12 +172,12 @@ bool _TESTclass()
 
 	log::info << "Testing: testClass2" 
 			//<< "\n\tOriginal input:\n\t\t>" << tt 
-	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.c_str()  
 	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
-	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.c_str()  
 			<< "<\n" << std::endl;
 
-	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	if( std::strcmp(json.c_str(), json2.c_str() )==0 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
@@ -288,12 +287,12 @@ bool _TESTclassNested()
 
 	log::info << "Testing: testClass nested" 
 			//<< "\n\tOriginal input:\n\t\t>" << tt 
-	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.c_str()  
 	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
-	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.c_str()  
 			<< "<\n" << std::endl;
 
-	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	if( std::strcmp(json.c_str(), json2.c_str() )==0 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
@@ -396,12 +395,12 @@ bool _TESTclassNestedJSON()
 
 	log::info << "Testing: nested serializableObj" 
 			//<< "\n\tOriginal input:\n\t\t>" << tt 
-	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.str()  
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.c_str()  
 	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
-	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.c_str()  
 			<< "<\n" << std::endl;
 
-	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	if( std::strcmp(json.c_str(), json2.c_str() )==0 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
@@ -428,7 +427,7 @@ bool jsonTests()
 
 
 	bool test = true;
-	/*
+	
 	test = test && TESTJSONStream(float, randf() );
 	test = test && TESTJSONStream(float, randf() );
 
@@ -477,7 +476,7 @@ bool jsonTests()
 
 	test = test && TESTJSONStreamVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
 
-*/
+
 	test = test && _TESTclass();
 /*
 	test = test && _TESTclassNested();
