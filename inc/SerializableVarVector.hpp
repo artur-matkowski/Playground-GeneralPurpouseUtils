@@ -95,15 +95,15 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVarVector<std::string>: public std::vector<std::string, custom_allocator<std::string> >, public SerializableBase
+	class SerializableVarVector<bfu::string>: public std::vector<bfu::string, custom_allocator<bfu::string> >, public SerializableBase
 	{
 		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::vector<std::string, custom_allocator<std::string> >( custom_allocator<std::string>(mBlock) )
+			:std::vector<bfu::string, custom_allocator<bfu::string> >( custom_allocator<bfu::string>(mBlock) )
 		{}
 	public:
 
 		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::vector<std::string, custom_allocator<std::string> >( custom_allocator<std::string>(mBlock) )
+			:std::vector<bfu::string, custom_allocator<bfu::string> >( custom_allocator<bfu::string>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -112,7 +112,7 @@ namespace bfu{
 		virtual ~SerializableVarVector()
 		{}
 
-		SerializableVarVector<std::string>& operator=(const std::vector<std::string, custom_allocator<std::string> >& in)
+		SerializableVarVector<bfu::string>& operator=(const std::vector<bfu::string, custom_allocator<bfu::string> >& in)
 		{
 			this->clear();
 
@@ -121,7 +121,7 @@ namespace bfu{
 			return *this;
 		}
 
-		SerializableVarVector<std::string>& operator=(const std::vector<std::string>& in)
+		SerializableVarVector<bfu::string>& operator=(const std::vector<bfu::string>& in)
 		{
 			this->clear();
 
@@ -166,7 +166,7 @@ namespace bfu{
 			stream.skip( 1 );
 
 			//SerializableVar<T> deserializationCache("", 0);
-			std::string cache;
+			bfu::string cache;
 
 			while(stream.peak() != ']')
 			{
@@ -280,15 +280,15 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVarVector<std::string*>: public std::vector<std::string*, custom_allocator<std::string*> >, public SerializableBase
+	class SerializableVarVector<bfu::string*>: public std::vector<bfu::string*, custom_allocator<bfu::string*> >, public SerializableBase
 	{
 		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::vector<std::string*, custom_allocator<std::string*> >( custom_allocator<std::string*>(mBlock) )
+			:std::vector<bfu::string*, custom_allocator<bfu::string*> >( custom_allocator<bfu::string*>(mBlock) )
 		{}
 	public:
 
 		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::vector<std::string*, custom_allocator<std::string*> >( custom_allocator<std::string*>(mBlock) )
+			:std::vector<bfu::string*, custom_allocator<bfu::string*> >( custom_allocator<bfu::string*>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -303,7 +303,7 @@ namespace bfu{
 		}
 
 
-		SerializableVarVector<std::string*>& operator=(const std::vector<std::string*, custom_allocator<std::string*> >& in)
+		SerializableVarVector<bfu::string*>& operator=(const std::vector<bfu::string*, custom_allocator<bfu::string*> >& in)
 		{
 			this->clear();
 
@@ -312,7 +312,7 @@ namespace bfu{
 			return *this;
 		}
 
-		SerializableVarVector<std::string*>& operator=(const std::vector<std::string*>& in)
+		SerializableVarVector<bfu::string*>& operator=(const std::vector<bfu::string*>& in)
 		{
 			this->clear();
 
@@ -364,7 +364,7 @@ namespace bfu{
 
 			while(stream.peak() != ']')
 			{
-				std::string* cache = new std::string;
+				bfu::string* cache = new bfu::string;
 				//deserializationCache.Deserialize(stream);
 				stream.Deserialize( *cache );
 

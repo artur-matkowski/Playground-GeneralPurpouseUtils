@@ -58,46 +58,46 @@ namespace bfu{
 
 
 	template<>
-	class SerializableVar<std::string>: public SerializableBase, public std::string
+	class SerializableVar<bfu::string>: public SerializableBase, public bfu::string
 	{
 		MemBlockBase* m_mBlock = 0;
 
 		SerializableVar()
-			:std::string()
+			:bfu::string()
 			{};
 	public:
 
-		SerializableVar(const std::string& val, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::string(val)
-			,m_mBlock(mBlock)
+		SerializableVar(const bfu::string& val)
+			:bfu::string(val)
+			,m_mBlock(0)
 		{}
 
 
 		SerializableVar(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:std::string()
+			:bfu::string(mBlock)
 			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
 
-		explicit inline operator std::string() const 
+		explicit inline operator bfu::string() const 
 		{
 			return *this;
 		}
 
-		inline std::string& GetRef()
+		inline bfu::string& GetRef()
 		{
 			return *this;
 		}
 
-		inline SerializableVar<std::string>& operator=(const std::string& val)
+		inline SerializableVar<bfu::string>& operator=(const bfu::string& val)
 		{
 			this->assign(val);
 			return *this;
 		}
 
-		inline SerializableVar<std::string>& operator=(const char* val)
+		inline SerializableVar<bfu::string>& operator=(const char* val)
 		{
 			this->assign(val);
 			return *this;
@@ -106,13 +106,13 @@ namespace bfu{
 
 		virtual void Serialize(JSONStream& stream)
 		{
-			stream.Serialize( *(std::string*)this );
+			stream.Serialize( *(bfu::string*)this );
 		}
 
 
 		virtual void Deserialize(JSONStream& stream)
 		{
-			stream.Deserialize( *(std::string*)this );
+			stream.Deserialize( *(bfu::string*)this );
 		}
 
 	};

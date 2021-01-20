@@ -80,6 +80,12 @@ namespace bfu
 		virtual void deallocate (void* p, std::size_t n) 
 		{
 			memset(p, 0, n);
+			if( (size_t)p+n==(size_t)m_buffFreePtr)
+			{
+	            std::cout << "Regaining memory becouse deallocate was called right after allocate on the same ptr" << std::endl;
+				std::cout.flush();
+				m_buffFreePtr = (void*)((size_t)m_buffFreePtr - n);
+			}
 		}
 
 		void free()

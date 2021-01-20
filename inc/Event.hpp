@@ -106,8 +106,8 @@ namespace bfu{
 
 
 		virtual void Init(const char* token, 
-							std::vector<std::pair<std::string, int>
-										, custom_allocator<std::pair<std::string, int>>
+							std::vector<std::pair<bfu::string, int>
+										, custom_allocator<std::pair<bfu::string, int>>
 										>* 			propagationTarget,
 							bfu::udp* _udp) = 0;
 
@@ -122,7 +122,7 @@ namespace bfu{
 		char 											m_token[256] = {'0'};
 
 		//do not delete thouse pointers
-		std::vector<std::pair<std::string, int>, custom_allocator<std::pair<std::string, int>> >*
+		std::vector<std::pair<bfu::string, int>, custom_allocator<std::pair<bfu::string, int>> >*
 												 		m_propagationTargets = 0;
 		bfu::udp* 										m_udp = 0;
 
@@ -133,8 +133,8 @@ namespace bfu{
 
 
 		virtual void Init(const char* token, 
-							std::vector<std::pair<std::string, int>
-										, custom_allocator<std::pair<std::string, int>>
+							std::vector<std::pair<bfu::string, int>
+										, custom_allocator<std::pair<bfu::string, int>>
 										>* 			propagationTarget,
 							bfu::udp* _udp)
 		{
@@ -239,8 +239,8 @@ namespace bfu{
 				> 	 	
 														m_events;
 
-		std::vector<std::pair<std::string, int>
-				, custom_allocator<std::pair<std::string, int>> 
+		std::vector<std::pair<bfu::string, int>
+				, custom_allocator<std::pair<bfu::string, int>> 
 				> 				
 														m_propagationTargets;
 
@@ -277,7 +277,7 @@ namespace bfu{
 	public:
 		EventSystem( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:m_events( custom_allocator< std::pair<const char* const, EventBase*>>(mBlock) )
-			,m_propagationTargets( custom_allocator<std::pair<std::string, int>>(mBlock) )
+			,m_propagationTargets( custom_allocator<std::pair<bfu::string, int>>(mBlock) )
 			,m_udp(mBlock)
 			,m_pkg(mBlock)
 		{
@@ -410,8 +410,8 @@ namespace bfu{
 
 		void RegisterPropagationTarget(const char* host, const int port)
 		{
-			std::string t(host);
-			m_propagationTargets.push_back(std::pair<std::string, int>(t, port));
+			bfu::string t(host);
+			m_propagationTargets.push_back(std::pair<bfu::string, int>(t, port));
 		}
 
 		void UnregisterPropagationTarget(const char* host, const int port)

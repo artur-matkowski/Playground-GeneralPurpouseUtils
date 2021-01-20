@@ -22,10 +22,10 @@ namespace bfu{
     	stream m_token;
 		//member name, member reference
 		
-		std::map<std::string
+		std::map<bfu::string
 				, SerializableBase*
-				, std::less<std::string>
-				, custom_allocator<std::pair<const std::string, SerializableBase*> > >		m_membersMap;
+				, std::less<bfu::string>
+				, custom_allocator<std::pair<const bfu::string, SerializableBase*> > >		m_membersMap;
 
 		friend class JSONStream;
 
@@ -38,7 +38,7 @@ namespace bfu{
 
 		SerializableClassBase( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:m_token(m_buff, 256, mBlock)
-			,m_membersMap( custom_allocator<std::pair<const std::string, SerializableBase*> >(mBlock) )
+			,m_membersMap( custom_allocator<std::pair<const bfu::string, SerializableBase*> >(mBlock) )
 			,m_mBlock(mBlock)
 		{};
 

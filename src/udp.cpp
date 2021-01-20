@@ -194,7 +194,7 @@ namespace bfu{
 	}
 
 
-	std::string udp::Read(std::string & remoteHost)
+	bfu::string udp::Read(bfu::string & remoteHost)
 	{
 		char cache[PACKAGESIZE] = {0};
 
@@ -206,20 +206,20 @@ namespace bfu{
 			log::error << "recvfrom2" << std::endl;
 			return "";
 		}
-		remoteHost = std::string(inet_ntoa(si_other.sin_addr));
+		remoteHost = bfu::string(inet_ntoa(si_other.sin_addr));
 
 	    //print details of the client/peer and the data received
 		log::debug << "Received udp msg: {" << cache << "} to {"<<inet_ntoa(si_other.sin_addr)<<":"<<ntohs(si_other.sin_port)<<"}" << std::endl;
 
-		return std::string(cache);
+		return bfu::string(cache);
 	}
 
 	void udp::Read(char* outBuff, int buffSize)
 	{
-		std::string host;
+		bfu::string host;
 		this->Read(outBuff, buffSize, host);
 	}
-	void udp::Read(char* outBuff, int buffSize, std::string & remoteHost)
+	void udp::Read(char* outBuff, int buffSize, bfu::string & remoteHost)
 	{
 		struct sockaddr_in si_other;
 
@@ -237,13 +237,13 @@ namespace bfu{
 			log::error << "recvfrom2" << std::endl;
 			return;
 		}
-		remoteHost = std::string(inet_ntoa(si_other.sin_addr));
+		remoteHost = bfu::string(inet_ntoa(si_other.sin_addr));
 
 	    //print details of the client/peer and the data received
 		log::debug << "Received udp msg: {" << outBuff << "} to {"<<inet_ntoa(si_other.sin_addr)<<":"<<ntohs(si_other.sin_port)<<"}" << std::endl;
 	}
 
-	void udp::Write(const std::string & buff, const char* host, int port)
+	void udp::Write(const bfu::string & buff, const char* host, int port)
 	{
 		struct sockaddr_in si_other;
 	    int s;

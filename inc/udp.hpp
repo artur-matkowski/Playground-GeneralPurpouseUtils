@@ -94,10 +94,10 @@ namespace bfu{
 		bool Write( packet &in );
 		bool Write( SerializableClassBase &in, const char* eventId, const char* host, int port);
 		
-		std::string Read(std::string & remoteHost);
+		bfu::string Read(bfu::string & remoteHost);
 		void Read(char* outBuff, int buffSize);
-		void Read(char* outBuff, int buffSize, std::string & remoteHost);
-		static void Write(const std::string & buff, const char* host, int port);
+		void Read(char* outBuff, int buffSize, bfu::string & remoteHost);
+		static void Write(const bfu::string & buff, const char* host, int port);
 		static void Write(const char * buff, int buffsize, const char* host, int port);
 
 		int GetPort();

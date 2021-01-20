@@ -15,13 +15,17 @@ namespace bfu{
   class JSONStream: public stream{
   public:
     char  m_buff[1024] = {'0'};
+    MemBlockBase* m_mBlock = 0;
+
     JSONStream(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
       :stream(m_buff, 1024, mBlock )
+      ,m_mBlock(mBlock)
     {
     }
 
     JSONStream(const JSONStream& input)
       :stream(input)
+      ,m_mBlock(input.m_mBlock)
     {
     }
 
@@ -144,7 +148,7 @@ namespace bfu{
     }
 */
 
-    JSONStream& Deserialize(std::string& val)
+    JSONStream& Deserialize(bfu::string& val)
     {
       if(m_status < status::OK)
       {
@@ -166,7 +170,8 @@ namespace bfu{
       }
 
       int size = skipper-m_readCursor+1;
-      char* buff = new char[size];
+      //char* buff = new char[size];
+      char* buff = (char*)m_mBlock->allocate(size, sizeof(char), alignof(char));
 
       int buffC = 0;
 
@@ -189,7 +194,8 @@ namespace bfu{
       
       val.assign(buff);
 
-      delete buff;
+      //delete buff;
+      m_mBlock->deallocate(buff, size * sizeof(char));
 
       m_readCursor = skipper;
       skipToOneOf(":,]}");
@@ -361,7 +367,7 @@ namespace bfu{
       return *this;
     }
 */
-    JSONStream& Serialize(const std::string& val)
+    JSONStream& Serialize(const bfu::string& val)
     {
       const char* buff = val.c_str();
       const int buffsize = val.size();

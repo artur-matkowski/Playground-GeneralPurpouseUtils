@@ -27,7 +27,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
     unsigned long vsize;
     long rss;
     {
-        std::string ignore;
+        bfu::string ignore;
         std::ifstream ifs("/proc/self/stat", std::ios_base::in);
         ifs >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
                 >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore >> ignore
@@ -65,8 +65,6 @@ int main(int argc, char** argv)
 	// cout << "VM: " << vm << "; RSS: " << rss << endl;
 
 	// 	return 0;
-
-	bfu::string sss = "fasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdffasdf";
 	
 
 

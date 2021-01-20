@@ -102,9 +102,9 @@ namespace bfu{
 			m_readCursor += c;
 		}
 
-		inline std::string str() const
+		inline bfu::string str() const
 		{
-			return std::string(m_first,m_writeCursor);
+			return bfu::string(m_first,m_writeCursor);
 		}
 
 		inline char* c_str()
@@ -307,7 +307,7 @@ namespace bfu{
 			return *this;
 		}
 
-		stream& operator<<(const std::string& val)
+		stream& operator<<(const bfu::string& val)
 		{
 			this->sprintf(val.c_str());
 
