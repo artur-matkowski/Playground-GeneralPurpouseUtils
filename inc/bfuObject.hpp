@@ -5,6 +5,7 @@
 #include <memory>
 #include <sys/mman.h>
 #include <stdlib.h>
+#include <cstring>
 
 namespace bfu
 {
@@ -39,12 +40,13 @@ namespace bfu
 		void* m_buffStartPtr = 0;
 		void* m_buffFreePtr = 0;
 		void* m_buffEndPtr = 0;
-		char buff[stackSize];
+		//char buff[stackSize];
 
 	public:
 		MonotonicMemBlock()
 		{
-			m_buffFreePtr = m_buffStartPtr = buff;
+			m_buffFreePtr = m_buffStartPtr = new char[stackSize];
+			std::memset(m_buffFreePtr, 0, stackSize);
 			m_buffEndPtr = (void*)((size_t)m_buffStartPtr + (size_t)stackSize);
 		};
 		~MonotonicMemBlock(){};
@@ -52,10 +54,24 @@ namespace bfu
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 		{
 			size_t size = getFreeMemory();
-	        if (std::align(alignOf, sizeOf, m_buffFreePtr, size ))
+
+			void* tmp = m_buffFreePtr;
+
+			if ( m_buffFreePtr = std::align(alignOf, sizeOf, m_buffFreePtr, size ))
 	        {
 	            void* result = m_buffFreePtr;
 	            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + sizeOf * elements);
+
+	            std::cout << "Allocating memory by MonotonicMemBlock, requested size: " << sizeOf * elements << std::endl;
+					std::cout.flush();
+	            if(m_buffFreePtr >= m_buffEndPtr)
+		        {
+		            std::cout << "Failed to allocate memory by MonotonicMemBlock, requested size: " << sizeOf * elements << std::endl;
+  					std::cout.flush();
+  					return nullptr;
+		        }
+	            if(getFreeMemory() < 0)
+					return nullptr;
 	            return result;
 	        }
 	        return nullptr;
@@ -63,7 +79,7 @@ namespace bfu
 
 		virtual void deallocate (void* p, std::size_t n) 
 		{
-
+			memset(p, 0, n);
 		}
 
 		void free()
@@ -116,11 +132,11 @@ struct custom_allocator {
 		size_t bytes = 0;
     	size_t gb = 0, mb = 0, kb = 0;
 
-  		T* ret = static_cast<T*>(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
+  		T* ret = (T*)(m_memBlock->allocate( n, sizeof(T), alignof(T) ));
   		bytes = m_memBlock->getFreeMemory();
   		convert(gb, mb, kb, bytes);
 
-  		std::cout << "allocate() remaining memory: " << gb << "Gb, "
+  		std::cout << /*typeid(T).name() <<*/ " allocate(" << n << ") sizeof(" << sizeof(T) << ")\talignof(" << alignof(T) << ") " << (size_t)ret << " remaining memory: " << gb << "Gb, "
   				<< mb << "Mb, " << kb << "kb, " << bytes << "b, "  << std::endl;
   		std::cout.flush();  		
 		return ret; 
@@ -128,8 +144,9 @@ struct custom_allocator {
 
 	void deallocate (T* p, std::size_t n) 
 	{
-  		m_memBlock->deallocate(p, n);
-  		//std::cout << "deallocate()\n";
+  		m_memBlock->deallocate(p, n * sizeof(T));
+  		std::cout << "deallocate() " << (size_t)p << std::endl;
+  		std::cout.flush();  		
 	}
 
   	/*
@@ -143,6 +160,11 @@ struct custom_allocator {
 		::delete(p); 
 	}*/
 };
+
+template <class T, class U>
+bool operator==(const custom_allocator<T>&, const custom_allocator<U>&) { return true; }
+template <class T, class U>
+bool operator!=(const custom_allocator<T>&, const custom_allocator<U>&) { return false; }
 
 }
 

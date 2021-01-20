@@ -23,14 +23,17 @@ bool randb()
 
 
 
+bfu::MonotonicMemBlock<1024*1024 * 2> memBlock;
+//bfu::StdAllocatorMemBlock memBlock;
 
 
 
 template<typename T>
 bool _TESTJSONStream(const char* _typename, const T& val)
 {
-	bfu::JSONStream json;
-	bfu::JSONStream json2;
+
+	bfu::JSONStream json(&memBlock);
+	bfu::JSONStream json2(&memBlock);
 	bfu::SerializableVar<T> tt(_typename, 0);
 	bfu::SerializableVar<T> tt2(_typename, 0);
 	tt = val;
@@ -67,11 +70,11 @@ bool _TESTJSONStream(const char* _typename, const T& val)
 template<typename T>
 bool _TESTJSONStreamVector(const char* _typename, const std::vector<T> input)
 {
-	bfu::JSONStream json;
-	bfu::JSONStream json2;
+	bfu::JSONStream json(&memBlock);
+	bfu::JSONStream json2(&memBlock);
 
-	bfu::SerializableVarVector<T> var("var",0);
-	bfu::SerializableVarVector<T> var2("var2",0);
+	bfu::SerializableVarVector<T> var("var",0, &memBlock);
+	bfu::SerializableVarVector<T> var2("var2",0, &memBlock);
 	var = input;
 
 	json << var;
@@ -110,17 +113,17 @@ bool _TESTclass()
 		bfu::SerializableVar<bool> m_var;
 		bfu::SerializableVar<float> m_var2;
 		bfu::SerializableVarVector<float> m_var3;
-		bfu::SerializableVar<std::string> m_var4;
+		//bfu::SerializableVar<std::string> m_var4;
 
 
 
 	public:
 		testClass()
-			:bfu::SerializableClassBase()
+			:bfu::SerializableClassBase((&memBlock))
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
-			,m_var4("m_var4",this)
+			,m_var3("m_var3",this, &memBlock)
+			//,m_var4("m_var4",this)
 		{
 			m_var = randb();
 			m_var2 = randf();
@@ -128,22 +131,22 @@ bool _TESTclass()
 			m_var3.push_back(randf());
 			m_var3.push_back(randf());
 
-			m_var4 = "testing \"std::string";
+			//m_var4 = "testing \"std::string";
 		}
 
 		testClass(const testClass& copy)
-			:bfu::SerializableClassBase()
+			:bfu::SerializableClassBase((&memBlock))
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
-			,m_var4("m_var4",this)
+			,m_var3("m_var3",this, &memBlock)
+			//,m_var4("m_var4",this)
 		{
 			m_var = copy.m_var;
 			m_var2 = copy.m_var2;
 
 			m_var3 = copy.m_var3;
 
-			m_var4 = copy.m_var4;
+			//m_var4 = copy.m_var4;
 		}
 	};
 
@@ -151,14 +154,11 @@ bool _TESTclass()
 	bfu::JSONStream json2;
 	testClass tt;
 	testClass tt2;
-	//tt = val;
 
 	std::cout << "tt:";
-	//tt.print();
 
 	
 	std::cout << "tt2:";
-	//tt2.print();
 
 	json << tt;
 
@@ -188,8 +188,8 @@ bool _TESTclass()
 		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
 		return false;		
 	}
-}
 
+}
 bool _TESTclassNested()
 {
 
@@ -205,10 +205,10 @@ bool _TESTclassNested()
 
 	public:
 		testClassChild()
-			:bfu::SerializableClassBase()
+			:bfu::SerializableClassBase((&memBlock))
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
+			,m_var3("m_var3",this, &memBlock)
 			,m_var4("m_var4",this)
 		{
 			m_var = randb();
@@ -221,10 +221,10 @@ bool _TESTclassNested()
 		}
 
 		testClassChild(const testClassChild& copy)
-			:bfu::SerializableClassBase()
+			:bfu::SerializableClassBase((&memBlock))
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
+			,m_var3("m_var3",this, &memBlock)
 			,m_var4("m_var4",this)
 		{
 			m_var = copy.m_var;
@@ -251,12 +251,12 @@ bool _TESTclassNested()
 
 	public:
 		testClass()
-			:bfu::SerializableClassBase()
+			:bfu::SerializableClassBase((&memBlock))
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
+			,m_var3("m_var3",this, &memBlock)
 			,m_var4("m_var4",this)
-			,m_var5("m_var5",this)
+			,m_var5("m_var5",this, &memBlock)
 		{
 			m_var = randb();
 			m_var2 = randf();
@@ -322,7 +322,7 @@ bool _TESTclassNestedJSON()
 			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
+			,m_var3("m_var3",this, &memBlock)
 			,m_var4("m_var4",this)
 		{
 			m_var = randb();
@@ -338,7 +338,7 @@ bool _TESTclassNestedJSON()
 			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var3("m_var3",this)
+			,m_var3("m_var3",this, &memBlock)
 			,m_var4("m_var4",this)
 		{
 			m_var = copy.m_var;
@@ -366,7 +366,7 @@ bool _TESTclassNestedJSON()
 			:bfu::SerializableClassBase()
 			,m_var("m_var",this)
 			,m_var2("m_var2",this)
-			,m_var4("m_var4",this)
+			,m_var4("m_var4",this, &memBlock)
 		{
 			m_var = randb();
 			m_var2 = randf();
@@ -428,7 +428,7 @@ bool jsonTests()
 
 
 	bool test = true;
-	
+	/*
 	test = test && TESTJSONStream(float, randf() );
 	test = test && TESTJSONStream(float, randf() );
 
@@ -477,13 +477,13 @@ bool jsonTests()
 
 	test = test && TESTJSONStreamVector(std::string, "test 1", "test 2", "test 3", "test 4", "test 5" ); 
 
-
+*/
 	test = test && _TESTclass();
-
+/*
 	test = test && _TESTclassNested();
 
 	test = test && _TESTclassNestedJSON();
-
+*/
 
 	if( test )
 	{

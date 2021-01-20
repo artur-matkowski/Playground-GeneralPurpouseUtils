@@ -15,7 +15,7 @@ namespace bfu{
 		{}
 	public:
 
-		SerializableVar(const T& val, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock())
+		SerializableVar(const T& val)
 			:m_var(val)
 		{}
 
@@ -60,18 +60,22 @@ namespace bfu{
 	template<>
 	class SerializableVar<std::string>: public SerializableBase, public std::string
 	{
+		MemBlockBase* m_mBlock = 0;
+
 		SerializableVar()
 			:std::string()
 			{};
 	public:
 
-		SerializableVar(const std::string& val)
+		SerializableVar(const std::string& val, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:std::string(val)
+			,m_mBlock(mBlock)
 		{}
 
 
-		SerializableVar(const char* Name, SerializableClassBase* parent)
+		SerializableVar(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:std::string()
+			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -110,6 +114,7 @@ namespace bfu{
 		{
 			stream.Deserialize( *(std::string*)this );
 		}
+
 	};
 
 }

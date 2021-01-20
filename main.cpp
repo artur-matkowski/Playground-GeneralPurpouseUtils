@@ -65,11 +65,7 @@ int main(int argc, char** argv)
 
 	// 	return 0;
 
-		std::map<std::string
-				, SerializableBase*
-				, std::less<std::string>
-				, custom_allocator<std::pair<const std::string, SerializableBase*> > 
-				 > m_membersMap;
+
 	if( argc < 2 )
 	{
 		cout << "\nUsage:";

@@ -6,15 +6,15 @@
 namespace bfu{
 
 	template<class T>
-	class SerializableVarVector: public std::vector<T>, public SerializableBase
+	class SerializableVarVector: public std::vector<T, custom_allocator<T> >, public SerializableBase
 	{
-		SerializableVarVector()
-			:std::vector<T>()
+		SerializableVarVector( MemBlockBase* mBlock )
+			:std::vector<T, custom_allocator<T> >( custom_allocator<T>(mBlock) )
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent)
-			:std::vector<T>()
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock )
+			:std::vector<T, custom_allocator<T> >( custom_allocator<T>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -24,18 +24,25 @@ namespace bfu{
 		{}
 
 
-		//TODO optimize me:
+		
+		SerializableVarVector<T>& operator=(const std::vector<T, custom_allocator<T> >& in)
+		{
+			this->clear();
+
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
+
+			return *this;
+		}
+
 		SerializableVarVector<T>& operator=(const std::vector<T>& in)
 		{
 			this->clear();
 
-			for(auto it = in.begin(); it != in.end(); ++it)
-			{
-				this->push_back(*it);
-			}
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
 		}
+
 
 		void Serialize(JSONStream& stream) override
 		{
@@ -88,15 +95,15 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVarVector<std::string>: public std::vector<std::string>, public SerializableBase
+	class SerializableVarVector<std::string>: public std::vector<std::string, custom_allocator<std::string> >, public SerializableBase
 	{
-		SerializableVarVector()
-			:std::vector<std::string>()
+		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<std::string, custom_allocator<std::string> >( custom_allocator<std::string>(mBlock) )
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent)
-			:std::vector<std::string>()
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<std::string, custom_allocator<std::string> >( custom_allocator<std::string>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -105,16 +112,20 @@ namespace bfu{
 		virtual ~SerializableVarVector()
 		{}
 
+		SerializableVarVector<std::string>& operator=(const std::vector<std::string, custom_allocator<std::string> >& in)
+		{
+			this->clear();
 
-		//TODO optimize me:
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
+
+			return *this;
+		}
+
 		SerializableVarVector<std::string>& operator=(const std::vector<std::string>& in)
 		{
 			this->clear();
 
-			for(auto it = in.begin(); it != in.end(); ++it)
-			{
-				this->push_back(*it);
-			}
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
 		}
@@ -172,15 +183,15 @@ namespace bfu{
 
 
 	template<class T>
-	class SerializableVarVector<T*>: public std::vector<T*>, public SerializableBase
+	class SerializableVarVector<T*>: public std::vector<T*, custom_allocator<T*> >, public SerializableBase
 	{
-		SerializableVarVector()
-			:std::vector<T*>()
+		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent)
-			:std::vector<T*>()
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -194,19 +205,25 @@ namespace bfu{
 			}
 		}
 
+		
+		SerializableVarVector<T*>& operator=(const std::vector<T, custom_allocator<T*> >& in)
+		{
+			this->clear();
 
-		//TODO optimize me:
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
+
+			return *this;
+		}
+
 		SerializableVarVector<T*>& operator=(const std::vector<T*>& in)
 		{
 			this->clear();
 
-			for(auto it = in.begin(); it != in.end(); ++it)
-			{
-				this->push_back(*it);
-			}
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
 		}
+
 
 		void Serialize(JSONStream& stream) override
 		{
@@ -263,15 +280,15 @@ namespace bfu{
 	};
 
 	template<>
-	class SerializableVarVector<std::string*>: public std::vector<std::string*>, public SerializableBase
+	class SerializableVarVector<std::string*>: public std::vector<std::string*, custom_allocator<std::string*> >, public SerializableBase
 	{
-		SerializableVarVector()
-			:std::vector<std::string*>()
+		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<std::string*, custom_allocator<std::string*> >( custom_allocator<std::string*>(mBlock) )
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent)
-			:std::vector<std::string*>()
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<std::string*, custom_allocator<std::string*> >( custom_allocator<std::string*>(mBlock) )
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -286,15 +303,20 @@ namespace bfu{
 		}
 
 
-		//TODO optimize me:
+		SerializableVarVector<std::string*>& operator=(const std::vector<std::string*, custom_allocator<std::string*> >& in)
+		{
+			this->clear();
+
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
+
+			return *this;
+		}
+
 		SerializableVarVector<std::string*>& operator=(const std::vector<std::string*>& in)
 		{
 			this->clear();
 
-			for(auto it = in.begin(); it != in.end(); ++it)
-			{
-				this->push_back(*it);
-			}
+			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
 		}

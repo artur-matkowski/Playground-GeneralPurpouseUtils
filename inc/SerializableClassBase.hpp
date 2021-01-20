@@ -18,7 +18,7 @@ namespace bfu{
 
 	class SerializableClassBase: public SerializableBase
 	{
-    	char  m_buff[1024] = {'0'};
+    	char  m_buff[256] = {'0'};
     	stream m_token;
 		//member name, member reference
 		
@@ -37,7 +37,7 @@ namespace bfu{
 	public:
 
 		SerializableClassBase( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-			:m_token(m_buff, 1024, mBlock)
+			:m_token(m_buff, 256, mBlock)
 			,m_membersMap( custom_allocator<std::pair<const std::string, SerializableBase*> >(mBlock) )
 			,m_mBlock(mBlock)
 		{};
