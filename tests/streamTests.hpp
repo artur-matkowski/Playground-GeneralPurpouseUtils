@@ -7,14 +7,12 @@
 
 bool streamTests( bfu::MemBlockBase* mBlock )
 {
-	bfu::MonotonicMemBlock<1024*1024> memBlock;
-
 	bool result = true;
     	char  m_buff[1024] = {'0'};
 
 	std::cout << "TESTING bfu::stream VISUALLY" << std::endl << std::flush;
 
-	bfu::stream str(m_buff, 1024, &memBlock);
+	bfu::stream str(m_buff, 1024, mBlock);
 
 	str << OUT(float, -2.321) << std::endl;
 	str << OUT(float, 2.321) << std::endl;

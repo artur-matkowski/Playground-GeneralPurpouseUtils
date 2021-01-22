@@ -28,12 +28,11 @@ public:
 
 bool EventTest( bfu::MemBlockBase* mBlock )
 {
-	bfu::MonotonicMemBlock<1024*1024> memBlock;
 	int test = 5;
     bfu::CallbackId id = 0;
     int result = 0;
 
-    bfu::EventSystem es = bfu::EventSystem(&memBlock);
+    bfu::EventSystem es = bfu::EventSystem(mBlock);
 
 
 	if(fork() == 0)

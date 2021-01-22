@@ -14,9 +14,8 @@
 
 bool udpTests( bfu::MemBlockBase* mBlock )
 {
-	bfu::MonotonicMemBlock<1024*1024> memBlock;
-	bfu::udp::packet out(&memBlock);
-	bfu::udp::packet msg(&memBlock);
+	bfu::udp::packet out(mBlock);
+	bfu::udp::packet msg(mBlock);
 
 	out.SetHost("127.0.0.1");
 	out.m_port = 8888;
@@ -29,7 +28,7 @@ bool udpTests( bfu::MemBlockBase* mBlock )
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 
-		bfu::udp udp(8889, &memBlock);
+		bfu::udp udp(8889, mBlock);
 		udp.Write( out );
 		udp.Write( out );
 
@@ -37,7 +36,7 @@ bool udpTests( bfu::MemBlockBase* mBlock )
 	}
 	else //child
 	{
-		bfu::udp udp(8888, &memBlock);
+		bfu::udp udp(8888, mBlock);
 
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
