@@ -26,7 +26,7 @@ public:
 };
 
 
-bool EventTest()
+bool EventTest( bfu::MemBlockBase* mBlock )
 {
 	bfu::MonotonicMemBlock<1024*1024> memBlock;
 	int test = 5;

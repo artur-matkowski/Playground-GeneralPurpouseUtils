@@ -73,7 +73,7 @@ namespace bfu{
 		{}
 
 
-		SerializableVar(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		SerializableVar(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock )
 			:bfu::string(mBlock)
 			,m_mBlock(mBlock)
 		{

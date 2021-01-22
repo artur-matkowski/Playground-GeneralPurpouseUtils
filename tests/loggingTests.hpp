@@ -3,7 +3,7 @@
 #include "testsbase.hpp"
 #include "log.hpp"
 
-bool loggingTests()
+bool loggingTests( bfu::MemBlockBase* mBlock )
 {
 	//log::Log.EnableFileLogging();
 

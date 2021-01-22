@@ -41,11 +41,12 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 
 
 
-class Prealocator10mb: public MonotonicMemBlock<1024*1024*10>{};
+class Prealocator10mb: public MonotonicMemBlock<1024*1024*50>{};
 
 
 int main(int argc, char** argv)
 {
+	Prealocator10mb membloc;
 	// vector<float, custom_allocator<float, Prealocator10mb >> v_floats;
 	// //vector<float, std::allocator<float> > v_floats;
 	// //vector<float> v_floats;
@@ -84,7 +85,7 @@ int main(int argc, char** argv)
 
 	if( strcmp(argv[1], "json") == 0 )
 	{
-		bool ret = jsonTests();
+		bool ret = jsonTests(&membloc);
 
 		if(ret)
 			return 0;
@@ -93,7 +94,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "stream") == 0 )
 	{
-		bool ret = streamTests();
+		bool ret = streamTests(&membloc);
 
 		if(ret)
 			return 0;
@@ -102,7 +103,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "logging") == 0 )
 	{
-		bool ret = loggingTests();
+		bool ret = loggingTests(&membloc);
 
 		if(ret)
 			return 0;
@@ -111,7 +112,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "udp") == 0 )
 	{
-		bool ret = udpTests();
+		bool ret = udpTests(&membloc);
 
 		if(ret)
 			return 0;
@@ -120,7 +121,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "event") == 0 )
 	{
-		bool ret = EventTest();
+		bool ret = EventTest(&membloc);
 
 		if(ret)
 			return 0;

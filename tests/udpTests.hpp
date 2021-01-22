@@ -12,7 +12,7 @@
 
 #define TEST_STRING "{kupa \"msg type\"}"
 
-bool udpTests()
+bool udpTests( bfu::MemBlockBase* mBlock )
 {
 	bfu::MonotonicMemBlock<1024*1024> memBlock;
 	bfu::udp::packet out(&memBlock);

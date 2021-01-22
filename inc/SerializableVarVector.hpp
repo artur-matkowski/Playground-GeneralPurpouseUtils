@@ -5,16 +5,77 @@
 
 namespace bfu{
 
+
+	// Or we can use enable_if from Boost:
+	template <bool, typename T = void>
+	struct enable_if {
+	};
+	template <typename T>
+	struct enable_if<true, T> {
+	    typedef T type;
+	};
+
+	typedef MemBlockBase* MemBlockBasePtr;
+
+
+	template <typename T>
+	struct ConstructoFinder {
+	    /* If T provides a constructor matching this signature, this is the declaration of SFINAE that will succeed,
+	     * of size 4 bytes
+	     */
+	    template<typename U>
+	    static int32_t SFINAE(decltype(U(MemBlockBasePtr()))*);
+
+	    /* Otherwise the ellipsis will accept just about anything (and has minimum priority) so in the fallback case
+	     * we'll use this definition and SFINAE will be 1 byte big
+	     */
+	    template<typename U>
+	    static int8_t SFINAE(...);
+
+	    // Check what size SFINAE ended up being, this tells us if the constructor matched the right signature or not
+	    static const bool value = sizeof(SFINAE<T>(nullptr)) == sizeof(int32_t);
+	};
+
+	class ConditionalBuilder {
+	public:
+
+	    /**
+	     * Construct an element which has a constructor with two int arguments.
+	     */
+	    template <class U>
+	    /* Here we have a dummy argument which defaults to a null pointer of type U* if there is a 2-int constructor.
+	     *
+	     * Otherwise the resolution of enable_if will fail. The compiler will quietly discard this method
+	     * during overload resolution and call the no-arg constructor version instead.
+	     */
+	    static U constructCandidate(MemBlockBase* mBlock, typename enable_if<ConstructoFinder<U>::value, U>::type* = 0) {
+	        return U(mBlock);
+	    }
+
+	    /**
+	     * Fallback for element types without two-int signatures.
+	     */
+	    template <class U>
+	    static U constructCandidate(MemBlockBase* mBlock,typename enable_if<!ConstructoFinder<U>::value, U>::type* = 0) {
+	        return U();
+	    }
+
+	};
+
+
 	template<class T>
 	class SerializableVarVector: public std::vector<T, custom_allocator<T> >, public SerializableBase
 	{
+		MemBlockBase* m_mBlock = 0;
 		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<T, custom_allocator<T> >( custom_allocator<T>(mBlock) )
+			,m_mBlock(mBlock)
 		{}
 	public:
 
 		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock )
 			:std::vector<T, custom_allocator<T> >( custom_allocator<T>(mBlock) )
+			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -80,7 +141,7 @@ namespace bfu{
 			stream.skip( 1 );
 
 			//SerializableVar<T> deserializationCache("", 0);
-			T cache;
+			T cache = ConditionalBuilder::constructCandidate<T>(m_mBlock);
 
 			while(stream.peak() != ']')
 			{
@@ -97,13 +158,16 @@ namespace bfu{
 	template<>
 	class SerializableVarVector<bfu::string>: public std::vector<bfu::string, custom_allocator<bfu::string> >, public SerializableBase
 	{
-		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		MemBlockBase* m_mBlock = 0;
+		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<bfu::string, custom_allocator<bfu::string> >( custom_allocator<bfu::string>(mBlock) )
+			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock )
 			:std::vector<bfu::string, custom_allocator<bfu::string> >( custom_allocator<bfu::string>(mBlock) )
+			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -166,7 +230,7 @@ namespace bfu{
 			stream.skip( 1 );
 
 			//SerializableVar<T> deserializationCache("", 0);
-			bfu::string cache;
+			bfu::string cache(m_mBlock);
 
 			while(stream.peak() != ']')
 			{
@@ -185,13 +249,16 @@ namespace bfu{
 	template<class T>
 	class SerializableVarVector<T*>: public std::vector<T*, custom_allocator<T*> >, public SerializableBase
 	{
-		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		MemBlockBase* m_mBlock = 0;
+		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
+			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock  )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
+			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
@@ -282,13 +349,16 @@ namespace bfu{
 	template<>
 	class SerializableVarVector<bfu::string*>: public std::vector<bfu::string*, custom_allocator<bfu::string*> >, public SerializableBase
 	{
-		SerializableVarVector( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		MemBlockBase* m_mBlock = 0;
+		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<bfu::string*, custom_allocator<bfu::string*> >( custom_allocator<bfu::string*>(mBlock) )
+			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock )
 			:std::vector<bfu::string*, custom_allocator<bfu::string*> >( custom_allocator<bfu::string*>(mBlock) )
+			,m_mBlock(mBlock)
 		{
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);

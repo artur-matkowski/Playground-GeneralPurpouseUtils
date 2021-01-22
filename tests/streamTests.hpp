@@ -5,7 +5,7 @@
 
 #define OUT(T,v) #T":\t " << (v<0?" ":"  ") << (T)v
 
-bool streamTests()
+bool streamTests( bfu::MemBlockBase* mBlock )
 {
 	bfu::MonotonicMemBlock<1024*1024> memBlock;
 
