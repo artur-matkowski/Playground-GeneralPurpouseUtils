@@ -185,7 +185,7 @@ bool _TESTclass(bfu::MemBlockBase* memBlock)
 	}
 
 }
-/*
+
 bool _TESTclassNested(bfu::MemBlockBase* memBlock)
 {
 
@@ -299,7 +299,7 @@ bool _TESTclassNested(bfu::MemBlockBase* memBlock)
 		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
 		return false;		
 	}
-}*/
+}
 
 bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 {
@@ -476,7 +476,7 @@ bool jsonTests( bfu::MemBlockBase* mBlock )
 
 	test = test && _TESTclass(mBlock);
 
-	//test = test && _TESTclassNested(mBlock);
+	test = test && _TESTclassNested(mBlock);
 /*
 	test = test && _TESTclassNestedJSON(mBlock);
 */

@@ -77,6 +77,7 @@ namespace bfu{
 			:std::vector<T, custom_allocator<T> >( custom_allocator<T>(mBlock) )
 			,m_mBlock(mBlock)
 		{
+			std::vector<T, custom_allocator<T> >::reserve(16);
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
@@ -169,6 +170,7 @@ namespace bfu{
 			:std::vector<bfu::string, custom_allocator<bfu::string> >( custom_allocator<bfu::string>(mBlock) )
 			,m_mBlock(mBlock)
 		{
+			std::vector<bfu::string, custom_allocator<bfu::string> >::reserve(16);
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
@@ -260,6 +262,7 @@ namespace bfu{
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
 		{
+			std::vector<T*, custom_allocator<T*> >::reserve(16);
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
@@ -324,7 +327,8 @@ namespace bfu{
 		{
 			for(auto it = this->begin(); it!=this->end(); ++it)
 			{
-				delete *it;
+				//delete *it;
+				m_mBlock->deallocate(*it, sizeof(T));
 			}
 			this->clear();
 
@@ -335,7 +339,8 @@ namespace bfu{
 
 			while(stream.peak() != ']')
 			{
-				T* cache = new T;
+				//T* cache = new T;
+				T* cache = m_mBlock->allocate(1, sizeof(T), alignof(T));
 				//deserializationCache.Deserialize(stream);
 				stream >>( *cache );
 
@@ -360,6 +365,7 @@ namespace bfu{
 			:std::vector<bfu::string*, custom_allocator<bfu::string*> >( custom_allocator<bfu::string*>(mBlock) )
 			,m_mBlock(mBlock)
 		{
+			std::vector<bfu::string*, custom_allocator<bfu::string*> >::reserve(16);
 			if(parent!=0)
 				parent->PushReferenceToMap(Name, this);
 		}
