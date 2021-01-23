@@ -133,17 +133,14 @@ public:
 						outfile.open(LogFileName, std::ios_base::app); // append instead of overwrite
 						if(outfile.fail())
 						{
+                            loggingToFile = false;
 							DebugLevel tmp = level;
-							log::warning << "\nFailed to open log file in location: " << LogFileName << " traying to log into executable folder";
-							outfile.open(LogFileName, std::ios_base::app);
-							if(outfile.fail())
-							{
-								log::error << "\nFailed to log into executable folder, disabling file logging";
-								loggingToFile = false;
-							}
+							log::warning << "\nFailed to open log file in location: " << LogFileName << std::endl;
 							level = tmp;
 						}
-						outfile << log::getTime() << LogLvl(level) << stream << os;
+                        else if(loggingToFile){ //need to dual check becouse of nested logging above
+                            outfile << log::getTime() << LogLvl(level) << stream << os;
+                        }
 						outfile.close();
                     }
 

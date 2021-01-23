@@ -47,7 +47,7 @@ class Prealocator10mb: public MonotonicMemBlock<1024*1024*50>{};
 int main(int argc, char** argv)
 {
 	Prealocator10mb membloc;
-	//log::file();
+	log::file();
 
 
 	if( argc < 2 )
