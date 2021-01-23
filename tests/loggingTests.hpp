@@ -5,7 +5,7 @@
 
 bool loggingTests( bfu::MemBlockBase* mBlock )
 {
-	//log::Log.EnableFileLogging();
+	//log::file();
 
 	unsigned char t[] = "testing unsined char*";
 

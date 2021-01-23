@@ -24,6 +24,9 @@ enum class DebugLevel {
 #define info Log(__FILE__,__LINE__)(DebugLevel::INFO)
 #define debug Log(__FILE__,__LINE__)(DebugLevel::ALL)
 
+
+
+
 class log {
 
 	static char 		time[];
@@ -38,6 +41,8 @@ public:
         /*  other log class methods/properties
             ...
         */
+
+        
 
         // out stream object
         static struct OutStream {
@@ -168,6 +173,11 @@ public:
                 }
 
         } Log;
+
+        static void file()
+        {
+            Log.EnableFileLogging();
+        }
 
 
 };

@@ -47,26 +47,7 @@ class Prealocator10mb: public MonotonicMemBlock<1024*1024*50>{};
 int main(int argc, char** argv)
 {
 	Prealocator10mb membloc;
-	// vector<float, custom_allocator<float, Prealocator10mb >> v_floats;
-	// //vector<float, std::allocator<float> > v_floats;
-	// //vector<float> v_floats;
-	// float f = 1.0;
-	// v_floats.push_back(++f);
-	// v_floats.push_back(++f);
-	// v_floats.push_back(++f);
-	// v_floats.push_back(++f);
-
-
-	// for(int i=0; i<v_floats.size(); ++i)
-	// 	cout << v_floats[i] << " ";
-
-
-	// double vm, rss;
-	// process_mem_usage(vm, rss);
-	// cout << "VM: " << vm << "; RSS: " << rss << endl;
-
-	// 	return 0;
-	
+	//log::file();
 
 
 	if( argc < 2 )
