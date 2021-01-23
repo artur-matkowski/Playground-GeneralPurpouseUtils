@@ -77,7 +77,7 @@ void * operator new(std::size_t size)
 
 	++alocations;
     alocatedBytes += size;
-    void * p = malloc(size); 
+    void * p = malloc(size==0?1:size); 
     log::warning << "\n\t\tMemory alocations:   " << alocations << " caling global operator NEW" <<
     		     "\n\t\tMemory dealocations: " << dealocations <<
                  "\n\t\tMemory addr: " <<  (size_t)p << " " << (int)size << "b" << 

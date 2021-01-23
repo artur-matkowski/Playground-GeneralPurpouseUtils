@@ -5,6 +5,7 @@
 #include <ostream>
 #include <string>
 #include <fstream>
+#include <cstdio>
 #include "stream.hpp"
 
 
@@ -121,17 +122,16 @@ public:
                     return *this;
                 }
 
-
                 // this overload intercept std::endl, to flush the stream and send all to std::cout
                 OutStream& operator<<(std::ostream& (*os)(std::ostream&)) {
 
                 	if(LOG_LEVEL > level)
                 		return *this;
-
+                    
                 	if(loggingToFile)
                     {
-						outfile.open(LogFileName, std::ios_base::app); // append instead of overwrite
-						if(outfile.fail())
+                        FILE* pFile = fopen(LogFileName, "a+");
+						if(pFile==NULL)
 						{
                             loggingToFile = false;
 							DebugLevel tmp = level;
@@ -139,9 +139,10 @@ public:
 							level = tmp;
 						}
                         else if(loggingToFile){ //need to dual check becouse of nested logging above
-                            outfile << log::getTime() << LogLvl(level) << stream << os;
+                            //outfile << log::getTime() << LogLvl(level) << stream << os;
+                            fprintf (pFile, "\n%s%s%s",log::getTime(), LogLvl(level), stream.c_str() );
+                            fclose (pFile);
                         }
-						outfile.close();
                     }
 
 

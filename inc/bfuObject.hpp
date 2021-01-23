@@ -72,6 +72,11 @@ namespace bfu
 		        }
 	            if(getFreeMemory() < 0)
 					return nullptr;
+
+				if(result == m_buffFreePtr)
+				{
+					m_buffFreePtr = (void*)((size_t)m_buffFreePtr +1);
+				}
 	            return result;
 	        }
 	        return nullptr;
