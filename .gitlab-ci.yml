@@ -16,7 +16,7 @@ build-rel-armhf:
     script:
         - make release
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -34,7 +34,7 @@ build-dbg-armhf:
     script:
         - make debug
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -50,7 +50,7 @@ tests-json-armhf:
     script:
         - ./build/armhf/rel/bitforgeutils_tests json
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -64,7 +64,7 @@ tests-stream-armhf:
     script:
         - ./build/armhf/rel/bitforgeutils_tests stream
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -78,7 +78,7 @@ tests-logging-armhf:
     script:
         - ./build/armhf/rel/bitforgeutils_tests logging
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -92,7 +92,7 @@ tests-udp-armhf:
     script:
         - ./build/armhf/rel/bitforgeutils_tests udp
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -106,7 +106,7 @@ tests-event-armhf:
     script:
         - ./build/armhf/rel/bitforgeutils_tests event
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
@@ -123,7 +123,7 @@ deploy-armhf:
         - stable
         - test
     tags:
-        - testpi0
+        - testpi0-gcc8.3
     artifacts:
         name: OBJ_$COMMIT_TIME
         expire_in: 1 week
