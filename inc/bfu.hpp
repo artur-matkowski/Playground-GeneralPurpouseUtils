@@ -4,6 +4,8 @@
 #include "Event.hpp"
 #include "log.hpp"
 #include "udp.hpp"
+#include "CustomAllocator.hpp"
+
 
 
 #endif

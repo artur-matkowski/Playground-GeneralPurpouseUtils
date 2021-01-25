@@ -5,11 +5,25 @@
 #include <string>
 #include <iostream>
 #include <cinttypes>
-#include "bfuObject.hpp"
+#include "CustomAllocator.hpp"
 //#include <iostream>
 	
 namespace bfu{
 	
+	typedef std::basic_string<char, std::char_traits<char>, custom_allocator<char> > t_string;
+
+	class string: public t_string
+	{
+	public:
+		using t_string::t_string;
+		string(const std::string& cp, MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:t_string(cp.c_str(), memBlock)
+		{}
+		operator std::string() const
+	    {
+	        return std::string(this->c_str());
+	    }
+	};
 
 	class stream
 	{

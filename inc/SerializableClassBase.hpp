@@ -1,7 +1,6 @@
 #ifndef _H_SerializableClassBase
 #define _H_SerializableClassBase
 #include "SerializableBase.hpp"
-//#include <cstdlib>
 #include <cstring>
 #include <map>
 #include "stream.hpp"
