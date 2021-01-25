@@ -27,6 +27,21 @@ namespace bfu
 			return m_memBlockDescriptor;
 		}
 	};
+
+	struct operatorNEWstatistics: public MemBlockBase
+	{
+		operatorNEWstatistics()
+			:MemBlockBase("operator NEW")
+		{};
+
+		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
+		{return nullptr;};
+
+		virtual size_t getFreeMemory();
+		virtual size_t getUsedMemory();
+		virtual void*  getRefPtr();
+
+	};
 }
 
 void* operator new(std::size_t size);

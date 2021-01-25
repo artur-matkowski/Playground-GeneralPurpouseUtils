@@ -8,8 +8,8 @@ namespace bfu
 {
 	class StdAllocatorMemBlock: public MemBlockBase
 	{
-		size_t 	m_allocatedMemory = 0;
-		size_t 	m_deallocatedMemory = 0;
+		static size_t 	m_allocatedMemory;
+		static size_t 	m_deallocatedMemory;
 	public:
 		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
 			:MemBlockBase(name)
@@ -55,7 +55,8 @@ namespace bfu
 	    };
 		virtual size_t getFreeMemory()
 	    {
-	        return 0;
+		    static operatorNEWstatistics mock;
+		    return mock.getFreeMemory();
 	    };
 		virtual size_t getUsedMemory() 
 		{
@@ -63,7 +64,7 @@ namespace bfu
 		}
 		virtual void* getRefPtr()
 		{
-			return this;
+			return 0;
 		}
 
 		static StdAllocatorMemBlock* GetMemBlock()

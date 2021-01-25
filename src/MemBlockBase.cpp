@@ -1,6 +1,7 @@
 #include "MemBlockBase.hpp"
 #include <iostream>
 #include <iomanip>
+#include <unistd.h>
 #include "log.hpp"
 
 void convert(size_t& big, size_t& small)
@@ -16,16 +17,32 @@ void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b)
     convert(gb, mb);
 }
 
-namespace bfu
-{
-
-}
-
 
 static size_t s_allocatedInBlock = 0;
 static size_t s_deallocatedInBlock = 0;
 static int s_allocationCount = 0;
 static int s_deallocationCount = 0;
+
+
+namespace bfu
+{
+	size_t operatorNEWstatistics::getFreeMemory()
+	{
+	    size_t pages = sysconf(_SC_PHYS_PAGES);
+	    size_t page_size = sysconf(_SC_PAGE_SIZE);
+	    return pages * page_size - s_allocatedInBlock;
+	}
+
+	size_t operatorNEWstatistics::getUsedMemory()
+	{
+		return s_allocatedInBlock;
+	}
+
+	void*  operatorNEWstatistics::getRefPtr()
+	{
+		return nullptr;
+	}
+}
 
 void * operator new(std::size_t size)
 { 
