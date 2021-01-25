@@ -41,12 +41,10 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 
 
 
-class Prealocator10mb: public MonotonicMemBlock<1024*1024*50>{};
-
 
 int main(int argc, char** argv)
 {
-	Prealocator10mb membloc;
+	MonotonicMemBlock<1024*1024*50> membloc("main memory block");
 	//log::file();
 
 

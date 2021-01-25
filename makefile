@@ -2,7 +2,7 @@ OUT		 = bitforgeutils
 VERSION	 = .1.0.0
 
 
-CC 		 = g++ -std=c++11
+CC 		 = g++ -std=c++11 -DDEBUG_MEMORY_ALLOC
 
 CPPFLAGS += -Iinc
 

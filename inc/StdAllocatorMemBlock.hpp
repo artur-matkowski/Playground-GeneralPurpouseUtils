@@ -11,6 +11,10 @@ namespace bfu
 		size_t 	m_allocatedMemory = 0;
 		size_t 	m_deallocatedMemory = 0;
 	public:
+		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
+			:MemBlockBase(name)
+		{};
+
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	    {
 	    	m_allocatedMemory += sizeOf * elements;
@@ -20,7 +24,7 @@ namespace bfu
 	    
 	   		logAlloc(	ret, 
 	    			sizeOf * elements, 
-	    			"StdAllocatorMemBlock",
+	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
 	    			m_deallocatedMemory,
@@ -38,7 +42,7 @@ namespace bfu
 
 	   		logDealloc(	p, 
 	    			n, 
-	    			"StdAllocatorMemBlock",
+	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
 	    			m_deallocatedMemory,

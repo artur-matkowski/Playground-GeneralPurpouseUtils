@@ -1,6 +1,7 @@
 #ifndef _H_MemBlockBase
 #define _H_MemBlockBase
 #include <cstddef>
+#include <cstring>
 
 namespace bfu
 {
@@ -11,6 +12,10 @@ namespace bfu
 		int 		m_allocationCount = 0;
 		int 		m_deallocationCount = 0;
 	public:
+		MemBlockBase(const char* name)
+		{
+			strncpy(m_memBlockDescriptor, name, sizeof(m_memBlockDescriptor));
+		}
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) = 0;
 		virtual void deallocate (void* p, std::size_t n){};
 		virtual size_t getFreeMemory() = 0;

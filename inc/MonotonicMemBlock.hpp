@@ -17,7 +17,8 @@ namespace bfu
 		//char buff[stackSize];
 
 	public:
-		MonotonicMemBlock()
+		MonotonicMemBlock(const char* name = "MonotonicMemBlock")
+			:MemBlockBase(name)
 		{
 			m_buffFreePtr = m_buffStartPtr = new char[stackSize];
 			std::memset(m_buffFreePtr, 0, stackSize);
@@ -53,7 +54,7 @@ namespace bfu
 				#ifdef DEBUG_MEMORY_ALLOC
 				logAlloc(	result, 
 		    			sizeOf * elements, 
-		    			"MonotonicMemBlock",
+		    			m_memBlockDescriptor,
 		    			getUsedMemory(),
 		    			getFreeMemory(),
 		    			m_deallocatedMemory,
@@ -81,7 +82,7 @@ namespace bfu
 			#ifdef DEBUG_MEMORY_ALLOC
    			logDealloc(	p, 
     			n, 
-    			"MonotonicMemBlock",
+    			m_memBlockDescriptor,
     			getUsedMemory(),
     			getFreeMemory(),
     			m_deallocatedMemory,
