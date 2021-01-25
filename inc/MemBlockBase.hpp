@@ -21,6 +21,11 @@ namespace bfu
 		virtual size_t getFreeMemory() = 0;
 		virtual size_t getUsedMemory() = 0;
 		virtual void*  getRefPtr() = 0;
+
+		const char* GetDescriptio()
+		{
+			return m_memBlockDescriptor;
+		}
 	};
 }
 
