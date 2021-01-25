@@ -36,10 +36,6 @@ namespace bfu
 	            void* result = m_buffFreePtr;
 	            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + sizeOf * elements);
 
-	    //         std::cout << "Allocating memory by MonotonicMemBlock, requested size: " << sizeOf * elements << std::endl;
-					// std::cout.flush();
-
-
 
 	            if(m_buffFreePtr >= m_buffEndPtr)
 		        {
@@ -54,7 +50,7 @@ namespace bfu
 				{
 					m_buffFreePtr = (void*)((size_t)m_buffFreePtr +1);
 				}
-
+				#ifdef DEBUG_MEMORY_ALLOC
 				logAlloc(	result, 
 		    			sizeOf * elements, 
 		    			"MonotonicMemBlock",
@@ -64,6 +60,7 @@ namespace bfu
 		    			++m_allocationCount,
 		    			m_deallocationCount,
 		    			m_buffStartPtr);
+				#endif
 
 	            return result;
 	        }
@@ -81,6 +78,7 @@ namespace bfu
 				m_buffFreePtr = (void*)((size_t)m_buffFreePtr - n);
 			}
 
+			#ifdef DEBUG_MEMORY_ALLOC
    			logDealloc(	p, 
     			n, 
     			"MonotonicMemBlock",
@@ -90,6 +88,7 @@ namespace bfu
     			m_allocationCount,
     			++m_deallocationCount,
     			m_buffStartPtr);
+			#endif
 		}
 
 		void free()
