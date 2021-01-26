@@ -26,8 +26,8 @@ namespace bfu
 		{
 			return m_memBlockDescriptor;
 		}
-		int GetAllocationsCount() {return m_allocationCount;}
-		int GetDeallocationsCount() {return m_deallocationCount;}
+		virtual int GetAllocationsCount() {return m_allocationCount;}
+		virtual int GetDeallocationsCount() {return m_deallocationCount;}
 	};
 
 	struct operatorNEWstatistics: public MemBlockBase
@@ -42,6 +42,9 @@ namespace bfu
 		virtual size_t getFreeMemory();
 		virtual size_t getUsedMemory();
 		virtual void*  getRefPtr();
+
+		virtual int GetAllocationsCount();
+		virtual int GetDeallocationsCount();
 
 	};
 }

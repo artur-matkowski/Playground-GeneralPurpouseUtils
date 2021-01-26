@@ -51,6 +51,8 @@ namespace bfu
 				{
 					m_buffFreePtr = (void*)((size_t)m_buffFreePtr +1);
 				}
+
+				++m_allocationCount;
 				#ifdef DEBUG_MEMORY_ALLOC
 				logAlloc(	result, 
 		    			sizeOf * elements, 
@@ -58,7 +60,7 @@ namespace bfu
 		    			getUsedMemory(),
 		    			getFreeMemory(),
 		    			m_deallocatedMemory,
-		    			++m_allocationCount,
+		    			m_allocationCount,
 		    			m_deallocationCount,
 		    			m_buffStartPtr);
 				#endif
@@ -79,6 +81,7 @@ namespace bfu
 				m_buffFreePtr = (void*)((size_t)m_buffFreePtr - n);
 			}
 
+    		++m_deallocationCount;
 			#ifdef DEBUG_MEMORY_ALLOC
    			logDealloc(	p, 
     			n, 
@@ -87,7 +90,7 @@ namespace bfu
     			getFreeMemory(),
     			m_deallocatedMemory,
     			m_allocationCount,
-    			++m_deallocationCount,
+    			m_deallocationCount,
     			m_buffStartPtr);
 			#endif
 		}

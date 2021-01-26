@@ -69,6 +69,9 @@ namespace bfu
 			return 0;
 		}
 
+		virtual int GetAllocationsCount() {return s_allocationCount;}
+		virtual int GetDeallocationsCount() {return s_deallocationCount;}
+
 		static StdAllocatorMemBlock* GetMemBlock()
 		{
 			static StdAllocatorMemBlock _this;
