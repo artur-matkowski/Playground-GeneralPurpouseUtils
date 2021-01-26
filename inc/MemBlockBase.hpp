@@ -22,10 +22,12 @@ namespace bfu
 		virtual size_t getUsedMemory() = 0;
 		virtual void*  getRefPtr() = 0;
 
-		const char* GetDescriptio()
+		const char* GetDescription()
 		{
 			return m_memBlockDescriptor;
 		}
+		int GetAllocationsCount() {return m_allocationCount;}
+		int GetDeallocationsCount() {return m_deallocationCount;}
 	};
 
 	struct operatorNEWstatistics: public MemBlockBase
