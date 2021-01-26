@@ -8,8 +8,10 @@ namespace bfu
 {
 	class StdAllocatorMemBlock: public MemBlockBase
 	{
-		static size_t 	m_allocatedMemory;
-		static size_t 	m_deallocatedMemory;
+		static size_t 	s_allocatedMemory;
+		static size_t 	s_deallocatedMemory;
+		static int 		s_allocationCount;
+		static int 		s_deallocationCount;
 	public:
 		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
 			:MemBlockBase(name)
@@ -17,7 +19,7 @@ namespace bfu
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	    {
-	    	m_allocatedMemory += sizeOf * elements;
+	    	s_allocatedMemory += sizeOf * elements;
 
 	        void* ret = aligned_alloc(alignOf, sizeOf * elements);
 
@@ -27,9 +29,9 @@ namespace bfu
 	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
-	    			m_deallocatedMemory,
-	    			++m_allocationCount,
-	    			m_deallocationCount,
+	    			s_deallocatedMemory,
+	    			++s_allocationCount,
+	    			s_deallocationCount,
 	    			this);
 
 
@@ -38,16 +40,16 @@ namespace bfu
 
 		virtual void deallocate (void* p, std::size_t n)
 	    {
-	    	m_deallocatedMemory += n;
+	    	s_deallocatedMemory += n;
 
 	   		logDealloc(	p, 
 	    			n, 
 	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
-	    			m_deallocatedMemory,
-	    			m_allocationCount,
-	    			++m_deallocationCount,
+	    			s_deallocatedMemory,
+	    			s_allocationCount,
+	    			++s_deallocationCount,
 	    			this);
 
 
@@ -60,7 +62,7 @@ namespace bfu
 	    };
 		virtual size_t getUsedMemory() 
 		{
-			return m_allocatedMemory;
+			return s_allocatedMemory;
 		}
 		virtual void* getRefPtr()
 		{
