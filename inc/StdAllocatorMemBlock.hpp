@@ -63,7 +63,7 @@ namespace bfu
 		virtual size_t getFreeMemory()
 	    {
 		    static operatorNEWstatistics mock;
-		    return mock.getFreeMemory();
+		    return mock.getFreeMemory() - s_allocatedMemory;
 	    };
 		virtual size_t getUsedMemory() 
 		{

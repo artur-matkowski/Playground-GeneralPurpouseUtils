@@ -59,23 +59,23 @@ namespace bfu
 		static size_t s_deallocatedInBlock;
 		static int s_allocationCount;
 		static int s_deallocationCount;
+		static size_t s_memoryCapacity;
 	public:
 
-		operatorNEWstatistics()
-			:MemBlockBase("operator NEW")
-		{};
+		operatorNEWstatistics();
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
 		{
  			void * p = malloc(sizeOf==0?1:sizeOf); 
 
 			++s_allocationCount;
+    		s_allocatedInBlock+=sizeOf;
 
 			#ifdef DEBUG_MEMORY_ALLOC
 		    logAlloc(	p, 
     			sizeOf==0?1:sizeOf, 
     			"global operator NEW",
-    			s_allocatedInBlock+=sizeOf,
+    			s_allocatedInBlock,
     			0,
     			s_deallocatedInBlock,
     			s_allocationCount,

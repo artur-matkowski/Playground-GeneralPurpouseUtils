@@ -25,12 +25,19 @@ namespace bfu
 	size_t operatorNEWstatistics::s_deallocatedInBlock = 0;
 	int operatorNEWstatistics::s_allocationCount = 0;
 	int operatorNEWstatistics::s_deallocationCount = 0;
+	size_t operatorNEWstatistics::s_memoryCapacity = 0;
 
-	size_t operatorNEWstatistics::getFreeMemory()
+	operatorNEWstatistics::operatorNEWstatistics()
+		:MemBlockBase("operator NEW")
 	{
 	    size_t pages = sysconf(_SC_PHYS_PAGES);
 	    size_t page_size = sysconf(_SC_PAGE_SIZE);
-	    return pages * page_size - s_allocatedInBlock;
+		s_memoryCapacity = pages * page_size;
+	};
+
+	size_t operatorNEWstatistics::getFreeMemory()
+	{
+	    return s_memoryCapacity - s_allocatedInBlock;
 	}
 
 	size_t operatorNEWstatistics::getUsedMemory()
