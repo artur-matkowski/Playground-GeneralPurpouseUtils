@@ -18,14 +18,14 @@ void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b)
 }
 
 
-static size_t s_allocatedInBlock = 0;
-static size_t s_deallocatedInBlock = 0;
-static int s_allocationCount = 0;
-static int s_deallocationCount = 0;
-
 
 namespace bfu
 {
+	size_t operatorNEWstatistics::s_allocatedInBlock = 0;
+	size_t operatorNEWstatistics::s_deallocatedInBlock = 0;
+	int operatorNEWstatistics::s_allocationCount = 0;
+	int operatorNEWstatistics::s_deallocationCount = 0;
+
 	size_t operatorNEWstatistics::getFreeMemory()
 	{
 	    size_t pages = sysconf(_SC_PHYS_PAGES);
@@ -49,33 +49,16 @@ namespace bfu
 
 void * operator new(std::size_t size)
 { 
-    void * p = malloc(size==0?1:size); 
+    static bfu::operatorNEWstatistics mem;
 
-    logAlloc(	p, 
-    			size==0?1:size, 
-    			"global operator NEW",
-    			s_allocatedInBlock+=size,
-    			0,
-    			s_deallocatedInBlock,
-    			++s_allocationCount,
-    			s_deallocationCount,
-    			0);
-
-    return p; 
+    return mem.allocate(1, size, 0); 
 } 
   
 void operator delete(void * p) noexcept
 { 
-	 logAlloc(	p, 
-    			0, 
-    			"global operator NEW",
-    			s_allocatedInBlock,
-    			0,
-    			s_deallocatedInBlock,
-    			s_allocationCount,
-    			++s_deallocationCount,
-    			0);
-    free(p); 
+    static bfu::operatorNEWstatistics mem;
+
+    mem.deallocate(p, 0);
 }
 
 #define TALBE_WIDTH 30

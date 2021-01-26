@@ -23,16 +23,18 @@ namespace bfu
 
 	        void* ret = aligned_alloc(alignOf, sizeOf * elements);
 
-	    
+	        ++s_allocationCount;
+	    	#ifdef DEBUG_MEMORY_ALLOC
 	   		logAlloc(	ret, 
 	    			sizeOf * elements, 
 	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
 	    			s_deallocatedMemory,
-	    			++s_allocationCount,
+	    			s_allocationCount,
 	    			s_deallocationCount,
 	    			this);
+	   		#endif
 
 
 	        return ret;
@@ -41,7 +43,9 @@ namespace bfu
 		virtual void deallocate (void* p, std::size_t n)
 	    {
 	    	s_deallocatedMemory += n;
+	    	++s_deallocationCount;
 
+			#ifdef DEBUG_MEMORY_ALLOC
 	   		logDealloc(	p, 
 	    			n, 
 	    			m_memBlockDescriptor,
@@ -49,8 +53,9 @@ namespace bfu
 	    			getFreeMemory(),
 	    			s_deallocatedMemory,
 	    			s_allocationCount,
-	    			++s_deallocationCount,
+	    			s_deallocationCount,
 	    			this);
+	   		#endif
 
 
 	        free(p);

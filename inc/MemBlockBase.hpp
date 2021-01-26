@@ -2,6 +2,29 @@
 #define _H_MemBlockBase
 #include <cstddef>
 #include <cstring>
+#include <cstdlib>
+
+void logAlloc(	void* ptr, 
+				size_t allocationSize, 
+				const char* memBlockDescriptor,
+				size_t allocatedInBlock,
+				size_t freeInBlock,
+				size_t deallocatedInBlock,
+				int allocationCount,
+				int deallocationCount,
+				void* refPtr );
+
+void logDealloc(void* ptr, 
+				size_t allocationSize, 
+				const char* memBlockDescriptor,
+				size_t allocatedInBlock,
+				size_t freeInBlock,
+				size_t deallocatedInBlock,
+				int allocationCount,
+				int deallocationCount,
+				void* refPtr );
+
+
 
 namespace bfu
 {
@@ -30,14 +53,56 @@ namespace bfu
 		virtual int GetDeallocationsCount() {return m_deallocationCount;}
 	};
 
-	struct operatorNEWstatistics: public MemBlockBase
+	class operatorNEWstatistics: public MemBlockBase
 	{
+		static size_t s_allocatedInBlock;
+		static size_t s_deallocatedInBlock;
+		static int s_allocationCount;
+		static int s_deallocationCount;
+	public:
+
 		operatorNEWstatistics()
 			:MemBlockBase("operator NEW")
 		{};
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
-		{return nullptr;};
+		{
+ 			void * p = malloc(sizeOf==0?1:sizeOf); 
+
+			++s_allocationCount;
+
+			#ifdef DEBUG_MEMORY_ALLOC
+		    logAlloc(	p, 
+    			sizeOf==0?1:sizeOf, 
+    			"global operator NEW",
+    			s_allocatedInBlock+=sizeOf,
+    			0,
+    			s_deallocatedInBlock,
+    			s_allocationCount,
+    			s_deallocationCount,
+    			0);
+		    #endif
+
+    		return p; 
+		}
+		virtual void deallocate (void* p, std::size_t n)
+		{
+			++s_deallocationCount;
+
+			#ifdef DEBUG_MEMORY_ALLOC
+			logDealloc(p, 
+		    			0, 
+		    			"global operator NEW",
+		    			s_allocatedInBlock,
+		    			0,
+		    			s_deallocatedInBlock,
+		    			s_allocationCount,
+		    			s_deallocationCount,
+		    			0);
+		    #endif
+
+		    free(p); 
+		}
 
 		virtual size_t getFreeMemory();
 		virtual size_t getUsedMemory();
@@ -51,25 +116,5 @@ namespace bfu
 
 void* operator new(std::size_t size);
 void operator delete(void* p) noexcept;
-
-void logAlloc(	void* ptr, 
-				size_t allocationSize, 
-				const char* memBlockDescriptor,
-				size_t allocatedInBlock,
-				size_t freeInBlock,
-				size_t deallocatedInBlock,
-				int allocationCount,
-				int deallocationCount,
-				void* refPtr );
-
-void logDealloc(void* ptr, 
-				size_t allocationSize, 
-				const char* memBlockDescriptor,
-				size_t allocatedInBlock,
-				size_t freeInBlock,
-				size_t deallocatedInBlock,
-				int allocationCount,
-				int deallocationCount,
-				void* refPtr );
 
 #endif
