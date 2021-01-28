@@ -9,7 +9,7 @@ stages:
 
 
 
-build-rel-armhf:
+rel-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -27,7 +27,7 @@ build-rel-armhf:
 
 
 
-build-dbg-armhf:
+dbg-armhf:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -45,7 +45,7 @@ build-dbg-armhf:
 
 
 
-tests-json-armhf:
+json-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests json
@@ -59,7 +59,7 @@ tests-json-armhf:
 
 
 
-tests-stream-armhf:
+stream-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests stream
@@ -73,7 +73,7 @@ tests-stream-armhf:
 
 
 
-tests-logging-armhf:
+logging-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests logging
@@ -87,7 +87,7 @@ tests-logging-armhf:
 
 
 
-tests-udp-armhf:
+udp-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests udp
@@ -101,7 +101,7 @@ tests-udp-armhf:
 
 
 
-tests-event-armhf:
+event-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests event
@@ -115,7 +115,7 @@ tests-event-armhf:
 
 
 
-deploy-armhf:
+armhf:
     stage: deploy
     script:
         - ./package.sh $CI_COMMIT_BRANCH
@@ -133,7 +133,7 @@ deploy-armhf:
 
 
 
-build-rel-amd64:
+rel-amd64:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -151,7 +151,7 @@ build-rel-amd64:
 
 
 
-build-dbg-amd64:
+dbg-amd64:
     stage: build
     before_script:
         - ./prebuild.sh
@@ -169,7 +169,7 @@ build-dbg-amd64:
 
 
 
-tests-json-amd64:
+json-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests json
@@ -183,7 +183,7 @@ tests-json-amd64:
 
 
 
-tests-stream-amd64:
+stream-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests stream
@@ -197,7 +197,7 @@ tests-stream-amd64:
 
 
 
-tests-logging-amd64:
+logging-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests logging
@@ -211,7 +211,7 @@ tests-logging-amd64:
 
 
 
-tests-udp-amd64:
+udp-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests udp
@@ -225,7 +225,7 @@ tests-udp-amd64:
 
 
 
-tests-event-amd64:
+event-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests event
@@ -239,7 +239,7 @@ tests-event-amd64:
 
 
 
-deploy-amd64:
+amd64:
     stage: deploy
     script:
         - ./package.sh $CI_COMMIT_BRANCH
