@@ -49,6 +49,10 @@ namespace bfu
 	{
 		return nullptr;
 	}
+	void*  operatorNEWstatistics::getMemPtr()
+	{
+		return nullptr;
+	}
 
 	int operatorNEWstatistics::GetAllocationsCount() {return s_allocationCount;}
 	int operatorNEWstatistics::GetDeallocationsCount() {return s_deallocationCount;}

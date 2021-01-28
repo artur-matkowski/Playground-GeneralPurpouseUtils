@@ -107,6 +107,10 @@ namespace bfu
 		{
 			return this;
 		}
+		void* getMemPtr()
+		{
+			return m_buffStartPtr;
+		}
 
 		static MonotonicMemBlock* GetMemBlock()
 		{

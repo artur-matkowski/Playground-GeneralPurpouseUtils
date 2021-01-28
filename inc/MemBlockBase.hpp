@@ -44,6 +44,7 @@ namespace bfu
 		virtual size_t getFreeMemory() = 0;
 		virtual size_t getUsedMemory() = 0;
 		virtual void*  getRefPtr() = 0;
+		virtual void* getMemPtr() = 0;
 
 		const char* GetDescription()
 		{
@@ -107,6 +108,7 @@ namespace bfu
 		virtual size_t getFreeMemory();
 		virtual size_t getUsedMemory();
 		virtual void*  getRefPtr();
+		virtual void* getMemPtr();
 
 		virtual int GetAllocationsCount();
 		virtual int GetDeallocationsCount();
