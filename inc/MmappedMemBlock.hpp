@@ -1,13 +1,11 @@
-#ifndef _H_MonotonicMemBlock
-#define _H_MonotonicMemBlock
+#ifndef _H_MmappedMemBlock
+#define _H_MmappedMemBlock
 #include "MemBlockBase.hpp"
 #include <memory>
 
 namespace bfu
 {
-
-	template <int stackSize>
-	class MonotonicMemBlock: public MemBlockBase
+	class MmappedMemBlock: public MemBlockBase
 	{
 	protected:
 		void* m_buffStartPtr = 0;
@@ -16,14 +14,10 @@ namespace bfu
 		size_t m_deallocatedMemory = 0;
 
 	public:
-		MonotonicMemBlock(const char* name = "MonotonicMemBlock")
-			:MemBlockBase(name)
-		{
-			m_buffFreePtr = m_buffStartPtr = new char[stackSize];
-			std::memset(m_buffFreePtr, 0, stackSize);
-			m_buffEndPtr = (void*)((size_t)m_buffStartPtr + (size_t)stackSize);
-		};
-		~MonotonicMemBlock(){ if(m_buffStartPtr!=0) delete (char*)m_buffStartPtr; };
+		inline static size_t PageSize();
+
+		MmappedMemBlock(size_t startingPointPage, size_t pagesToAllocate, const char* name = "MmappedMemBlock");
+		~MmappedMemBlock();
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 		{
@@ -41,10 +35,15 @@ namespace bfu
 
 	            if(m_buffFreePtr >= m_buffEndPtr)
 		        {
-		            //std::cout << "Failed to allocate memory by MonotonicMemBlock, requested size: " << sizeOf * elements << std::endl;
+		            //std::cout << "Failed to allocate memory by MmappedMemBlock, requested size: " << sizeOf * elements << std::endl;
   					//std::cout.flush();
   					return nullptr;
 		        }
+
+				if(result == m_buffFreePtr)
+				{
+					m_buffFreePtr = (void*)((size_t)m_buffFreePtr +1);
+				}
 
 				++m_allocationCount;
 				#ifdef DEBUG_MEMORY_ALLOC
@@ -106,12 +105,6 @@ namespace bfu
 		void* getRefPtr()
 		{
 			return this;
-		}
-
-		static MonotonicMemBlock* GetMemBlock()
-		{
-			static MonotonicMemBlock<stackSize> _this;
-			return &_this;
 		}
 	};
 

@@ -2,6 +2,7 @@
 #define _H_CustomAllocator
 #include "StdAllocatorMemBlock.hpp"
 #include "MonotonicMemBlock.hpp"
+#include "MmappedMemBlock.hpp"
 
 namespace bfu
 {
