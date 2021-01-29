@@ -45,6 +45,7 @@ namespace bfu
 		virtual size_t getUsedMemory() = 0;
 		virtual void*  getRefPtr() = 0;
 		virtual void* getMemPtr() = 0;
+		virtual bool owns(void*) = 0;
 
 		const char* GetDescription()
 		{
@@ -54,7 +55,7 @@ namespace bfu
 		virtual int GetDeallocationsCount() {return m_deallocationCount;}
 	};
 
-	class operatorNEWstatistics: public MemBlockBase
+	class MallocAllocator: public MemBlockBase
 	{
 		static size_t s_allocatedInBlock;
 		static size_t s_deallocatedInBlock;
@@ -63,7 +64,7 @@ namespace bfu
 		static size_t s_memoryCapacity;
 	public:
 
-		operatorNEWstatistics();
+		MallocAllocator();
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
 		{
@@ -109,11 +110,13 @@ namespace bfu
 		virtual size_t getUsedMemory();
 		virtual void*  getRefPtr();
 		virtual void* getMemPtr();
+		virtual bool owns(void*);
 
 		virtual int GetAllocationsCount();
 		virtual int GetDeallocationsCount();
-
 	};
+
+	bool BindOperatorNew2MemBlock(MemBlockBase*);
 }
 
 void* operator new(std::size_t size);

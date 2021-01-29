@@ -111,6 +111,14 @@ namespace bfu
 		{
 			return m_buffStartPtr;
 		}
+		virtual bool owns(void* ptr)
+		{
+			if((size_t)m_buffStartPtr<(size_t)ptr && (size_t)ptr < (size_t)m_buffEndPtr)
+				return true;
+			
+			return false;
+		}
+
 
 		static MonotonicMemBlock* GetMemBlock()
 		{
