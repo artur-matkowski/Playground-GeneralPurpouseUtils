@@ -269,10 +269,7 @@ namespace bfu{
 
 		virtual ~SerializableVarVector()
 		{
-			for(auto it = this->begin(); it!=this->end(); ++it)
-			{
-				delete *it;
-			}
+			
 		}
 
 		
@@ -350,7 +347,7 @@ namespace bfu{
 
 		}
 	};
-
+/*
 	template<>
 	class SerializableVarVector<bfu::string*>: public std::vector<bfu::string*, custom_allocator<bfu::string*> >, public SerializableBase
 	{
@@ -372,10 +369,7 @@ namespace bfu{
 
 		virtual ~SerializableVarVector()
 		{
-			for(auto it = this->begin(); it!=this->end(); ++it)
-			{
-				delete *it;
-			}
+
 		}
 
 
@@ -429,7 +423,8 @@ namespace bfu{
 		{
 			for(auto it = this->begin(); it!=this->end(); ++it)
 			{
-				delete *it;
+				//delete *it;
+				m_mBlock->deallocate(*it, sizeof(bfu::string));
 			}
 			this->clear();
 
@@ -440,7 +435,7 @@ namespace bfu{
 
 			while(stream.peak() != ']')
 			{
-				bfu::string* cache = new bfu::string;
+				bfu::string* cache = (bfu::string*)m_mBlock->allocate(1, sizeof(bfu::string*), alignof(bfu::string*));
 				//deserializationCache.Deserialize(stream);
 				stream.Deserialize( *cache );
 
@@ -449,7 +444,7 @@ namespace bfu{
 
 
 		}
-	};
+	};*/
 
 }
 
