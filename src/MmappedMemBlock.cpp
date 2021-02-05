@@ -1,6 +1,7 @@
 #include "MmappedMemBlock.hpp"
 #include <unistd.h>
 #include <sys/mman.h>
+#include <memory>
 
 namespace bfu
 {
@@ -11,10 +12,11 @@ namespace bfu
 	    return pageSize;
 	}
 
-	MmappedMemBlock::MmappedMemBlock(size_t startingPointPage, size_t size, const char* name)
+	MmappedMemBlock::MmappedMemBlock(void* reqAddr, size_t size, const char* name)
 		:MemBlockBase(name)
 	{
-		m_buffStartPtr = m_buffFreePtr = mmap((void*)(PageSize() * startingPointPage), size, 
+		reqAddr = std::align(PageSize(), 1, reqAddr, size);
+		m_buffStartPtr = m_buffFreePtr = mmap(reqAddr, size, 
                 PROT_READ | PROT_WRITE, 
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);

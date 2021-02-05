@@ -16,7 +16,7 @@ namespace bfu
 	public:
 		inline static size_t PageSize();
 
-		MmappedMemBlock(size_t startingPointPage, size_t pagesToAllocate, const char* name = "MmappedMemBlock");
+		MmappedMemBlock(void* reqAddr, size_t size, const char* name = "MmappedMemBlock");
 		~MmappedMemBlock();
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
@@ -101,6 +101,15 @@ namespace bfu
 		size_t getUsedMemory()
 		{
 			return (size_t)m_buffFreePtr- (size_t)m_buffStartPtr;
+		}
+		size_t size()
+		{
+			return (size_t)m_buffEndPtr- (size_t)m_buffStartPtr;
+		}
+
+		void* end()
+		{
+			return m_buffEndPtr;
 		}
 		void* getRefPtr()
 		{
