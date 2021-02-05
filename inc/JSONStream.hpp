@@ -23,6 +23,12 @@ namespace bfu{
     {
     }
 
+    JSONStream(char* prealocatedBuff, int size, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
+      :stream(prealocatedBuff, size, mBlock )
+      ,m_mBlock(mBlock)
+    {
+    }
+
     JSONStream(const JSONStream& input)
       :stream(input)
       ,m_mBlock(input.m_mBlock)
