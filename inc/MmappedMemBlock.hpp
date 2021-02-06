@@ -14,7 +14,7 @@ namespace bfu
 		size_t m_deallocatedMemory = 0;
 
 	public:
-		inline static size_t PageSize();
+		static size_t PageSize();
 
 		MmappedMemBlock(void* reqAddr, size_t size, const char* name = "MmappedMemBlock");
 		MmappedMemBlock(const MmappedMemBlock& cp);
