@@ -39,6 +39,12 @@ namespace bfu
 		{
 			strncpy(m_memBlockDescriptor, name, sizeof(m_memBlockDescriptor));
 		}
+		MemBlockBase(const MemBlockBase& cp)
+		{
+			strncpy(m_memBlockDescriptor, cp.m_memBlockDescriptor, sizeof(m_memBlockDescriptor));
+			m_allocationCount = cp.m_allocationCount;
+			m_deallocationCount = cp.m_allocationCount;
+		}
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) = 0;
 		virtual void deallocate (void* p, std::size_t n){};
 		virtual size_t getFreeMemory() = 0;

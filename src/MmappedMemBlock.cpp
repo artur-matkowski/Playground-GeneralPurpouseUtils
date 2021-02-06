@@ -26,6 +26,16 @@ namespace bfu
 		m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
 	};
 
+
+	MmappedMemBlock::MmappedMemBlock(const MmappedMemBlock& cp)
+		:MemBlockBase(cp)
+		,m_buffStartPtr(cp.m_buffStartPtr)
+		,m_buffFreePtr(cp.m_buffFreePtr)
+		,m_buffEndPtr(cp.m_buffEndPtr)
+		,m_deallocatedMemory(cp.m_deallocatedMemory)
+	{
+	}
+
 	MmappedMemBlock::~MmappedMemBlock()
 	{
 		munmap(m_buffFreePtr, (size_t)m_buffEndPtr - (size_t)m_buffStartPtr);

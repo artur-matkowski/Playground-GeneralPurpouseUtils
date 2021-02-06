@@ -17,6 +17,7 @@ namespace bfu
 		inline static size_t PageSize();
 
 		MmappedMemBlock(void* reqAddr, size_t size, const char* name = "MmappedMemBlock");
+		MmappedMemBlock(const MmappedMemBlock& cp);
 		~MmappedMemBlock();
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
