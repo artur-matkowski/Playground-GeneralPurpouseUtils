@@ -45,7 +45,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 int main(int argc, char** argv)
 {
 	//MonotonicMemBlock<1024*1024*50> membloc("main memory block");
-	MmappedMemBlock membloc(1, 1024*1024*50, "main memory block");
+	MmappedMemBlock membloc((void*)1, 1024*1024*50, "main memory block");
 	//log::file();
 
 
