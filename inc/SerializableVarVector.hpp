@@ -91,6 +91,8 @@ namespace bfu{
 		{
 			this->clear();
 
+			this->reserve( in.size() );
+
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
@@ -99,6 +101,8 @@ namespace bfu{
 		SerializableVarVector<T>& operator=(const std::vector<T>& in)
 		{
 			this->clear();
+
+			this->reserve( in.size() );
 
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
@@ -182,6 +186,8 @@ namespace bfu{
 		{
 			this->clear();
 
+			this->reserve( in.size() );
+
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
@@ -190,6 +196,8 @@ namespace bfu{
 		SerializableVarVector<bfu::string>& operator=(const std::vector<bfu::string>& in)
 		{
 			this->clear();
+
+			this->reserve( in.size() );
 
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
@@ -277,6 +285,8 @@ namespace bfu{
 		{
 			this->clear();
 
+			this->reserve( in.size() );
+
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
@@ -285,6 +295,8 @@ namespace bfu{
 		SerializableVarVector<T*>& operator=(const std::vector<T*>& in)
 		{
 			this->clear();
+
+			this->reserve( in.size() );
 
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
@@ -377,6 +389,8 @@ namespace bfu{
 		{
 			this->clear();
 
+			this->reserve( in.size() );
+
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
@@ -386,6 +400,8 @@ namespace bfu{
 		{
 			this->clear();
 
+			this->reserve( in.size() );
+			
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
