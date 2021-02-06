@@ -281,7 +281,7 @@ namespace bfu{
 		}
 
 		
-		SerializableVarVector<T*>& operator=(const std::vector<T, custom_allocator<T*> >& in)
+		SerializableVarVector<T*>& operator=(const std::vector<T*, custom_allocator<T*> >& in)
 		{
 			this->clear();
 
@@ -401,7 +401,7 @@ namespace bfu{
 			this->clear();
 
 			this->reserve( in.size() );
-			
+
 			std::copy(in.begin(), in.end(), std::back_inserter(*this)); 
 
 			return *this;
