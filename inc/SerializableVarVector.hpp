@@ -260,17 +260,17 @@ namespace bfu{
 	class SerializableVarVector<T*>: public std::vector<T*, custom_allocator<T*> >, public SerializableBase
 	{
 		MemBlockBase* 	m_mBlock = 0;
-		T 				m_copyInitializationObject;
+		T* 				p_copyInitializationObject;
 		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, const T& copyInitializationObject, MemBlockBase* mBlock  )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, T* copyInitializationObject, MemBlockBase* mBlock  )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
-			,m_copyInitializationObject(copyInitializationObject)
+			,p_copyInitializationObject(copyInitializationObject)
 		{
 			std::vector<T*, custom_allocator<T*> >::reserve(16);
 			if(parent!=0)
@@ -279,7 +279,11 @@ namespace bfu{
 
 		virtual ~SerializableVarVector()
 		{
-			
+		}
+
+		void SetCopyInitializationObject(T* copyInitializationObject)
+		{
+			p_copyInitializationObject = copyInitializationObject;
 		}
 
 		
@@ -353,7 +357,7 @@ namespace bfu{
 			{
 				//T* cache = new T;
 				T* cache = (T*)m_mBlock->allocate(1, sizeof(T), alignof(T));
-				new (cache) T( m_copyInitializationObject );
+				new (cache) T( *p_copyInitializationObject );
 				//deserializationCache.Deserialize(stream);
 				stream >>( *cache );
 
