@@ -349,7 +349,7 @@ namespace bfu{
 			while(stream.peak() != ']')
 			{
 				//T* cache = new T;
-				T* cache = (T*)m_mBlock->allocate(1, sizeof(T*), alignof(T*));
+				T* cache = (T*)m_mBlock->allocate(1, sizeof(T), alignof(T));
 				//deserializationCache.Deserialize(stream);
 				stream >>( *cache );
 
