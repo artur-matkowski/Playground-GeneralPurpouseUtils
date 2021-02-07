@@ -259,16 +259,18 @@ namespace bfu{
 	template<class T>
 	class SerializableVarVector<T*>: public std::vector<T*, custom_allocator<T*> >, public SerializableBase
 	{
-		MemBlockBase* m_mBlock = 0;
+		MemBlockBase* 	m_mBlock = 0;
+		T 				m_copyInitializationObject;
 		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock  )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, const T& copyInitializationObject, MemBlockBase* mBlock  )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
+			,m_copyInitializationObject(copyInitializationObject)
 		{
 			std::vector<T*, custom_allocator<T*> >::reserve(16);
 			if(parent!=0)
@@ -337,6 +339,7 @@ namespace bfu{
 			for(auto it = this->begin(); it!=this->end(); ++it)
 			{
 				//delete *it;
+				(*it)->~T();
 				m_mBlock->deallocate(*it, sizeof(T));
 			}
 			this->clear();
@@ -350,6 +353,7 @@ namespace bfu{
 			{
 				//T* cache = new T;
 				T* cache = (T*)m_mBlock->allocate(1, sizeof(T), alignof(T));
+				new (cache) T( m_copyInitializationObject );
 				//deserializationCache.Deserialize(stream);
 				stream >>( *cache );
 
