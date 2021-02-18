@@ -16,7 +16,7 @@ namespace bfu
 		MallocAllocator mock;
 	public:
 		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
-			:MemBlockBase(name)
+			:MemBlockBase( name )
 		{};
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
