@@ -14,15 +14,18 @@ namespace bfu
 
 	MmappedMemBlock::MmappedMemBlock(void* reqAddr, size_t size, const char* name)
 		:MemBlockBase(name)
+		,m_selfRefCounter(std::make_shared<int>(1))
 	{
 		reqAddr = std::align(PageSize(), 1, reqAddr, size);
-		m_buffStartPtr = m_buffFreePtr = mmap(reqAddr, size, 
+		m_buffStartPtr = mmap(reqAddr, size, 
                 PROT_READ | PROT_WRITE, 
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
 
+		m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
+
 		//m_buffFreePtr = m_buffStartPtr = new char[stackSize];
-		std::memset(m_buffFreePtr, 0, size);
+		std::memset(*m_buffFreePtr, 0, size);
 		m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
 	};
 
@@ -34,10 +37,13 @@ namespace bfu
 		,m_buffEndPtr(cp.m_buffEndPtr)
 		,m_deallocatedMemory(cp.m_deallocatedMemory)
 	{
+		++(*m_selfRefCounter);
 	}
 
 	MmappedMemBlock::~MmappedMemBlock()
 	{
-		munmap(m_buffFreePtr, (size_t)m_buffEndPtr - (size_t)m_buffStartPtr);
+		--(*m_selfRefCounter);
+		if(m_selfRefCounter==0)
+			munmap(*m_buffFreePtr, (size_t)m_buffEndPtr - (size_t)m_buffStartPtr);
 	};
 }

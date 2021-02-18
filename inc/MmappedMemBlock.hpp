@@ -9,7 +9,8 @@ namespace bfu
 	{
 	protected:
 		void* m_buffStartPtr = 0;
-		void* m_buffFreePtr = 0;
+		std::shared_ptr<void*> m_buffFreePtr = nullptr;
+		std::shared_ptr<int> m_selfRefCounter = nullptr;
 		void* m_buffEndPtr = 0;
 		size_t m_deallocatedMemory = 0;
 
@@ -24,26 +25,26 @@ namespace bfu
 		{
 			size_t size = getFreeMemory();
 
-			void* tmp = m_buffFreePtr;
+			void* tmp = *m_buffFreePtr;
 
-			if ( m_buffFreePtr = std::align(alignOf, sizeOf, m_buffFreePtr, size ))
+			if ( *m_buffFreePtr = std::align(alignOf, sizeOf, *m_buffFreePtr, size ))
 	        {
-	            void* result = m_buffFreePtr;
+	            void* result = *m_buffFreePtr;
 	            size_t size = sizeOf * elements;
 	            size = size > 0 ? size : 1;
-	            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + size);
+	            *m_buffFreePtr = (void*)((size_t) *m_buffFreePtr + size);
 
 
-	            if(m_buffFreePtr >= m_buffEndPtr)
+	            if(*m_buffFreePtr >= m_buffEndPtr)
 		        {
 		            //std::cout << "Failed to allocate memory by MmappedMemBlock, requested size: " << sizeOf * elements << std::endl;
   					//std::cout.flush();
   					return nullptr;
 		        }
 
-				if(result == m_buffFreePtr)
+				if(result == *m_buffFreePtr)
 				{
-					m_buffFreePtr = (void*)((size_t)m_buffFreePtr +1);
+					*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr +1);
 				}
 
 				++m_allocationCount;
@@ -68,11 +69,11 @@ namespace bfu
 		{
 			m_deallocatedMemory += n;
 			memset(p, 0, n);
-			if( (size_t)p+n==(size_t)m_buffFreePtr)
+			if( (size_t)p+n==(size_t)*m_buffFreePtr)
 			{
 	            //std::cout << "Regaining memory becouse deallocate was called right after allocate on the same ptr" << std::endl;
 				//std::cout.flush();
-				m_buffFreePtr = (void*)((size_t)m_buffFreePtr - n);
+				*m_buffFreePtr = (void*)((size_t)*m_buffFreePtr - n);
 			}
 
     		++m_deallocationCount;
@@ -91,17 +92,17 @@ namespace bfu
 
 		void free()
 		{
-			m_buffFreePtr = m_buffStartPtr;
+			*m_buffFreePtr = m_buffStartPtr;
 		}
 
 
 		size_t getFreeMemory()
 		{
-			return (size_t)m_buffEndPtr- (size_t)m_buffFreePtr;
+			return (size_t)m_buffEndPtr- (size_t)*m_buffFreePtr;
 		}
 		size_t getUsedMemory()
 		{
-			return (size_t)m_buffFreePtr- (size_t)m_buffStartPtr;
+			return (size_t)*m_buffFreePtr- (size_t)m_buffStartPtr;
 		}
 		size_t size()
 		{
