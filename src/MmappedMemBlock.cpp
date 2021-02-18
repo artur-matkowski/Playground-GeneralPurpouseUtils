@@ -1,4 +1,5 @@
 #include "MmappedMemBlock.hpp"
+#include "CustomAllocator.hpp"
 #include <unistd.h>
 #include <sys/mman.h>
 #include <memory>
@@ -14,7 +15,6 @@ namespace bfu
 
 	MmappedMemBlock::MmappedMemBlock(void* reqAddr, size_t size, const char* name)
 		:MemBlockBase(name)
-		,m_selfRefCounter(std::make_shared<int>(1))
 	{
 		reqAddr = std::align(PageSize(), 1, reqAddr, size);
 		m_buffStartPtr = mmap(reqAddr, size, 
@@ -22,11 +22,13 @@ namespace bfu
                 MAP_PRIVATE | MAP_ANONYMOUS, 
                 -1, 0);
 
-		m_buffFreePtr = std::make_shared<void*>(m_buffStartPtr);
 
 		//m_buffFreePtr = m_buffStartPtr = new char[stackSize];
 		std::memset(*m_buffFreePtr, 0, size);
 		m_buffEndPtr = (void*)((size_t)m_buffStartPtr + size);
+
+		m_selfRefCounter = std::allocate_shared<int>(custom_allocator<int>(this), 1);
+		m_buffFreePtr = std::allocate_shared<void*>(custom_allocator<void*>(this), m_buffStartPtr);
 	};
 
 
@@ -43,7 +45,7 @@ namespace bfu
 	MmappedMemBlock::~MmappedMemBlock()
 	{
 		--(*m_selfRefCounter);
-		if(m_selfRefCounter==0)
+		if(*m_selfRefCounter==0)
 			munmap(*m_buffFreePtr, (size_t)m_buffEndPtr - (size_t)m_buffStartPtr);
 	};
 }
