@@ -49,6 +49,7 @@ namespace bfu{
 		stream.skip(1);
 	}
 
+
 	void SerializableClassBase::print()
 	{
 		auto last = m_membersMap.end();

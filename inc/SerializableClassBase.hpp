@@ -17,6 +17,8 @@ namespace bfu{
 
 	class SerializableClassBase: public SerializableBase
 	{
+		friend class JSONStream;
+
     	char  m_buff[256] = {'0'};
     	stream m_token;
 		//member name, member reference
@@ -26,7 +28,6 @@ namespace bfu{
 				, std::less<bfu::string>
 				, custom_allocator<std::pair<const bfu::string, SerializableBase*> > >		m_membersMap;
 
-		friend class JSONStream;
 
 		//you need to have a copy constructor in your class for that to work
 		//virtual SerializableClassBase(const SerializableClassBase& ) = 0;
@@ -50,6 +51,15 @@ namespace bfu{
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
 		{
 			m_membersMap[memberName] = memberReference;
+		}
+
+		template<typename Functor>
+		void IterateOverSerializableMembers( Functor fPtr )
+		{
+			for(auto it = m_membersMap.begin(); it != m_membersMap.end(); ++it)
+			{
+				fPtr( it->first, it->second );
+			}
 		}
 
 

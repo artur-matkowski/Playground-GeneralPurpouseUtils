@@ -446,6 +446,14 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 	}
 }
 
+
+void printMap(const bfu::string& name, bfu::SerializableBase* serializable)
+{
+	log::info << "PrintngMap " << name.c_str() << std::endl;
+}
+
+
+
 bool jsonTests( bfu::MemBlockBase* mBlock )
 {
 
@@ -516,6 +524,43 @@ bool jsonTests( bfu::MemBlockBase* mBlock )
 	test = test && _TESTclassNested(mBlock);
 
 	test = test && _TESTclassNestedJSON(mBlock);
+
+
+	class testClass: public bfu::SerializableClassBase
+	{
+	public:
+		bfu::SerializableVar<bool> m_var;
+		bfu::SerializableVar<float> m_var2;
+
+		bfu::SerializableVar<bfu::JSONStream> m_var4;
+
+
+
+	public:
+		testClass(bfu::MemBlockBase* mBlock)
+			:bfu::SerializableClassBase(mBlock)
+			,m_var("m_var",this)
+			,m_var2("m_var2",this)
+			,m_var4("m_var4",this, mBlock)
+		{
+			m_var = randb();
+			m_var2 = randf();
+		}
+	};
+
+	testClass testObj(mBlock);
+
+	testObj.IterateOverSerializableMembers(printMap);
+
+	int i = 234;
+
+
+	testObj.IterateOverSerializableMembers( [&](const bfu::string& name, bfu::SerializableBase* serializable)
+		{
+			log::info << "PrintngMap " << name.c_str() << " " << i << std::endl;
+		} );
+
+
 
 
 	if( test )
