@@ -1,7 +1,7 @@
 #ifndef _H_jsonTests
 #define _H_jsonTests
 
-#include "SerializableVarVector.hpp"
+#include "SerializableVarArray.hpp"
 #include <stdlib.h>    
 #include <time.h>
 
@@ -347,6 +347,7 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 		bfu::SerializableVar<float> m_var2;
 		bfu::SerializableVarVector<float> m_var3;
 		bfu::SerializableVar<bfu::string> m_var4;
+		bfu::SerializableVarArray<float> m_var5;
 
 
 
@@ -354,9 +355,10 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 		testClassChild(bfu::MemBlockBase* mBlock)
 			:bfu::SerializableClassBase(mBlock)
 			,m_var("m_var",this)
-			,m_var2("m_var2",this)
-			,m_var3("m_var3",this, mBlock)
-			,m_var4("m_var4",this, mBlock)
+			,m_var2("m_var2", this)
+			,m_var3("m_var3", this, mBlock)
+			,m_var4("m_var4", this, mBlock)
+			,m_var5("m_var5", this, 1, mBlock)
 		{
 			m_var = randb();
 			m_var2 = randf();
@@ -365,14 +367,17 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 			m_var3.push_back(randf());
 
 			m_var4 = "testing \"bfu::string";
+
+			m_var5 = m_var3;
 		}
 
 		testClassChild(const testClassChild& copy)
 			:bfu::SerializableClassBase(copy.m_mBlock)
 			,m_var("m_var",this)
-			,m_var2("m_var2",this)
-			,m_var3("m_var3",this, copy.m_mBlock)
-			,m_var4("m_var4",this, copy.m_mBlock)
+			,m_var2("m_var2", this)
+			,m_var3("m_var3", this, copy.m_mBlock)
+			,m_var4("m_var4", this, copy.m_mBlock)
+			,m_var5("m_var5", this, 1, copy.m_mBlock)
 		{
 			m_var = copy.m_var;
 			m_var2 = copy.m_var2;
@@ -380,6 +385,8 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 			m_var3 = copy.m_var3;
 
 			m_var4 = copy.m_var4;
+
+			m_var5 = copy.m_var5;
 		}
 	};
 
