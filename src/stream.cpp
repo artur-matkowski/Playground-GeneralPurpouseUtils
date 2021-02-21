@@ -33,9 +33,7 @@ namespace bfu{
 	    ,using_prealocated(false)
 	    ,m_mBlock(input.m_mBlock)
 	{
-		resize( input.m_buffsize );
-
-		std::memcpy(m_first, input.m_first, m_buffsize);
+		this->operator=(input);
 	}
 /*
 	stream::stream(const int size)

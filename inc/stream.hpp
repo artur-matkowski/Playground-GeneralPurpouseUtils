@@ -351,7 +351,7 @@ namespace bfu{
 			std::memcpy(m_first, src.m_first, m_buffsize);
 
 			const int writeOffset = src.m_writeCursor - src.m_first;
-			const int readOffset = src.m_writeCursor - src.m_first;
+			const int readOffset = src.m_readCursor - src.m_first;
 
 			m_writeCursor = m_first + writeOffset;
 			m_readCursor = m_first + readOffset;
