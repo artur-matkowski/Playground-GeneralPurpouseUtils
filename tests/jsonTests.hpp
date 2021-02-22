@@ -223,6 +223,64 @@ bool _TESTclass(bfu::MemBlockBase* memBlock)
 
 }
 
+bool _TESTclassEmpty(bfu::MemBlockBase* memBlock)
+{
+
+	class testClass: public bfu::SerializableClassBase
+	{
+	public:
+		testClass(bfu::MemBlockBase* mBlock)
+			:bfu::SerializableClassBase(mBlock)
+		{
+		}
+
+		testClass(const testClass& copy)
+			:bfu::SerializableClassBase(copy.m_mBlock)
+		{
+		}
+	};
+
+	bfu::JSONStream json(memBlock);
+	bfu::JSONStream json2(memBlock);
+	testClass tt(memBlock);
+	testClass tt2(memBlock);
+
+	std::cout << "tt:";
+
+	
+	std::cout << "tt2:";
+
+	json << tt;
+
+	json.SetCursonPos(0);
+
+	json >> tt2;
+	json2 << tt2;
+
+
+	std::cout << "tt2 after deseriailze:";
+	//tt2.print();
+
+	log::info << "Testing: testClass2" 
+			//<< "\n\tOriginal input:\n\t\t>" << tt 
+	 		<< "<\n\tSerialized to JSON:\n\t\t>" << json.c_str()  
+	 		//<< "<\n\tDeserialized back to type:\n\t\t>" << tt2
+	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.c_str()  
+			<< "<\n" << std::endl;
+
+	if( std::strcmp(json.c_str(), json2.c_str() )==0 )
+	{
+		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
+		return true;
+	}
+	else
+	{
+		log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl;
+		return false;		
+	}
+
+}
+
 bool _TESTclassNested(bfu::MemBlockBase* memBlock)
 {
 
@@ -527,6 +585,8 @@ bool jsonTests( bfu::MemBlockBase* mBlock )
 
 
 	test = test && _TESTclass(mBlock);
+
+	test = test && _TESTclassEmpty(mBlock);
 
 	test = test && _TESTclassNested(mBlock);
 

@@ -20,6 +20,7 @@ namespace bfu{
 		friend class JSONStream;
 
     	char  m_buff[256] = {'0'};
+	protected:
     	stream m_token;
 		//member name, member reference
 		
@@ -31,7 +32,6 @@ namespace bfu{
 
 		//you need to have a copy constructor in your class for that to work
 		//virtual SerializableClassBase(const SerializableClassBase& ) = 0;
-	protected:
 		MemBlockBase* m_mBlock;
 
 	public:

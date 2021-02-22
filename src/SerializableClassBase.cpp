@@ -35,6 +35,9 @@ namespace bfu{
 		stream.skipTo('{');
 		stream.skip( 1 );
 
+		if(stream.peak() == '\n')
+			stream.skip( 1 );
+
 		while( stream.peak() != '}' )
 		{
 			m_token.clear();
