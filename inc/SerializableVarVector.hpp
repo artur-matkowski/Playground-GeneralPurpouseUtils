@@ -60,6 +60,20 @@ namespace bfu{
 	        return U();
 	    }
 
+	    template <class U>
+	    static U* constructPtrCandidate(MemBlockBase* mBlock, typename enable_if<ConstructoFinder<U>::value, U>::type* = 0) {
+	    	U* ret = (U*)mBlock->allocate(1, sizeof(U), alignof(U));
+	    	new (ret) U(mBlock);
+	        return ret;
+	    }
+
+	    template <class U>
+	    static U* constructPtrCandidate(MemBlockBase* mBlock,typename enable_if<!ConstructoFinder<U>::value, U>::type* = 0) {
+	    	U* ret = (U*)mBlock->allocate(1, sizeof(U), alignof(U));
+	    	new (ret) U();
+	        return ret;
+	    }
+
 	};
 
 
@@ -146,10 +160,10 @@ namespace bfu{
 			stream.skip( 1 );
 
 			//SerializableVar<T> deserializationCache("", 0);
-			T cache = ConditionalBuilder::constructCandidate<T>(m_mBlock);
 
 			while(stream.peak() != ']')
 			{
+				T cache = ConditionalBuilder::constructCandidate<T>(m_mBlock);
 				//deserializationCache.Deserialize(stream);
 				stream >> ( cache );
 
@@ -260,17 +274,15 @@ namespace bfu{
 	class SerializableVarVector<T*>: public std::vector<T*, custom_allocator<T*> >, public SerializableBase
 	{
 		MemBlockBase* 	m_mBlock = 0;
-		T* 				p_copyInitializationObject;
 		SerializableVarVector( MemBlockBase* mBlock )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
 		{}
 	public:
 
-		SerializableVarVector(const char* Name, SerializableClassBase* parent, T* copyInitializationObject, MemBlockBase* mBlock  )
+		SerializableVarVector(const char* Name, SerializableClassBase* parent, MemBlockBase* mBlock  )
 			:std::vector<T*, custom_allocator<T*>>( custom_allocator<T*>(mBlock) )
 			,m_mBlock(mBlock)
-			,p_copyInitializationObject(copyInitializationObject)
 		{
 			std::vector<T*, custom_allocator<T*> >::reserve(16);
 			if(parent!=0)
@@ -279,11 +291,6 @@ namespace bfu{
 
 		virtual ~SerializableVarVector()
 		{
-		}
-
-		void SetCopyInitializationObject(T* copyInitializationObject)
-		{
-			p_copyInitializationObject = copyInitializationObject;
 		}
 
 		
@@ -356,8 +363,9 @@ namespace bfu{
 			while(stream.peak() != ']')
 			{
 				//T* cache = new T;
-				T* cache = (T*)m_mBlock->allocate(1, sizeof(T), alignof(T));
-				new (cache) T( *p_copyInitializationObject );
+				T* cache = ConditionalBuilder::constructPtrCandidate<T>(m_mBlock);
+				// T* cache = (T*)m_mBlock->allocate(1, sizeof(T), alignof(T));
+				// new (cache) T( *p_copyInitializationObject );
 				//deserializationCache.Deserialize(stream);
 				stream >>( *cache );
 
