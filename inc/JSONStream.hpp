@@ -14,11 +14,11 @@ namespace bfu{
 
   class JSONStream: public stream{
   public:
-    char  m_buff[1024] = {'0'};
+    char  m_buff[3096] = {'0'};
     MemBlockBase* m_mBlock = 0;
 
     JSONStream(MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() )
-      :stream(m_buff, 1024, mBlock )
+      :stream(m_buff, 3096, mBlock )
       ,m_mBlock(mBlock)
     {
     }
