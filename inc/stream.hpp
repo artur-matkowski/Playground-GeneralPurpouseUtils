@@ -314,6 +314,13 @@ namespace bfu{
 			return *this;
 		}
 
+		stream& operator<<(const double& val)
+		{
+			this->sprintf("%f", val);
+
+			return *this;
+		}
+
 		stream& operator<<(const bool& val)
 		{
 			this->sprintf("%d", val);
