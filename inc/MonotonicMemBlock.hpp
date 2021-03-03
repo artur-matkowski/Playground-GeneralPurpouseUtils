@@ -19,11 +19,11 @@ namespace bfu
 		MonotonicMemBlock(const char* name = "MonotonicMemBlock")
 			:MemBlockBase(name)
 		{
-			m_buffFreePtr = m_buffStartPtr = new char[stackSize];
+			m_buffFreePtr = m_buffStartPtr = malloc(stackSize);
 			std::memset(m_buffFreePtr, 0, stackSize);
 			m_buffEndPtr = (void*)((size_t)m_buffStartPtr + (size_t)stackSize);
 		};
-		~MonotonicMemBlock(){ if(m_buffStartPtr!=0) delete (char*)m_buffStartPtr; };
+		~MonotonicMemBlock(){ if(m_buffStartPtr!=0) free(m_buffStartPtr); };
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 		{
