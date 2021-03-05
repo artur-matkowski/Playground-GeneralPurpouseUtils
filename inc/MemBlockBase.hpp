@@ -53,7 +53,7 @@ namespace bfu
 		virtual void* getMemPtr() = 0;
 		virtual bool owns(void*) = 0;
 
-		const char* GetDescription()
+		const char* GetDescription() const
 		{
 			return m_memBlockDescriptor;
 		}
