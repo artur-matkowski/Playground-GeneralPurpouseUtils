@@ -6,7 +6,8 @@
 #include <iostream>
 #include <cinttypes>
 #include "CustomAllocator.hpp"
-//#include <iostream>
+//#include "log.hpp"
+#include <iostream>
 	
 namespace bfu{
 	
@@ -42,7 +43,8 @@ namespace bfu{
 
 		status m_status = status::OK;
 
-		int next_power_of_two(int n) {
+		int next_power_of_two(int n) const
+		{
 		    int i = 0;
 		    ++n;
 		    for (--n; n > 0; n >>= 1) {
@@ -55,6 +57,7 @@ namespace bfu{
 
 		//stream();
 	    stream(char* prealocatedBuff, int size, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
+	    stream(const char* prealocatedBuff, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock()  );
 	    stream(const stream& input);
 	    //stream(const int size);
 
@@ -62,7 +65,10 @@ namespace bfu{
 
 	    inline int size() const
 	    {
-	    	return (int)(m_writeCursor-m_first);
+	    	if(m_writeCursor!=0)
+	    		return (int)(m_writeCursor-m_first);
+	    	else
+	    		return strlen(m_first);
 	    }
 
 	    inline int capacity() const
@@ -72,7 +78,8 @@ namespace bfu{
 
 		inline void clear()
 		{
-			m_writeCursor = m_first;
+			if(m_writeCursor!=0)
+				m_writeCursor = m_first;
 			m_readCursor = m_first;
 		}
 
@@ -118,12 +125,17 @@ namespace bfu{
 
 		inline bfu::string str() const
 		{
-			return bfu::string(m_first,m_writeCursor);
+			if(m_writeCursor!=0)
+				return bfu::string(m_first,m_writeCursor);
+			else
+				return bfu::string(m_first);
 		}
 
-		inline char* c_str()
+		inline char* c_str() const
 		{
-			put( '\0' );
+			if(m_writeCursor!=0)
+				*m_writeCursor='\0';
+
 			return m_first;
 		}
 
@@ -146,7 +158,9 @@ namespace bfu{
 				resize(t);
 			}
 
-			m_writeCursor = m_first + pos;
+
+			if(m_writeCursor!=0)
+				m_writeCursor = m_first + pos;
 		}
 
 		inline void OverrideReadCursorPos(int pos)
@@ -162,6 +176,9 @@ namespace bfu{
 
 		inline void sprintf(const char* str, ...)
 		{
+			if(m_writeCursor==0)
+				return;
+
 			va_list args1;
 			va_start(args1, str);
 			va_list args2;
@@ -191,6 +208,9 @@ namespace bfu{
 
 		inline void put(char c)
 		{
+			if(m_writeCursor==0) 
+				return;
+
 			if( m_writeCursor == m_last )
 			{
 				int newSize = m_last-m_first+1;
@@ -203,7 +223,7 @@ namespace bfu{
 			if( c != '\0' )
 			{
 				++m_writeCursor;
-			}		
+			}
 		}
 
 		inline void resize(int newsize)
@@ -213,7 +233,7 @@ namespace bfu{
 
 			newsize =  newsize+1;
 			char* newbuff = (char*)m_mBlock->allocate( newsize, sizeof(char), alignof(char) );
-			int toCopy = std::min(newsize, (int)(m_writeCursor-m_first));
+			int toCopy = m_writeCursor==0 && m_first!=0 ? strlen(m_first) : std::min(newsize, (int)(m_writeCursor-m_first));
 
 			std::memset(newbuff, '\0', newsize);
 			std::memcpy(newbuff, m_first, toCopy);
@@ -230,6 +250,8 @@ namespace bfu{
 			m_last = m_first + newsize;
 			m_buffsize = newsize;
 			using_prealocated = false;
+			
+			*m_last = '\0';
 		}
 
 		inline void grow(int minSize)
@@ -360,19 +382,31 @@ namespace bfu{
 			const int writeOffset = src.m_writeCursor - src.m_first;
 			const int readOffset = src.m_readCursor - src.m_first;
 
-			m_writeCursor = m_first + writeOffset;
+			m_writeCursor = m_first + (src.m_writeCursor==0 ? 0 : writeOffset);
 			m_readCursor = m_first + readOffset;
 
 			return *this;
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
+		friend std::less<bfu::stream>;
 	};
 
 	std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
 
 
 
+}
+
+namespace std {
+	template<>
+	struct less<bfu::stream>
+	{
+	   bool operator()(const bfu::stream& k1, const bfu::stream& k2) const
+	   {
+	      return std::strcmp(k1.c_str(), k2.c_str()) < 0;
+	   }
+	};
 }
 
 using bfu::operator<<;

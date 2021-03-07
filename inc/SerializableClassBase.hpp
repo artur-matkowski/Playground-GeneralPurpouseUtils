@@ -24,10 +24,10 @@ namespace bfu{
     	stream m_token;
 		//member name, member reference
 		
-		std::map<bfu::string
+		std::map<stream
 				, SerializableBase*
-				, std::less<bfu::string>
-				, custom_allocator<std::pair<const bfu::string, SerializableBase*> > >		m_membersMap;
+				, std::less<stream>
+				, custom_allocator<std::pair<const stream, SerializableBase*> > >		m_membersMap;
 
 
 		//you need to have a copy constructor in your class for that to work

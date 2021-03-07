@@ -512,7 +512,7 @@ bool _TESTclassNestedJSON(bfu::MemBlockBase* memBlock)
 }
 
 
-void printMap(const bfu::string& name, bfu::SerializableBase* serializable)
+void printMap(const bfu::stream& name, bfu::SerializableBase* serializable)
 {
 	log::info << "PrintngMap " << name.c_str() << std::endl;
 }
@@ -622,7 +622,7 @@ bool jsonTests( bfu::MemBlockBase* mBlock )
 	int i = 234;
 
 
-	testObj.IterateOverSerializableMembers( [&](const bfu::string& name, bfu::SerializableBase* serializable)
+	testObj.IterateOverSerializableMembers( [&](const bfu::stream& name, bfu::SerializableBase* serializable)
 		{
 			log::info << "PrintngMap " << name.c_str() << " " << i << std::endl;
 		} );

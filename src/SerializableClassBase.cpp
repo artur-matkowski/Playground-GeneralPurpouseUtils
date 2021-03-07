@@ -44,7 +44,7 @@ namespace bfu{
 
 			stream.Deserialize( m_token );
 
-			auto &tmp = m_membersMap[ m_token.str() ];
+			auto &tmp = m_membersMap[ m_token ];
 
 			tmp->Deserialize( stream );
 
