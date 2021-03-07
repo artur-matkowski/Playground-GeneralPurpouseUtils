@@ -14,10 +14,21 @@ namespace bfu{
 
 	class string: public t_string
 	{
+	protected:
+		MemBlockBase* m_mBlock = 0;
 	public:
 		using t_string::t_string;
+		string(MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:t_string(memBlock)
+			,m_mBlock(memBlock)
+		{}
 		string(const std::string& cp, MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:t_string(cp.c_str(), memBlock)
+			,m_mBlock(memBlock)
+		{}
+		string(const bfu::string& cp)
+			:t_string(cp.m_mBlock)
+			,m_mBlock(cp.m_mBlock)
 		{}
 		operator std::string() const
 	    {
