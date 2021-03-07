@@ -32,6 +32,10 @@ namespace bfu{
 
 	void SerializableClassBase::Deserialize(JSONStream& stream)
 	{
+    	char buff[1024] = {'0'};
+    	bfu::stream token(buff, 1024, m_mBlock);
+
+
 		stream.skipTo('{');
 		stream.skip( 1 );
 
@@ -40,11 +44,11 @@ namespace bfu{
 
 		while( stream.peak() != '}' )
 		{
-			m_token.clear();
+			token.clear();
 
-			stream.Deserialize( m_token );
+			stream.Deserialize( token );
 
-			auto &tmp = m_membersMap[ m_token ];
+			auto &tmp = m_membersMap[ token ];
 
 			tmp->Deserialize( stream );
 
