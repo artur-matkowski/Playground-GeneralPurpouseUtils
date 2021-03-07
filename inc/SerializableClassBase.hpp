@@ -50,9 +50,7 @@ namespace bfu{
 
 		virtual void PushReferenceToMap(const char* memberName, SerializableBase* memberReference)
 		{
-			bfu::string tmp(memberName, m_mBlock);
-
-			m_membersMap[tmp] = memberReference;
+			m_membersMap[memberName] = memberReference;
 		}
 
 		template<typename Functor>
