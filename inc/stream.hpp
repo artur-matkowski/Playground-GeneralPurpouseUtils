@@ -199,6 +199,7 @@ namespace bfu{
     		va_end(args2);
 
 			m_writeCursor += t;
+			put('\0');
 		}
 
 		inline char peak(int offset = 0) const
@@ -382,7 +383,7 @@ namespace bfu{
 			const int writeOffset = src.m_writeCursor - src.m_first;
 			const int readOffset = src.m_readCursor - src.m_first;
 
-			m_writeCursor = m_first + (src.m_writeCursor==0 ? 0 : writeOffset);
+			m_writeCursor = m_first + (src.m_writeCursor==0 ? src.size() : writeOffset);
 			m_readCursor = m_first + readOffset;
 
 			return *this;
@@ -402,10 +403,14 @@ namespace std {
 	template<>
 	struct less<bfu::stream>
 	{
-	   bool operator()(const bfu::stream& k1, const bfu::stream& k2) const
-	   {
-	      return std::strcmp(k1.c_str(), k2.c_str()) < 0;
-	   }
+		bool operator()(const bfu::stream& k1, const bfu::stream& k2) const
+		{
+			const char* str1 = k1.c_str();
+			const char* str2 = k2.c_str();
+
+			int ret = std::strcmp(str1, str2);
+			return ret < 0;
+		}
 	};
 }
 
