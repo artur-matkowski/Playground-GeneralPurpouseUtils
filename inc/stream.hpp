@@ -26,6 +26,10 @@ namespace bfu{
 			:t_string(cp.c_str(), memBlock)
 			,m_mBlock(memBlock)
 		{}
+		string(const char* str, MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:t_string(str, memBlock)
+			,m_mBlock(memBlock)
+		{}
 		string(const bfu::string& cp)
 			:t_string(cp.m_mBlock)
 			,m_mBlock(cp.m_mBlock)
