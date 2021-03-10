@@ -156,11 +156,6 @@ namespace bfu{
 
     JSONStream& Deserialize(bfu::string& val)
     {
-      if(m_status < status::OK)
-      {
-        return *this;        
-      }
-
       skipTo('\"');
 
       char* skipper = m_readCursor+1;
@@ -212,12 +207,6 @@ namespace bfu{
 
     JSONStream& Deserialize(bfu::stream& val)
     {
-      
-      if(m_status < status::OK)
-      {
-        return *this;        
-      }
-
       skipTo('\"');
 
       char* skipper = m_readCursor+1;
@@ -266,11 +255,6 @@ namespace bfu{
 
     JSONStream& operator>> ( stream& val)
     {
-      if(m_status < status::OK)
-      {
-        return *this;        
-      }
-
       skipTo('\"');
 
       char* skipper = m_readCursor+1;

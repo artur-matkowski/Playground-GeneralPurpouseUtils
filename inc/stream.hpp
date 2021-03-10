@@ -39,10 +39,6 @@ namespace bfu{
 		MemBlockBase* m_mBlock = 0;
 
 
-		enum class status{NOK = -1, OK = 0};
-
-		status m_status = status::OK;
-
 		int next_power_of_two(int n) const
 		{
 		    int i = 0;
@@ -260,11 +256,6 @@ namespace bfu{
 			int newSize = m_last-m_first+1;
 			newSize = next_power_of_two(newSize);
 			resize(newSize);
-		}
-
-		inline status getStatus()
-		{
-			return m_status;
 		}
 
 		inline void resize()
