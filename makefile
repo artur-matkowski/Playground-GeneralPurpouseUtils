@@ -1,22 +1,26 @@
 OUT		 = bitforgeutils
 VERSION	 = .1.0.0
 
+ARCHITECTURE = $(shell dpkg --print-architecture)
 
 CC 		 = g++ -std=c++11 #-DDEBUG_MEMORY_ALLOC
 
-CPPFLAGS += -Iinc
 
 INCDIR	 	= inc/
 OBJDIR	 	= obj/
-SRCDIR	 	= src/
+VENDOR_DIR  = vendor/lib/
 INSTALLDIR	= /usr/lib/
 HEADERDIR	= /usr/include/
 
-SOURCES	= $(shell ls $(SRCDIR))
-ARCHITECTURE = $(shell dpkg --print-architecture)
+SRCDIR	 	= src/
+SOURCES		= $(shell find $(SRCDIR) -type f | grep cpp | cut -f 1 -d '.')
+DIRSTRUCTURE = $(shell find $(INCDIR) -type d)
+INCSTRUCTURE = $(patsubst %, -I%, $(DIRSTRUCTURE))
 
-DEPOBJ =  
 
+OBJECTS 	= $(SOURCES:%.cpp=$(OBJDIR)%.o)
+OBJECTS2 	= $(patsubst %, %.o, $(SOURCES))
+OBJECTS 	= $(OBJECTS2:%.cpp=$(OBJDIR)%.o)
 
 #################################################################################
 
@@ -27,27 +31,28 @@ all:
 
 debug: CC += -g -DLOG_LEVEL=DebugLevel::ALL
 debug: BUILDPATH = build/$(ARCHITECTURE)/dbg/
-debug: OBJDIR = build/$(ARCHITECTURE)/dbg/obj/
-debug: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
+#debug: OBJDIR = build/$(ARCHITECTURE)/dbg/obj/
+#debug: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
 #debug: DEPS_OBJ		= 	$(addsuffix /build/dbg/obj/*,$(DEPS))
 debug: $(SOURCES) $(OUT) 
 
 release: CC += -O3 -DLOG_LEVEL=DebugLevel::INFO -DNOTRACE
 release: BUILDPATH = build/$(ARCHITECTURE)/rel/
-release: OBJDIR = build/$(ARCHITECTURE)/rel/obj/
-release: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
+#release: OBJDIR = build/$(ARCHITECTURE)/rel/obj/
+#release: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
 #release: DEPS_OBJ		= 	$(addsuffix /build/rel/obj/*,$(DEPS))
 release: $(SOURCES) $(OUT) 
 	
 
-$(OUT): $(OBJECTS)
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(OBJDIR)* $(DEPOBJ) 
-	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(BUILDPATH)$@.so $(DEPOBJ) main.cpp 
-	#$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(OBJDIR)* $(DEPOBJ) main.cpp 
+$(OUT):
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(BUILDPATH)*.o $(DEPOBJ) 
+	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)$@.so $(DEPOBJ) main.cpp 
+	#$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(OBJDIR)* $(DEPOBJ) main.cpp 
 
 
-$(SOURCES): $(INCDIR)$(@:%.cpp=%.hpp) $(SRCDIR)$@
-	$(CC) -c $(CPPFLAGS) $(SRCDIR)$@ -o $(@:%.cpp=$(OBJDIR)%.o) -fpic
+$(SOURCES): $(INCDIR)$(@:%.cpp=%.hpp) $@
+	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $@.cpp -o $(BUILDPATH)$(notdir $@).o -fpic
+
 
 test:
 	@$(MAKE) ${OUT} -B
