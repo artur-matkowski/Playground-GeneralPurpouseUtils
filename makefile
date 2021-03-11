@@ -3,7 +3,7 @@ VERSION	 = .1.0.0
 
 ARCHITECTURE = $(shell dpkg --print-architecture)
 
-CC 		 = g++ -std=c++11 #-DDEBUG_MEMORY_ALLOC
+CC 		 = g++ -std=c++14 #-DDEBUG_MEMORY_ALLOC
 
 
 INCDIR	 	= inc/

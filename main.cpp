@@ -12,6 +12,7 @@
 #include "tests/udpTests.hpp"
 #include "tests/jsonTests.hpp"
 #include "tests/EventTest.hpp"
+#include "tests/ObjectSerializable_tests.hpp"
 
 using namespace std;
 
@@ -59,6 +60,7 @@ int main(int argc, char** argv)
 		cout << "\n\t\t- logging - runs logging tests";
 		cout << "\n\t\t- udp     - runs udp tests";
 		cout << "\n\t\t- event   - event tests\n";
+		cout << "\n\t\t- serial  - new serialization methods\n";
 
 		return -1;
 	}
@@ -102,6 +104,15 @@ int main(int argc, char** argv)
 	else if( strcmp(argv[1], "event") == 0 )
 	{
 		bool ret = EventTest(&membloc);
+
+		if(ret)
+			return 0;
+		else
+			return -1;
+	}
+	else if( strcmp(argv[1], "serial") == 0 )
+	{
+		bool ret = ObjectSerializableTests(&membloc);
 
 		if(ret)
 			return 0;
