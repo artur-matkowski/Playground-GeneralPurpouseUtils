@@ -1,19 +1,26 @@
 #ifndef H_ObjectSerializableClassBase
 #define H_ObjectSerializableClassBase
 #include <vector>
+#include "SerializerBase.hpp"
 
 namespace bfu2
 {
+	
+
+	typedef void (*SerializationFunc)(SerializerBase&, std::vector<char>&, void*);
+
+
 	struct dummy{};
 
 	struct MemberInfo
 	{
 		MemberInfo* next = nullptr;
 		size_t offset = 0;
+		SerializationFunc serializationFunc;
 		const char* name = nullptr;
 	};
 
-	dummy FeedInfo(const char* name, size_t offset, MemberInfo** firstListEntry);
+	dummy FeedInfo(const char* name, size_t offset, SerializationFunc serializationFunc, MemberInfo** firstListEntry);
 
 
 
@@ -51,9 +58,16 @@ namespace bfu2
 	dummy SerializableClassBase<T>::initialized /*__attribute__((__used__))*/ = SerializableClassBase<T>::className();
 
 
+	template<class T>
+	void Serialize(SerializerBase& serializator, std::vector<char>& v_buff, void* datafield)
+	{
+		serializator.Serialize(v_buff, (T*)datafield);
+	}
+
 
 	#define SERIALIZE(C, T,i) \
-		bfu2::dummy i##__LINE__ = FeedInfo(#i, offsetof(C, i), &sp_first); \
+		bfu2::dummy _##i##__LINE__ = FeedInfo(#i, offsetof(C, i), \
+			bfu2::Serialize<T>,  &sp_first); \
 		T i; 
 
 
