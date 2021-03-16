@@ -26,11 +26,8 @@ public:
 };
 
 
-bool EventTest( bfu::MemBlockBase* in_mBlock )
+bool EventTest( bfu::MemBlockBase* mBlock )
 {
-	bfu::MmappedMemBlock* mBlock = new bfu::MmappedMemBlock( *(bfu::MmappedMemBlock*)in_mBlock );
-
-
 	int test = 5;
     bfu::CallbackId id = 0;
     int result = 0;

@@ -1,7 +1,6 @@
 #ifndef _H_CustomAllocator
 #define _H_CustomAllocator
 #include "StdAllocatorMemBlock.hpp"
-#include "MmappedMemBlock.hpp"
 
 namespace bfu
 {
