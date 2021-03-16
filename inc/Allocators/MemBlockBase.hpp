@@ -46,7 +46,9 @@ namespace bfu
 			m_deallocationCount = cp.m_allocationCount;
 		}
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) = 0;
-		virtual void deallocate (void* p, std::size_t n){};
+		virtual void deallocate (void* p, std::size_t n) = 0;
+
+
 		virtual size_t getFreeMemory() = 0;
 		virtual size_t getUsedMemory() = 0;
 		virtual void*  getRefPtr() = 0;
@@ -61,71 +63,69 @@ namespace bfu
 		virtual int GetDeallocationsCount() {return m_deallocationCount;}
 	};
 
-	class MallocAllocator: public MemBlockBase
-	{
-		static size_t s_allocatedInBlock;
-		static size_t s_deallocatedInBlock;
-		static int s_allocationCount;
-		static int s_deallocationCount;
-		static size_t s_memoryCapacity;
-	public:
+	// class MallocAllocator: public MemBlockBase
+	// {
+	// 	static size_t s_allocatedInBlock;
+	// 	static size_t s_deallocatedInBlock;
+	// 	static int s_allocationCount;
+	// 	static int s_deallocationCount;
+	// 	static size_t s_memoryCapacity;
+	// public:
 
-		MallocAllocator();
+	// 	MallocAllocator();
 
-		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
-		{
- 			void * p = malloc(sizeOf==0?1:sizeOf); 
+	// 	virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
+	// 	{
+ // 			void * p = malloc(sizeOf==0?1:sizeOf); 
 
-			++s_allocationCount;
-    		s_allocatedInBlock+=sizeOf;
+	// 		++s_allocationCount;
+ //    		s_allocatedInBlock+=sizeOf;
 
-			#ifdef DEBUG_MEMORY_ALLOC
-		    logAlloc(	p, 
-    			sizeOf==0?1:sizeOf, 
-    			"global operator NEW",
-    			s_allocatedInBlock,
-    			0,
-    			s_deallocatedInBlock,
-    			s_allocationCount,
-    			s_deallocationCount,
-    			0);
-		    #endif
+	// 		#ifdef DEBUG_MEMORY_ALLOC
+	// 	    logAlloc(	p, 
+ //    			sizeOf==0?1:sizeOf, 
+ //    			"global operator NEW",
+ //    			s_allocatedInBlock,
+ //    			0,
+ //    			s_deallocatedInBlock,
+ //    			s_allocationCount,
+ //    			s_deallocationCount,
+ //    			0);
+	// 	    #endif
 
-    		return p; 
-		}
-		virtual void deallocate (void* p, std::size_t n)
-		{
-			++s_deallocationCount;
+ //    		return p; 
+	// 	}
+	// 	virtual void deallocate (void* p, std::size_t n)
+	// 	{
+	// 		++s_deallocationCount;
 
-			#ifdef DEBUG_MEMORY_ALLOC
-			logDealloc(p, 
-		    			0, 
-		    			"global operator NEW",
-		    			s_allocatedInBlock,
-		    			0,
-		    			s_deallocatedInBlock,
-		    			s_allocationCount,
-		    			s_deallocationCount,
-		    			0);
-		    #endif
+	// 		#ifdef DEBUG_MEMORY_ALLOC
+	// 		logDealloc(p, 
+	// 	    			0, 
+	// 	    			"global operator NEW",
+	// 	    			s_allocatedInBlock,
+	// 	    			0,
+	// 	    			s_deallocatedInBlock,
+	// 	    			s_allocationCount,
+	// 	    			s_deallocationCount,
+	// 	    			0);
+	// 	    #endif
 
-		    free(p); 
-		}
+	// 	    free(p); 
+	// 	}
 
-		virtual size_t getFreeMemory();
-		virtual size_t getUsedMemory();
-		virtual void*  getRefPtr();
-		virtual void* getMemPtr();
-		virtual bool owns(void*);
+	// 	virtual size_t getFreeMemory();
+	// 	virtual size_t getUsedMemory();
+	// 	virtual void*  getRefPtr();
+	// 	virtual void* getMemPtr();
+	// 	virtual bool owns(void*);
 
-		virtual int GetAllocationsCount();
-		virtual int GetDeallocationsCount();
-	};
+	// 	virtual int GetAllocationsCount();
+	// 	virtual int GetDeallocationsCount();
+	// };
 
-	bool BindOperatorNew2MemBlock(MemBlockBase*);
+	//bool BindOperatorNew2MemBlock(MemBlockBase*);
 }
 
-void* operator new(std::size_t size);
-void operator delete(void* p) noexcept;
 
 #endif

@@ -13,7 +13,6 @@ namespace bfu
 		static int 		s_allocationCount;
 		static int 		s_deallocationCount;
 
-		MallocAllocator mock;
 	public:
 		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
 			:MemBlockBase( name )
@@ -64,7 +63,7 @@ namespace bfu
 	    };
 		virtual size_t getFreeMemory()
 	    {
-		    return mock.getFreeMemory() - s_allocatedMemory;
+		    return 0;
 	    };
 		virtual size_t getUsedMemory() 
 		{
@@ -94,4 +93,6 @@ namespace bfu
 	};
 }
 
+void* operator new(std::size_t size);
+void operator delete(void* p) noexcept;
 #endif

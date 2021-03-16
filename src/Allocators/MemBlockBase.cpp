@@ -18,77 +18,60 @@ void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b)
 }
 
 static bfu::MemBlockBase* 		s_mBlock = 0;
-static bfu::MallocAllocator 	s_mMalloc;
 
 namespace bfu
 {
-	size_t MallocAllocator::s_allocatedInBlock = 0;
-	size_t MallocAllocator::s_deallocatedInBlock = 0;
-	int MallocAllocator::s_allocationCount = 0;
-	int MallocAllocator::s_deallocationCount = 0;
-	size_t MallocAllocator::s_memoryCapacity = 0;
+	// size_t MallocAllocator::s_allocatedInBlock = 0;
+	// size_t MallocAllocator::s_deallocatedInBlock = 0;
+	// int MallocAllocator::s_allocationCount = 0;
+	// int MallocAllocator::s_deallocationCount = 0;
+	// size_t MallocAllocator::s_memoryCapacity = 0;
 
-	MallocAllocator::MallocAllocator()
-		:MemBlockBase("Malloc Allocator")
-	{
-	    size_t pages = sysconf(_SC_PHYS_PAGES);
-	    size_t page_size = sysconf(_SC_PAGE_SIZE);
-		s_memoryCapacity = pages * page_size;
-	};
+	// MallocAllocator::MallocAllocator()
+	// 	:MemBlockBase("Malloc Allocator")
+	// {
+	//     size_t pages = sysconf(_SC_PHYS_PAGES);
+	//     size_t page_size = sysconf(_SC_PAGE_SIZE);
+	// 	s_memoryCapacity = pages * page_size;
+	// };
 
-	size_t MallocAllocator::getFreeMemory()
-	{
-	    return s_memoryCapacity - s_allocatedInBlock;
-	}
+	// size_t MallocAllocator::getFreeMemory()
+	// {
+	//     return s_memoryCapacity - s_allocatedInBlock;
+	// }
 
-	size_t MallocAllocator::getUsedMemory()
-	{
-		return s_allocatedInBlock;
-	}
+	// size_t MallocAllocator::getUsedMemory()
+	// {
+	// 	return s_allocatedInBlock;
+	// }
 
-	void*  MallocAllocator::getRefPtr()
-	{
-		return nullptr;
-	}
-	void*  MallocAllocator::getMemPtr()
-	{
-		return nullptr;
-	}
-	bool MallocAllocator::owns(void* ptr)
-	{
-		return false;
-	}
+	// void*  MallocAllocator::getRefPtr()
+	// {
+	// 	return nullptr;
+	// }
+	// void*  MallocAllocator::getMemPtr()
+	// {
+	// 	return nullptr;
+	// }
+	// bool MallocAllocator::owns(void* ptr)
+	// {
+	// 	return false;
+	// }
 
-	int MallocAllocator::GetAllocationsCount() {return s_allocationCount;}
-	int MallocAllocator::GetDeallocationsCount() {return s_deallocationCount;}
+	// int MallocAllocator::GetAllocationsCount() {return s_allocationCount;}
+	// int MallocAllocator::GetDeallocationsCount() {return s_deallocationCount;}
 
 
-	bool BindOperatorNew2MemBlock(MemBlockBase* mBlock)
-	{
-		if(s_mBlock==0)
-		{
-			s_mBlock = mBlock;
-			return true;
-		}
-		return false;
+	// bool BindOperatorNew2MemBlock(MemBlockBase* mBlock)
+	// {
+	// 	if(s_mBlock==0)
+	// 	{
+	// 		s_mBlock = mBlock;
+	// 		return true;
+	// 	}
+	// 	return false;
 		
-	}
-}
-
-void * operator new(std::size_t size)
-{ 
-    if(s_mBlock!=0)
-    	return s_mBlock->allocate(1, size, 0);
-    else 
-    	return s_mMalloc.allocate(1, size, 0);
-} 
-  
-void operator delete(void * p) noexcept
-{ 
-    if(s_mBlock!=0 && s_mBlock->owns(p) )
-    	return s_mBlock->deallocate(p, 0);
-    else 
-    	return s_mMalloc.deallocate(p, 0);
+	// }
 }
 
 #define TALBE_WIDTH 30
