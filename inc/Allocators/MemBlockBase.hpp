@@ -28,6 +28,16 @@ void logDealloc(void* ptr,
 
 namespace bfu
 {
+	class MemBlockBase;
+
+	struct MemChunkHeader
+	{
+		MemBlockBase* 	m_MemBlockOwner = nullptr;
+		size_t			m_sizeOfChunk = 0;
+
+		static MemChunkHeader* InitFromLifePtr(void* ptr);
+	};
+
 	class MemBlockBase
 	{
 	protected:
@@ -62,69 +72,6 @@ namespace bfu
 		virtual int GetAllocationsCount() {return m_allocationCount;}
 		virtual int GetDeallocationsCount() {return m_deallocationCount;}
 	};
-
-	// class MallocAllocator: public MemBlockBase
-	// {
-	// 	static size_t s_allocatedInBlock;
-	// 	static size_t s_deallocatedInBlock;
-	// 	static int s_allocationCount;
-	// 	static int s_deallocationCount;
-	// 	static size_t s_memoryCapacity;
-	// public:
-
-	// 	MallocAllocator();
-
-	// 	virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) 
-	// 	{
- // 			void * p = malloc(sizeOf==0?1:sizeOf); 
-
-	// 		++s_allocationCount;
- //    		s_allocatedInBlock+=sizeOf;
-
-	// 		#ifdef DEBUG_MEMORY_ALLOC
-	// 	    logAlloc(	p, 
- //    			sizeOf==0?1:sizeOf, 
- //    			"global operator NEW",
- //    			s_allocatedInBlock,
- //    			0,
- //    			s_deallocatedInBlock,
- //    			s_allocationCount,
- //    			s_deallocationCount,
- //    			0);
-	// 	    #endif
-
- //    		return p; 
-	// 	}
-	// 	virtual void deallocate (void* p, std::size_t n)
-	// 	{
-	// 		++s_deallocationCount;
-
-	// 		#ifdef DEBUG_MEMORY_ALLOC
-	// 		logDealloc(p, 
-	// 	    			0, 
-	// 	    			"global operator NEW",
-	// 	    			s_allocatedInBlock,
-	// 	    			0,
-	// 	    			s_deallocatedInBlock,
-	// 	    			s_allocationCount,
-	// 	    			s_deallocationCount,
-	// 	    			0);
-	// 	    #endif
-
-	// 	    free(p); 
-	// 	}
-
-	// 	virtual size_t getFreeMemory();
-	// 	virtual size_t getUsedMemory();
-	// 	virtual void*  getRefPtr();
-	// 	virtual void* getMemPtr();
-	// 	virtual bool owns(void*);
-
-	// 	virtual int GetAllocationsCount();
-	// 	virtual int GetDeallocationsCount();
-	// };
-
-	//bool BindOperatorNew2MemBlock(MemBlockBase*);
 }
 
 

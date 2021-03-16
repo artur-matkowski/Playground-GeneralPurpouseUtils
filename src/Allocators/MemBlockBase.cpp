@@ -4,6 +4,18 @@
 #include <unistd.h>
 #include "log.hpp"
 
+
+
+
+
+namespace bfu
+{
+	MemChunkHeader* MemChunkHeader::InitFromLifePtr(void* ptr)
+	{
+		return (MemChunkHeader*) ((size_t)ptr - sizeof(MemChunkHeader));
+	}
+}
+
 void convert(size_t& big, size_t& small)
 {
     big = small / 1024;
@@ -17,62 +29,6 @@ void convert(size_t& gb, size_t& mb, size_t& kb, size_t& b)
     convert(gb, mb);
 }
 
-static bfu::MemBlockBase* 		s_mBlock = 0;
-
-namespace bfu
-{
-	// size_t MallocAllocator::s_allocatedInBlock = 0;
-	// size_t MallocAllocator::s_deallocatedInBlock = 0;
-	// int MallocAllocator::s_allocationCount = 0;
-	// int MallocAllocator::s_deallocationCount = 0;
-	// size_t MallocAllocator::s_memoryCapacity = 0;
-
-	// MallocAllocator::MallocAllocator()
-	// 	:MemBlockBase("Malloc Allocator")
-	// {
-	//     size_t pages = sysconf(_SC_PHYS_PAGES);
-	//     size_t page_size = sysconf(_SC_PAGE_SIZE);
-	// 	s_memoryCapacity = pages * page_size;
-	// };
-
-	// size_t MallocAllocator::getFreeMemory()
-	// {
-	//     return s_memoryCapacity - s_allocatedInBlock;
-	// }
-
-	// size_t MallocAllocator::getUsedMemory()
-	// {
-	// 	return s_allocatedInBlock;
-	// }
-
-	// void*  MallocAllocator::getRefPtr()
-	// {
-	// 	return nullptr;
-	// }
-	// void*  MallocAllocator::getMemPtr()
-	// {
-	// 	return nullptr;
-	// }
-	// bool MallocAllocator::owns(void* ptr)
-	// {
-	// 	return false;
-	// }
-
-	// int MallocAllocator::GetAllocationsCount() {return s_allocationCount;}
-	// int MallocAllocator::GetDeallocationsCount() {return s_deallocationCount;}
-
-
-	// bool BindOperatorNew2MemBlock(MemBlockBase* mBlock)
-	// {
-	// 	if(s_mBlock==0)
-	// 	{
-	// 		s_mBlock = mBlock;
-	// 		return true;
-	// 	}
-	// 	return false;
-		
-	// }
-}
 
 #define TALBE_WIDTH 30
 

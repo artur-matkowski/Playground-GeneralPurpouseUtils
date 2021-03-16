@@ -14,20 +14,26 @@ namespace bfu
 		static int 		s_deallocationCount;
 
 	public:
-		StdAllocatorMemBlock(const char* name = "StdAllocatorMemBlock")
+		StdAllocatorMemBlock(const char* name = "Std Allocator MemBlock")
 			:MemBlockBase( name )
 		{};
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	    {
-	    	s_allocatedMemory += sizeOf * elements;
+	    	s_allocatedMemory += sizeOf * elements + sizeof(MemChunkHeader);
+	    	size_t size = sizeOf * elements + sizeof(MemChunkHeader);
 
-	        void* ret = aligned_alloc(alignOf, sizeOf * elements);
+	        void* ret = aligned_alloc( alignOf, size );
+
+	        MemChunkHeader* headerInfo = (MemChunkHeader*)ret;
+
+	        headerInfo->m_MemBlockOwner = this;
+	        headerInfo->m_sizeOfChunk = size;
 
 	        ++s_allocationCount;
 	    	#ifdef DEBUG_MEMORY_ALLOC
 	   		logAlloc(	ret, 
-	    			sizeOf * elements, 
+	    			size, 
 	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
@@ -37,18 +43,18 @@ namespace bfu
 	    			this);
 	   		#endif
 
-
-	        return ret;
+	        return (void*) ((size_t)ret + sizeof(MemChunkHeader));
 	    }
 
 		virtual void deallocate (void* p, std::size_t n)
 	    {
-	    	s_deallocatedMemory += n;
+	        MemChunkHeader* headerInfo = MemChunkHeader::InitFromLifePtr(p);
+	    	s_deallocatedMemory += headerInfo->m_sizeOfChunk;
 	    	++s_deallocationCount;
 
 			#ifdef DEBUG_MEMORY_ALLOC
 	   		logDealloc(	p, 
-	    			n, 
+	    			headerInfo->m_sizeOfChunk, 
 	    			m_memBlockDescriptor,
 	    			getUsedMemory(),
 	    			getFreeMemory(),
@@ -57,9 +63,9 @@ namespace bfu
 	    			s_deallocationCount,
 	    			this);
 	   		#endif
+		
 
-
-	        free(p);
+	        free(headerInfo);
 	    };
 		virtual size_t getFreeMemory()
 	    {
