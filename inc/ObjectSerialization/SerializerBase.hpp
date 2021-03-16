@@ -1,54 +1,56 @@
 #ifndef H_SerializerBase
 #define H_SerializerBase
-#include <vector>
 #include <cstdint>
+#include "Serializable.hpp"
 
 namespace bfu2
 {
+	class SerializableClassInterface;
+
 	class SerializerBase
 	{
 	public:
 
-		virtual void Serialize(std::vector<char>& v_buff, const SerializerBase* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<SerializerBase>* data) = 0;
+		virtual void Serialize( const SerializableClassInterface* data ) = 0;
+		virtual void Serialize( const SerializableVector<SerializableClassInterface>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const float* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<float>* data) = 0;
+		virtual void Serialize( const float* data ) = 0;
+		virtual void Serialize( const SerializableVector<float>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const double* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<double>* data) = 0;
+		virtual void Serialize( const double* data ) = 0;
+		virtual void Serialize( const SerializableVector<double>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const bool* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<bool>* data) = 0;
+		virtual void Serialize( const bool* data ) = 0;
+		virtual void Serialize( const SerializableVector<bool>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const char* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<char>* data) = 0;
-
-
-		virtual void Serialize(std::vector<char>& v_buff, const uint8_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<uint8_t>* data) = 0;
-
-		virtual void Serialize(std::vector<char>& v_buff, const uint16_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<uint16_t>* data) = 0;
-
-		virtual void Serialize(std::vector<char>& v_buff, const uint32_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<uint32_t>* data) = 0;
-
-		virtual void Serialize(std::vector<char>& v_buff, const uint64_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<uint64_t>* data) = 0;
+		virtual void Serialize( const char* data ) = 0;
+		virtual void Serialize( const SerializableVector<char>* data ) = 0;
 
 
-		virtual void Serialize(std::vector<char>& v_buff, const int8_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<int8_t>* data) = 0;
+		virtual void Serialize( const uint8_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<uint8_t>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const int16_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<int16_t>* data) = 0;
+		virtual void Serialize( const uint16_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<uint16_t>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const int32_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<int32_t>* data) = 0;
+		virtual void Serialize( const uint32_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<uint32_t>* data ) = 0;
 
-		virtual void Serialize(std::vector<char>& v_buff, const int64_t* data) = 0;
-		virtual void Serialize(std::vector<char>& v_buff, const std::vector<int64_t>* data) = 0;
+		virtual void Serialize( const uint64_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<uint64_t>* data ) = 0;
+
+
+		virtual void Serialize( const int8_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<int8_t>* data ) = 0;
+
+		virtual void Serialize( const int16_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<int16_t>* data ) = 0;
+
+		virtual void Serialize( const int32_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<int32_t>* data ) = 0;
+
+		virtual void Serialize( const int64_t* data ) = 0;
+		virtual void Serialize( const SerializableVector<int64_t>* data ) = 0;
 	};
 }
 

@@ -3,15 +3,15 @@
 
 namespace bfu2
 {
-	MemberInfo infos[1024];
+	ClassInfo infos[1024];
 
 	//cant be constexpr as I need to be able togrow array if is to shr
-	dummy FeedInfo(const char* name, size_t offset, SerializationFunc serializationFunc, MemberInfo** firstListEntry)
+	int FeedInfo(const char* name, size_t offset, ClassInfo** firstListEntry)
 	{
-		//std::cout <<  name << "\n";
+		printf("%s\n", name);
 		static int freeIndex = 0;
 
-		MemberInfo* free = &infos[freeIndex];
+		ClassInfo* free = &infos[freeIndex];
 		++freeIndex;
 
 		free->name = name;
@@ -24,7 +24,7 @@ namespace bfu2
 		}
 		else
 		{
-			MemberInfo* lastListEntry = *firstListEntry;
+			ClassInfo* lastListEntry = *firstListEntry;
 
 			for(; 	lastListEntry->next!=0; 
 					lastListEntry = lastListEntry->next );
@@ -32,7 +32,6 @@ namespace bfu2
 			lastListEntry->next = free;
 		}
 
-		return dummy();
+		return 0;
 	}
-
 }

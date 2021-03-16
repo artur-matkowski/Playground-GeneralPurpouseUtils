@@ -6,8 +6,8 @@
 
 class customSerializatorTest: bfu2::SerializableClassBase<customSerializatorTest>
 {
-	SERIALIZE(customSerializatorTest, int, i);
-	SERIALIZE(customSerializatorTest, std::vector<float>, ii);
+	SERIALIZABLE_VAR(customSerializatorTest, int, i);
+	SERIALIZABLE_VAR(customSerializatorTest, std::vector<float>, ii);
 
 
 public:
