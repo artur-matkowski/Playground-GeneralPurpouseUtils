@@ -72,7 +72,7 @@ namespace ObjectSerializationTests
 		 		<< "<\n\tSerialized to JSON2:\n\t\t>" << serializer2.str()  
 				<< "<\n" << std::endl;
 
-		if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 )
+		if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i==tt2.i )
 		{
 			log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 			return true;

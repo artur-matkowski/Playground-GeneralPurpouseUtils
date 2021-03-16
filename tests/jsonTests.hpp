@@ -46,7 +46,7 @@ bool _TESTJSONStream(const char* _typename, const T& val, bfu::MemBlockBase* mem
 	 		<< "<\n\tSerialized to JSON2:\n\t\t>" << json2.str()  
 			<< "<\n" << std::endl;
 
-	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 )
+	if( std::strcmp(json.str().c_str(), json2.str().c_str() )==0 && tt==tt2  )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
