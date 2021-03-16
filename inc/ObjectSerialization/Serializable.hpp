@@ -20,12 +20,15 @@ namespace bfu2
 		using std::vector<T*>::vector;
 	};
 
-	// template<>
-	// class SerializableVector<SerializableClassBase>: public std::vector<SerializableClassBase*> 
-	// {
-	// public:
-	// 	using std::vector<SerializableClassBase*>::vector;
-	// };
+	
+	class SerializableClassInterface;
+
+	template<>
+	class SerializableVector<SerializableClassInterface>: public std::vector<SerializableClassInterface*> 
+	{
+	public:
+		using std::vector<SerializableClassInterface*>::vector;
+	};
 
 	SERIALIZABLE_VECTOR( char );
 	SERIALIZABLE_VECTOR( uint8_t );

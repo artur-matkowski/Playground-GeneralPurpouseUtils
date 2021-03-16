@@ -112,7 +112,7 @@ int main(int argc, char** argv)
 	}
 	else if( strcmp(argv[1], "serial") == 0 )
 	{
-		bool ret = ObjectSerializableTests(&membloc);
+		bool ret = ObjectSerializationTests::ObjectSerializableTests(&membloc);
 
 		if(ret)
 			return 0;

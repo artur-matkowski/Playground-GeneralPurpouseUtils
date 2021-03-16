@@ -18,7 +18,7 @@ namespace bfu2
 
 	int FeedInfo(const char* name, size_t offset, ClassInfo** firstListEntry);
 
-	class SerializableClassInterface{};
+	struct SerializableClassInterface{};
 
 	template<class T>
 	class SerializableClassBase: public SerializableClassInterface
