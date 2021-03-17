@@ -26,20 +26,14 @@ namespace ObjectSerializationTests
 
 
 
-	template<class T>
-	class customSerializatorTest: public bfu2::SerializableClassBase<customSerializatorTest<T>>
+	class customSerializatorTest: public bfu2::SerializableClassBase<customSerializatorTest>
 	{
 	public:
-		SERIALIZABLE_VAR(customSerializatorTest, T, i);
-
-
+		SERIALIZABLE_VAR(customSerializatorTest, int, i);
 	public:
 		customSerializatorTest()
 		{};
 		~customSerializatorTest(){};
-
-
-		
 	};
 
 
@@ -52,8 +46,8 @@ namespace ObjectSerializationTests
 		bfu2::JSONSerializer serializer1(buff1, 4096, memBlock);
 		bfu2::JSONSerializer serializer2(buff2, 4096, memBlock);
 
-		customSerializatorTest<T> tt;
-		customSerializatorTest<T> tt2;
+		customSerializatorTest tt;
+		customSerializatorTest tt2;
 		tt.i = val;
 
 		serializer1.Serialize(&tt);
@@ -91,7 +85,7 @@ namespace ObjectSerializationTests
 	{
 		bool test = true;
 
-		test = test && TTESTJSONStream(float, randF(), mBlock);
+		test = test && TTESTJSONStream(int, 23, mBlock);
 
 		//bfu2::SerializableClassInterface* p = new customSerializatorTest<float>();
 

@@ -8,17 +8,27 @@
 
 namespace bfu2
 {
+	class JSONSerializer;
+	typedef void (*Func)(JSONSerializer*, void*);
+
 	struct ClassInfo
 	{
 		ClassInfo* next = nullptr;
 		size_t offset = 0;
+		size_t sizeOf = 0;
+		Func jsonSerializeFunc = nullptr;
+		Func jsonDeserializeFunc = nullptr;
 		const char* name = nullptr;
 	};
 
 
-	int FeedInfo(const char* name, size_t offset, ClassInfo** firstListEntry);
+	int FeedInfo(const char* name, size_t offset, size_t sizeOf, ClassInfo** firstListEntry, Func jsonserialize, Func jsondeserialize);
 
-	struct SerializableClassInterface{};
+	struct SerializableClassInterface
+	{
+		ClassInfo* p_first = nullptr;
+		//virtual ClassInfo* GetClassInfoListBegin() const = 0;
+	};
 
 	template<class T>
 	class SerializableClassBase: public SerializableClassInterface
@@ -52,9 +62,12 @@ namespace bfu2
 
 		SerializableClassBase()
 		{
+			p_first = sp_first;
 			// if(sp_first==nullptr)
 			// 	std::cout<< "did not initialized\n";
 		}
+
+		//virtual ClassInfo* GetClassInfoListBegin() const override { return sp_first; }
 
 		static T* AllocateAndInit()
 		{

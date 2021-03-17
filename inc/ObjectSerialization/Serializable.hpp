@@ -20,7 +20,7 @@ namespace bfu2
 		using std::vector<T*>::vector;
 	};
 
-	
+
 	class SerializableClassInterface;
 
 	template<>
@@ -42,16 +42,28 @@ namespace bfu2
 	SERIALIZABLE_VECTOR( float );
 	SERIALIZABLE_VECTOR( double );
 
+	class JSONSerializer;
+	typedef void (JSONSerializer::*funcFlaot)(const float*);
+	//typedef void (JSONSerializer::*Func)(void*);
+
 
 	#define SERIALIZABLE_VAR(C, T,i) \
 		T i; \
 		static inline void initVar_##i() __attribute__((constructor)) \
 		{ \
 			static bool isRegistered = false; \
-			if( isRegistered==false ){ \
-				FeedInfo(#i, offsetof(C, i), &C::sp_first); \
-				isRegistered = true;} \
+			if( isRegistered==false ) \
+			{ \
+				FeedInfo(#i, offsetof(C, i), sizeof(i), &C::sp_first, \
+				bfu2::JSONSerializer::Serialize_##T, \
+				0); \
+				isRegistered = true; \
+			} \
 		}
 }
 
+		// 		(bfu2::Func) (bfu2::funcFlaot) bfu2::JSONSerializer::Serialize, \
+		// 		(bfu2::Func) (bfu2::funcFlaot) bfu2::JSONSerializer::Deserialize); \
+		// 		isRegistered = true;} \
+		// }
 #endif

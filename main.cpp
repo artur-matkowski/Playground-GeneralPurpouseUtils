@@ -19,6 +19,7 @@ using namespace std;
 using namespace bfu;
 
 
+
 void process_mem_usage(double& vm_usage, double& resident_set)
 {
     vm_usage     = 0.0;
@@ -40,8 +41,31 @@ void process_mem_usage(double& vm_usage, double& resident_set)
     resident_set = rss * page_size_kb;
 }
 
+	// template<class T>
+	// class A: public bfu2::SerializableClassBase<A<T>>
+	// {
+	// public:
+	// 	SERIALIZABLE_VAR(A<T>, int, i);
 
 
+	// public:
+	// 	A()
+	// 	{};
+	// 	~A(){};
+	// };
+
+
+	// class B: public bfu2::SerializableClassBase<B>
+	// {
+	// public:
+	// 	SERIALIZABLE_VAR(B, int, i);
+
+
+	// public:
+	// 	B()
+	// 	{};
+	// 	~B(){};
+	// };
 
 int main(int argc, char** argv)
 {
@@ -59,7 +83,7 @@ int main(int argc, char** argv)
 		cout << "\n\t\t- stream  - runs stream rests";
 		cout << "\n\t\t- logging - runs logging tests";
 		cout << "\n\t\t- udp     - runs udp tests";
-		cout << "\n\t\t- event   - event tests\n";
+		cout << "\n\t\t- event   - event tests";
 		cout << "\n\t\t- serial  - new serialization methods\n";
 
 		return -1;
@@ -142,6 +166,7 @@ int main(int argc, char** argv)
 	cout << "\n\t\t- logging - runs logging tests";
 	cout << "\n\t\t- udp     - runs udp tests";
 	cout << "\n\t\t- event   - event tests";
+	cout << "\n\t\t- serial  - new serialization methods\n";
 	return -1;
 }
 

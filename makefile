@@ -45,9 +45,10 @@ release: $(SOURCES) $(OUT)
 	
 
 $(OUT):
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(BUILDPATH)*.o $(DEPOBJ) 
-	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)$@.so $(DEPOBJ) main.cpp 
-	#$(CC) -o $(BUILDPATH)$@ $(CPPFLAGS) $(INCSTRUCTURE) $(OBJDIR)* $(DEPOBJ) main.cpp 
+	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(BUILDPATH)*.o  
+	#as rcs $(BUILDPATH)$@.a $(BUILDPATH)*.o
+	$(CC) -o $(BUILDPATH)$@_testsSO $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)$@.so  main.cpp 
+	#$(CC) -o $(BUILDPATH)$@_testO $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)*.o  main.cpp 
 
 
 $(SOURCES): $(INCDIR)$(@:%.cpp=%.hpp) $@
