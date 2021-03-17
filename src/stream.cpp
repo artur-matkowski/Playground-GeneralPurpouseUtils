@@ -2,17 +2,18 @@
 #include <algorithm>
 
 namespace bfu{
-/*
-	stream::stream()
-	    :m_buffsize(0)
-	    ,m_first(0)
-	    ,m_last(0)
-	    ,m_writeCursor(0)
-	    ,m_readCursor(0)
-	    ,using_prealocated(false)
+
+	stream::stream(MemBlockBase* mBlock)
+	    :m_buffsize( 1 )
+	    ,m_first(tmpBuff)
+	    ,m_last(m_first+m_buffsize-1)
+	    ,m_writeCursor(m_first)
+	    ,m_readCursor(m_first)
+	    ,using_prealocated(true)
+	    ,m_mBlock(mBlock)
 	{
 	}
-*/
+
 	stream::stream(char* prealocatedBuff, int buffSize, MemBlockBase* mBlock )
 	    :m_buffsize( buffSize )
 	    ,m_first(prealocatedBuff)

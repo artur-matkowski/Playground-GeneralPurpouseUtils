@@ -29,6 +29,7 @@ namespace bfu{
 	class stream
 	{
 	protected:
+		char tmpBuff[1];
 		//lazy alocation if buffsize = 0 and not constructing with size
 		int m_buffsize = 0;
 		char* m_first = 0;
@@ -51,13 +52,44 @@ namespace bfu{
 
 	public:
 
-		//stream();
+		stream( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
 	    stream(char* prealocatedBuff, int size, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
 	    stream(const char* prealocatedBuff, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock()  );
 	    stream(const stream& input);
 	    //stream(const int size);
 
 	    ~stream();
+
+	    inline void assignMemBlock(MemBlockBase* mBlock)
+	    {
+	    	if(using_prealocated)
+	    	{
+	    		m_mBlock = mBlock;
+	    		return;
+	    	}
+
+	    	int newsize = size();
+			char* newbuff = (char*)mBlock->allocate( newsize, sizeof(char), alignof(char) );
+			int toCopy = m_writeCursor==0 && m_first!=0 ? strlen(m_first) : std::min(newsize, (int)(m_writeCursor-m_first));
+
+			std::memset(newbuff, '\0', newsize);
+			std::memcpy(newbuff, m_first, toCopy);
+
+			if(m_first!=0)
+				m_mBlock->deallocate( m_first, (size_t)m_last-(size_t)m_first );
+
+			int readOffset = m_readCursor - m_first;
+
+			m_first = newbuff;
+			m_writeCursor = m_first + toCopy;
+
+			m_readCursor = readOffset + m_first; 
+			m_last = m_first + newsize;
+			m_buffsize = newsize;
+			using_prealocated = false;
+			
+			*m_last = '\0';
+	    }
 
 	    inline int size() const
 	    {
@@ -378,6 +410,21 @@ namespace bfu{
 			m_readCursor = m_first + readOffset;
 
 			return *this;
+		}
+
+		inline bfu::stream& operator<<(const bfu::stream& src)
+		{
+			this->sprintf( src.c_str() );
+			return *this;
+		}
+
+		bool operator==(const bfu::stream& other)
+		{
+			bool ret = this->size() == other.size();
+
+			ret = ret && strncmp(m_first, other.m_first, size() )==0;
+
+			return ret;
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
