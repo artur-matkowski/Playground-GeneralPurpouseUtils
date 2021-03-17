@@ -296,6 +296,50 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( string* data )
 	{
+		skipTo('\"');
+
+		char* skipper = m_readCursor+1;
+
+		while( m_readCursor!=m_last )
+		{
+			if( skipper[0] == '\"' && skipper[-1] != '\\' )
+			{
+				break;
+			}
+
+			++skipper;
+		}
+
+		int size = skipper-m_readCursor+1;
+		//char* buff = new char[size];
+		char* buff = (char*)m_mBlock->allocate(size, sizeof(char), alignof(char));
+
+		int buffC = 0;
+
+		for(char* cursor = m_readCursor+1; m_readCursor<skipper; ++cursor)
+		{
+			if( cursor[0]=='\\' && cursor[1]=='\"' )
+			{
+				++cursor;
+			}
+			//yes looks like shit, but this is never going to be first element of array anyway
+			else if( cursor[0]=='\"' && cursor[-1]!='\\' )
+			{
+				buff[buffC] = '\0';
+				break;
+			}
+			buff[buffC] = *cursor;
+
+			++buffC;
+		}
+
+		(*data).assign(buff);
+
+		//delete buff;
+		m_mBlock->deallocate(buff, size * sizeof(char));
+
+		m_readCursor = skipper;
+		skipToOneOf(":,]}");
 
 	}
 	void JSONSerializer::Deserialize( SerializableVector<string>* data )

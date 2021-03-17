@@ -41,16 +41,12 @@ namespace bfu2
 	SERIALIZABLE_VECTOR( float );
 	SERIALIZABLE_VECTOR( bool );
 
-	class JSONSerializer;
-	//typedef void (JSONSerializer::*funcFlaot)(const float*);
-	//typedef void (JSONSerializer::*Func)(void*);
-
 	template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
 	{
 	    return (char*)&((T*)nullptr->*member) - (char*)nullptr;
 	}
 
-	#define SERIALIZABLE_VAR(C, T,i) \
+	#define SERIALIZABLE_VAR(C, T, i) \
 		T i; \
 		static inline void initVar_##i() __attribute__((constructor)) \
 		{ \
@@ -64,7 +60,7 @@ namespace bfu2
 			} \
 		} 
 
-	#define SERIALIZABLE_OBJ(C, T,i) \
+	#define SERIALIZABLE_OBJ(C, T, i) \
 		T i; \
 		static inline void initVar_##i() __attribute__((constructor)) \
 		{ \

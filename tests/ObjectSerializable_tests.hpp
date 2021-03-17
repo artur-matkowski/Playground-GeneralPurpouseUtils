@@ -91,6 +91,12 @@ GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
 
 GENERATE_TEST_FOR_SIMPLE_VAR(bool, randB() );
 
+using bfu::string;
+GENERATE_TEST_FOR_SIMPLE_VAR(string, "testing bfu::string" );
+
+using bfu::stream;
+//GENERATE_TEST_FOR_SIMPLE_VAR(stream, "testing bfu::stream" );
+
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
@@ -109,6 +115,9 @@ GENERATE_TEST_FOR_SIMPLE_VAR(bool, randB() );
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
 
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(bool, mBlock);
+
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(string, mBlock);
+		//test = test && PROCESS_TEST_FOR_SIMPLE_VAR(stream, mBlock);
 
 
 		return test;
