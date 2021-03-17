@@ -3,11 +3,6 @@
 
 namespace bfu2
 {
-
-	#define GENERATE_SERIALIZE_BINDING_FUNC(T) \
-		void JSONSerializer::Serialize_#T(JSONSerializer* serializer, void* data){ serializer->Serialize( (float*)data ); }
-
-
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		this->sprintf("{");
@@ -29,6 +24,7 @@ namespace bfu2
 
 		this->sprintf("\n}");
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<SerializableClassInterface*>* data )
 	{
 
@@ -38,7 +34,7 @@ namespace bfu2
 	{
    		this->sprintf("%f", *data);
 	}
-	void JSONSerializer::Serialize_float(JSONSerializer* serializer, void* data){ serializer->Serialize( (float*)data ); }
+	
 	void JSONSerializer::Serialize( SerializableVector<float>* data )
 	{
 
@@ -48,6 +44,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<double>* data )
 	{
 
@@ -57,6 +54,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<bool>* data )
 	{
 
@@ -66,25 +64,28 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<char>* data )
 	{
 
 	}
 
-	void JSONSerializer::Serialize( bfu::stream* data )
+	void JSONSerializer::Serialize( stream* data )
 	{
 
 	}
-	void JSONSerializer::Serialize( SerializableVector<bfu::stream>* data )
+	
+	void JSONSerializer::Serialize( SerializableVector<stream>* data )
 	{
 
 	}
 
-	void JSONSerializer::Serialize( bfu::string* data )
+	void JSONSerializer::Serialize( string* data )
 	{
 
 	}
-	void JSONSerializer::Serialize( SerializableVector<bfu::string>* data )
+	
+	void JSONSerializer::Serialize( SerializableVector<string>* data )
 	{
 
 	}
@@ -94,6 +95,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<uint8_t>* data )
 	{
 
@@ -103,6 +105,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<uint16_t>* data )
 	{
 
@@ -112,6 +115,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<uint32_t>* data )
 	{
 
@@ -121,6 +125,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<uint64_t>* data )
 	{
 
@@ -131,6 +136,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<int8_t>* data )
 	{
 
@@ -140,6 +146,7 @@ namespace bfu2
 	{
 
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<int16_t>* data )
 	{
 
@@ -149,8 +156,7 @@ namespace bfu2
 	{
 		this->sprintf("%" PRId32, *data);
 	}
-	void JSONSerializer::Serialize_int32_t(JSONSerializer* serializer, void* data) { serializer->Serialize( (int32_t*)data ); }
-	void JSONSerializer::Serialize_int(JSONSerializer* serializer, void* data) { serializer->Serialize( (int32_t*)data ); }
+	
 	void JSONSerializer::Serialize( SerializableVector<int32_t>* data )
 	{
 
@@ -158,14 +164,23 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( int64_t* data )
 	{
-
+		this->sprintf("%" PRId64, *data);
 	}
+	
 	void JSONSerializer::Serialize( SerializableVector<int64_t>* data )
 	{
 
 	}
 
+
+
+
+
 	//---------------
+
+
+
+
 
 	void JSONSerializer::Deserialize( SerializableClassInterface* data )
 	{
@@ -205,7 +220,6 @@ namespace bfu2
 		m_readCursor += sscanf(m_readCursor, "%f", data);
 		skipToOneOf(",]}");
 	}
-	void JSONSerializer::Deserialize_float(JSONSerializer* serializer, void* data) { serializer->Deserialize( (float*)data ); }
 	void JSONSerializer::Deserialize( SerializableVector<float>* data )
 	{
 
@@ -352,8 +366,6 @@ namespace bfu2
 		m_readCursor += sscanf(m_readCursor, "%" SCNd32, data);
 		skipToOneOf(",]}");
 	}
-	void JSONSerializer::Deserialize_int32_t(JSONSerializer* serializer, void* data) { serializer->Deserialize( (int32_t*)data ); }
-	void JSONSerializer::Deserialize_int(JSONSerializer* serializer, void* data) { serializer->Deserialize( (int32_t*)data ); }
 	void JSONSerializer::Deserialize( SerializableVector<int32_t>* data )
 	{
 
@@ -361,7 +373,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( int64_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNd64, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<int64_t>* data )
 	{

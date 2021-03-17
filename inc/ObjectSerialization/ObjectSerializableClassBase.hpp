@@ -4,12 +4,10 @@
 #include <cstring>
 #include <iostream>
 #include <stdio.h>
-#include "SerializerBase.hpp"
-
 namespace bfu2
 {
-	class JSONSerializer;
-	typedef void (*Func)(JSONSerializer*, void*);
+	class SerializerBase;
+	typedef void (*Func)(SerializerBase*, void*);
 
 	struct ClassInfo
 	{

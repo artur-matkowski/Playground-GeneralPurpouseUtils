@@ -77,7 +77,7 @@ namespace ObjectSerializationTests
 	testing_##T::_TESTJSONStream(mBlock)
 
 
-GENERATE_TEST_FOR_SIMPLE_VAR(int, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(int32_t, randI() );
 GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
 
 
@@ -85,7 +85,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
 	{
 		bool test = true;
 
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int32_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
 
 

@@ -43,7 +43,7 @@ namespace bfu2
 	SERIALIZABLE_VECTOR( double );
 
 	class JSONSerializer;
-	typedef void (JSONSerializer::*funcFlaot)(const float*);
+	//typedef void (JSONSerializer::*funcFlaot)(const float*);
 	//typedef void (JSONSerializer::*Func)(void*);
 
 	template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
@@ -59,8 +59,22 @@ namespace bfu2
 			if( isRegistered==false ) \
 			{ \
 				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
-				bfu2::JSONSerializer::Serialize_##T, \
-				bfu2::JSONSerializer::Deserialize_##T); \
+				bfu2::SerializerBase::Serialize_##T, \
+				bfu2::SerializerBase::Deserialize_##T); \
+				isRegistered = true; \
+			} \
+		} 
+
+	#define SERIALIZABLE_OBJ(C, T,i) \
+		T i; \
+		static inline void initVar_##i() __attribute__((constructor)) \
+		{ \
+			static bool isRegistered = false; \
+			if( isRegistered==false ) \
+			{ \
+				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
+				bfu2::SerializerBase::Serialize_SerializableClassInterface, \
+				bfu2::SerializerBase::Deserialize_SerializableClassInterface); \
 				isRegistered = true; \
 			} \
 		} 
