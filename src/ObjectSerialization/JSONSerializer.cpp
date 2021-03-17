@@ -6,7 +6,7 @@ namespace bfu2
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		this->sprintf("{");
-		ClassInfo* it = data->p_first;
+		ClassInfo* it = data->GetFirstClassInfo();;
 
 		for(; it != nullptr; )
 		{

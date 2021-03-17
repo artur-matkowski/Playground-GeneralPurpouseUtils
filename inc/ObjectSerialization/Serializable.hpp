@@ -46,24 +46,25 @@ namespace bfu2
 	typedef void (JSONSerializer::*funcFlaot)(const float*);
 	//typedef void (JSONSerializer::*Func)(void*);
 
+	template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
+	{
+	    return (char*)&((T*)nullptr->*member) - (char*)nullptr;
+	}
 
 	#define SERIALIZABLE_VAR(C, T,i) \
-		T i; \
+		T _##i; \
 		static inline void initVar_##i() __attribute__((constructor)) \
 		{ \
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetof(C, i), sizeof(i), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::_##i), sizeof(_##i), &C::sp_first, \
 				bfu2::JSONSerializer::Serialize_##T, \
 				0); \
 				isRegistered = true; \
 			} \
-		}
+		} \
+		public: T& i() { return _##i; }
 }
 
-		// 		(bfu2::Func) (bfu2::funcFlaot) bfu2::JSONSerializer::Serialize, \
-		// 		(bfu2::Func) (bfu2::funcFlaot) bfu2::JSONSerializer::Deserialize); \
-		// 		isRegistered = true;} \
-		// }
 #endif

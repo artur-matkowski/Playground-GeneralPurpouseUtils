@@ -24,10 +24,11 @@ namespace bfu2
 
 	int FeedInfo(const char* name, size_t offset, size_t sizeOf, ClassInfo** firstListEntry, Func jsonserialize, Func jsondeserialize);
 
-	struct SerializableClassInterface
+	class SerializableClassInterface
 	{
-		ClassInfo* p_first = nullptr;
-		//virtual ClassInfo* GetClassInfoListBegin() const = 0;
+	public:
+	public:
+		virtual ClassInfo* GetFirstClassInfo() const = 0;
 	};
 
 	template<class T>
@@ -36,6 +37,7 @@ namespace bfu2
 	protected:
 		static char s_className[255];
 		static char s_NamespacedClassName[1024];
+		int s;
 
 		static constexpr ClassInfo* className()
 		{
@@ -60,14 +62,13 @@ namespace bfu2
 
 		static ClassInfo* sp_first;
 
+		virtual ClassInfo* GetFirstClassInfo() const override { return sp_first; };
+
 		SerializableClassBase()
 		{
-			p_first = sp_first;
 			// if(sp_first==nullptr)
 			// 	std::cout<< "did not initialized\n";
 		}
-
-		//virtual ClassInfo* GetClassInfoListBegin() const override { return sp_first; }
 
 		static T* AllocateAndInit()
 		{
