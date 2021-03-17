@@ -28,7 +28,7 @@ namespace ObjectSerializationTests
 
 	class customSerializatorTest: public bfu2::SerializableClassBase<customSerializatorTest>
 	{
-	protected:
+	public:
 		SERIALIZABLE_VAR(customSerializatorTest, int, i);
 	public:
 		customSerializatorTest()
@@ -48,7 +48,7 @@ namespace ObjectSerializationTests
 
 		customSerializatorTest tt;
 		customSerializatorTest tt2;
-		tt.i() = val;
+		tt.i = val;
 
 		serializer1.Serialize(&tt);
 		//json << tt;
@@ -60,13 +60,13 @@ namespace ObjectSerializationTests
 		serializer2.Serialize(&tt2);
 		//json2 << tt2;
 
-		log::info << "Testing: " << _typename << "\n\tOriginal input:\n\t\t>" << tt.i()
+		log::info << "Testing: " << _typename << "\n\tOriginal input:\n\t\t>" << tt.i
 		 		<< "<\n\tSerialized to JSON:\n\t\t>" << serializer1.str()  
-		 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2.i()
+		 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2.i
 		 		<< "<\n\tSerialized to JSON2:\n\t\t>" << serializer2.str()  
 				<< "<\n" << std::endl;
 
-		if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i()==tt2.i() )
+		if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i==tt2.i )
 		{
 			log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 			return true;

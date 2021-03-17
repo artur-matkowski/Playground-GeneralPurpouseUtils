@@ -52,19 +52,18 @@ namespace bfu2
 	}
 
 	#define SERIALIZABLE_VAR(C, T,i) \
-		T _##i; \
+		T i; \
 		static inline void initVar_##i() __attribute__((constructor)) \
 		{ \
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::_##i), sizeof(_##i), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
 				bfu2::JSONSerializer::Serialize_##T, \
 				0); \
 				isRegistered = true; \
 			} \
-		} \
-		public: T& i() { return _##i; }
+		} 
 }
 
 #endif
