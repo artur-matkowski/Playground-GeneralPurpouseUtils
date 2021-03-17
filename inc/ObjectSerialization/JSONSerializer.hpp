@@ -75,50 +75,66 @@ namespace bfu2
 		//---------------
 
 		virtual void Deserialize( SerializableClassInterface* data ) override;
+		void Deserialize_SerializablSerializableClassInterface(void* data);
 		virtual void Deserialize( SerializableVector<SerializableClassInterface*>* data ) override;
 
 		virtual void Deserialize( float* data ) override;
+		void Deserialize_float(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<float>* data ) override;
 
 		virtual void Deserialize( double* data ) override;
+		void Deserialize_double(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<double>* data ) override;
 
 		virtual void Deserialize( bool* data ) override;
+		void Deserialize_bool(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<bool>* data ) override;
 
 		virtual void Deserialize( char* data ) override;
+		void Deserialize_char(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<char>* data ) override;
 
 		virtual void Deserialize( bfu::stream* data ) override;
+		void Deserialize_stream(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<bfu::stream>* data ) override;
 
 		virtual void Deserialize( bfu::string* data ) override;
+		void Deserialize_string(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<bfu::string>* data ) override;
 		
 
 		virtual void Deserialize( uint8_t* data ) override;
+		void Deserialize_uint8_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<uint8_t>* data ) override;
 
 		virtual void Deserialize( uint16_t* data ) override;
+		void Deserialize_uint16_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<uint16_t>* data ) override;
 
 		virtual void Deserialize( uint32_t* data ) override;
+		void Deserialize_uint32_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<uint32_t>* data ) override;
 
 		virtual void Deserialize( uint64_t* data ) override;
+		void Deserialize_uint64_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<uint64_t>* data ) override;
 
 
 		virtual void Deserialize( int8_t* data ) override;
+		void Deserialize_int8_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<int8_t>* data ) override;
 
 		virtual void Deserialize( int16_t* data ) override;
+		void Deserialize_int16_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<int16_t>* data ) override;
 
 		virtual void Deserialize( int32_t* data ) override;
+		static void Deserialize_int32_t(JSONSerializer* serializer, void* data);
+		static void Deserialize_int(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<int32_t>* data ) override;
 
 		virtual void Deserialize( int64_t* data ) override;
+		void Deserialize_int64_t(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<int64_t>* data ) override;
 	};
 }

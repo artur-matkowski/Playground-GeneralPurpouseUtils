@@ -60,7 +60,7 @@ namespace bfu2
 			{ \
 				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
 				bfu2::JSONSerializer::Serialize_##T, \
-				0); \
+				bfu2::JSONSerializer::Deserialize_##T); \
 				isRegistered = true; \
 			} \
 		} 

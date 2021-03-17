@@ -3,6 +3,19 @@
 
 namespace bfu2
 {
+	ClassInfo* ClassInfo::operator[](const char* name)
+	{
+		ClassInfo* it = this;
+
+		for(; it!=nullptr; it = it->next)
+		{
+			if(strcmp(name, it->name)==0)
+				break;
+		}
+		return it;
+	}
+
+
 	ClassInfo infos[1024];
 
 	//cant be constexpr as I need to be able togrow array if is to shr

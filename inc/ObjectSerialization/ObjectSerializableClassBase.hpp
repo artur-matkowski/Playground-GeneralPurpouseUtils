@@ -19,6 +19,8 @@ namespace bfu2
 		Func jsonSerializeFunc = nullptr;
 		Func jsonDeserializeFunc = nullptr;
 		const char* name = nullptr;
+
+		ClassInfo* operator[](const char*);
 	};
 
 

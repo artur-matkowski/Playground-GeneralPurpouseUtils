@@ -6,7 +6,7 @@ namespace bfu2
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		this->sprintf("{");
-		ClassInfo* it = data->GetFirstClassInfo();;
+		ClassInfo* it = data->GetFirstClassInfo();
 
 		for(; it != nullptr; )
 		{
@@ -142,7 +142,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( int32_t* data )
 	{
-		this->sprintf("%d", *data);
+		this->sprintf("%" PRId32, *data);
 	}
 	void JSONSerializer::Serialize_int32_t(JSONSerializer* serializer, void* data) { serializer->Serialize( (int32_t*)data ); }
 	void JSONSerializer::Serialize_int(JSONSerializer* serializer, void* data) { serializer->Serialize( (int32_t*)data ); }
@@ -164,7 +164,29 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( SerializableClassInterface* data )
 	{
+		char buff[1024] = {'0'};
+    	bfu::stream token(buff, 1024 /*, mBlock*/);
+		ClassInfo* classInfo = data->GetFirstClassInfo();
 
+
+		this->skipTo('{');
+		this->skip( 1 );
+
+		if(this->peak() == '\n')
+			this->skip( 1 );
+
+		while( this->peak() != '}' )
+		{
+			token.clear();
+
+			Deserialize( &token );
+
+			(*classInfo)[ token.c_str() ]->jsonDeserializeFunc( this,  (void*) ((size_t)data + classInfo->offset) );
+
+			this->skipToOneOf("\"}");
+
+		}
+		this->skip(1);
 	}
 	void JSONSerializer::Deserialize( SerializableVector<SerializableClassInterface*>* data )
 	{
@@ -212,7 +234,41 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( bfu::stream* data )
 	{
+		skipTo('\"');
 
+		char* skipper = m_readCursor+1;
+
+		while( m_readCursor!=m_last )
+		{
+			if( skipper[0] == '\"' && skipper[-1] != '\\' )
+			{
+				break;
+			}
+
+			++skipper;
+		}
+
+		int size = skipper-m_readCursor+1;
+
+		data->grow( size );
+
+		for(char* cursor = m_readCursor+1; cursor<skipper; ++cursor)
+		{
+			if( cursor[0]=='\\' && cursor[1]=='\"' )
+			{
+				++cursor;
+			}
+			else if( cursor[0]=='\"' && cursor[-1]!='\\' )
+			{
+				data->put( '\0' );
+				break;
+			}
+			data->put( *cursor );
+		}
+
+
+		m_readCursor = skipper;
+		skipToOneOf(":,]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<bfu::stream>* data )
 	{
@@ -285,8 +341,13 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( int32_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNd32, data);
+		skipToOneOf(",]}");
 	}
+	void JSONSerializer::Deserialize_int32_t(JSONSerializer* serializer, void* data) { serializer->Deserialize( (int32_t*)data ); }
+	void JSONSerializer::Deserialize_int(JSONSerializer* serializer, void* data) { serializer->Deserialize( (int32_t*)data ); }
 	void JSONSerializer::Deserialize( SerializableVector<int32_t>* data )
 	{
 
