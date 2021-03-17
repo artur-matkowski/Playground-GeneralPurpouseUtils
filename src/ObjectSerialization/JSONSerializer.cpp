@@ -3,6 +3,11 @@
 
 namespace bfu2
 {
+
+	#define GENERATE_SERIALIZE_BINDING_FUNC(T) \
+		void JSONSerializer::Serialize_#T(JSONSerializer* serializer, void* data){ serializer->Serialize( (float*)data ); }
+
+
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		this->sprintf("{");
@@ -200,6 +205,7 @@ namespace bfu2
 		m_readCursor += sscanf(m_readCursor, "%f", data);
 		skipToOneOf(",]}");
 	}
+	void JSONSerializer::Deserialize_float(JSONSerializer* serializer, void* data) { serializer->Deserialize( (float*)data ); }
 	void JSONSerializer::Deserialize( SerializableVector<float>* data )
 	{
 

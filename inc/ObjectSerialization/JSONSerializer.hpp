@@ -10,7 +10,7 @@ namespace bfu2
 		using bfu::stream::stream;
 
 		virtual void Serialize( SerializableClassInterface* data ) override;
-		void Serialize_SerializablSerializableClassInterface(void* data);
+		void Serialize_SerializableClassInterface(void* data);
 		virtual void Serialize( SerializableVector<SerializableClassInterface*>* data ) override;
 
 		virtual void Serialize( float* data ) override;
@@ -72,14 +72,22 @@ namespace bfu2
 		void Serialize_int64_t(JSONSerializer* serializer, void* data);
 		virtual void Serialize( SerializableVector<int64_t>* data ) override;
 
+
+
+
+
 		//---------------
 
+
+
+
+
 		virtual void Deserialize( SerializableClassInterface* data ) override;
-		void Deserialize_SerializablSerializableClassInterface(void* data);
+		void Deserialize_SerializableClassInterface(void* data);
 		virtual void Deserialize( SerializableVector<SerializableClassInterface*>* data ) override;
 
 		virtual void Deserialize( float* data ) override;
-		void Deserialize_float(JSONSerializer* serializer, void* data);
+		static void Deserialize_float(JSONSerializer* serializer, void* data);
 		virtual void Deserialize( SerializableVector<float>* data ) override;
 
 		virtual void Deserialize( double* data ) override;

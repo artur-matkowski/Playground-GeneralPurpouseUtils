@@ -78,8 +78,7 @@ namespace ObjectSerializationTests
 
 
 GENERATE_TEST_FOR_SIMPLE_VAR(int, randI() );
-
-	#define TTESTJSONStream(T,v, m) _TESTJSONStream<T>(#T, (T)v, m)
+GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
 
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
@@ -87,8 +86,8 @@ GENERATE_TEST_FOR_SIMPLE_VAR(int, randI() );
 		bool test = true;
 
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
 
-		//bfu2::SerializableClassInterface* p = new customSerializatorTest<float>();
 
 		return test;
 	}
