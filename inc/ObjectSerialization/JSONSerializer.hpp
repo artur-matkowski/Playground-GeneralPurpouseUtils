@@ -17,17 +17,9 @@ namespace bfu2
 		
 		virtual void Serialize( SerializableVector<float>* data ) override;
 
-		virtual void Serialize( double* data ) override;
-		
-		virtual void Serialize( SerializableVector<double>* data ) override;
-
 		virtual void Serialize( bool* data ) override;
 		
 		virtual void Serialize( SerializableVector<bool>* data ) override;
-
-		virtual void Serialize( char* data ) override;
-		
-		virtual void Serialize( SerializableVector<char>* data ) override;
 
 		virtual void Serialize( bfu::stream* data ) override;
 		
@@ -90,17 +82,9 @@ namespace bfu2
 		
 		virtual void Deserialize( SerializableVector<float>* data ) override;
 
-		virtual void Deserialize( double* data ) override;
-		
-		virtual void Deserialize( SerializableVector<double>* data ) override;
-
 		virtual void Deserialize( bool* data ) override;
 		
 		virtual void Deserialize( SerializableVector<bool>* data ) override;
-
-		virtual void Deserialize( char* data ) override;
-		
-		virtual void Deserialize( SerializableVector<char>* data ) override;
 
 		virtual void Deserialize( bfu::stream* data ) override;
 		

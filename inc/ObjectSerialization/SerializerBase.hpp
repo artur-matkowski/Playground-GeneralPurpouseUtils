@@ -27,9 +27,7 @@ namespace bfu2
 
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( SerializableClassInterface )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( float )
-		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( double )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( bool )
-		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( char )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( stream )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( string )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( uint8_t )
@@ -45,9 +43,7 @@ namespace bfu2
 
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( SerializableClassInterface )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( float )
-		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( double )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( bool )
-		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( char )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( stream )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( string )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( uint8_t )
@@ -67,11 +63,7 @@ namespace bfu2
 
 		virtual void Serialize( SerializableVector<float>* data ) = 0;
 
-		virtual void Serialize( SerializableVector<double>* data ) = 0;
-
 		virtual void Serialize( SerializableVector<bool>* data ) = 0;
-
-		virtual void Serialize( SerializableVector<char>* data ) = 0;
 
 		virtual void Serialize( SerializableVector<stream>* data ) = 0;
 
@@ -109,11 +101,7 @@ namespace bfu2
 
 		virtual void Deserialize( SerializableVector<float>* data ) = 0;
 
-		virtual void Deserialize( SerializableVector<double>* data ) = 0;
-
 		virtual void Deserialize( SerializableVector<bool>* data ) = 0;
-
-		virtual void Deserialize( SerializableVector<char>* data ) = 0;
 
 		virtual void Deserialize( SerializableVector<stream>* data ) = 0;
 

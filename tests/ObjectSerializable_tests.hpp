@@ -77,16 +77,38 @@ namespace ObjectSerializationTests
 	testing_##T::_TESTJSONStream(mBlock)
 
 
+GENERATE_TEST_FOR_SIMPLE_VAR(int8_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(int16_t, randI() );
 GENERATE_TEST_FOR_SIMPLE_VAR(int32_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(int64_t, randI() );
+
+GENERATE_TEST_FOR_SIMPLE_VAR(uint8_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(uint16_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(uint32_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(uint64_t, randI() );
+
 GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
+
+GENERATE_TEST_FOR_SIMPLE_VAR(bool, randB() );
 
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
 		bool test = true;
 
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int16_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int64_t, mBlock);
+
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint16_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint64_t, mBlock);
+
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
+
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(bool, mBlock);
 
 
 		return test;

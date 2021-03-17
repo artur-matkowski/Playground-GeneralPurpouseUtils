@@ -40,19 +40,9 @@ namespace bfu2
 
 	}
 
-	void JSONSerializer::Serialize( double* data )
-	{
-
-	}
-	
-	void JSONSerializer::Serialize( SerializableVector<double>* data )
-	{
-
-	}
-
 	void JSONSerializer::Serialize( bool* data )
 	{
-
+		this->sprintf("%s", (*data ? "true" : "false") );
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<bool>* data )
@@ -60,19 +50,22 @@ namespace bfu2
 
 	}
 
-	void JSONSerializer::Serialize( char* data )
-	{
-
-	}
-	
-	void JSONSerializer::Serialize( SerializableVector<char>* data )
-	{
-
-	}
-
 	void JSONSerializer::Serialize( stream* data )
 	{
+		int buffsize = data->size();
 
+		put('\"');
+
+		for(int i=0; i<buffsize; ++i)
+		{
+			if( (*data)[i] == '\"' )
+			{
+				put('\\');
+			}
+			put((*data)[i]);
+		}
+
+		put('\"');
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<stream>* data )
@@ -82,7 +75,20 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( string* data )
 	{
+		int buffsize = (*data).size();
 
+		put('\"');
+
+		for(int i=0; i<buffsize; ++i)
+		{
+			if( (*data)[i] == '\"' )
+			{
+				put('\\');
+			}
+			put((*data)[i]);
+		}
+
+		put('\"');
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<string>* data )
@@ -93,7 +99,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( uint8_t* data )
 	{
-
+		this->sprintf("%" PRIu8, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<uint8_t>* data )
@@ -103,7 +109,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( uint16_t* data )
 	{
-
+		this->sprintf("%" PRIu16, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<uint16_t>* data )
@@ -113,7 +119,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( uint32_t* data )
 	{
-
+		this->sprintf("%" PRIu32, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<uint32_t>* data )
@@ -123,7 +129,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( uint64_t* data )
 	{
-
+		this->sprintf("%" PRIu64, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<uint64_t>* data )
@@ -134,7 +140,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( int8_t* data )
 	{
-
+		this->sprintf("%" PRId8, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<int8_t>* data )
@@ -144,7 +150,7 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( int16_t* data )
 	{
-
+		this->sprintf("%" PRId16, *data);
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<int16_t>* data )
@@ -225,34 +231,27 @@ namespace bfu2
 
 	}
 
-	void JSONSerializer::Deserialize( double* data )
-	{
-
-	}
-	void JSONSerializer::Deserialize( SerializableVector<double>* data )
-	{
-
-	}
-
 	void JSONSerializer::Deserialize( bool* data )
 	{
+		skipToOneOf("tf");
 
+		if( 0==strncmp(m_readCursor, "true", 4) )
+		{
+			*data = true;
+		}
+		else if( 0==strncmp(m_readCursor, "false", 5) )
+		{
+			*data = false;
+		}
+
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<bool>* data )
 	{
 
 	}
 
-	void JSONSerializer::Deserialize( char* data )
-	{
-
-	}
-	void JSONSerializer::Deserialize( SerializableVector<char>* data )
-	{
-
-	}
-
-	void JSONSerializer::Deserialize( bfu::stream* data )
+	void JSONSerializer::Deserialize( stream* data )
 	{
 		skipTo('\"');
 
@@ -290,23 +289,26 @@ namespace bfu2
 		m_readCursor = skipper;
 		skipToOneOf(":,]}");
 	}
-	void JSONSerializer::Deserialize( SerializableVector<bfu::stream>* data )
+	void JSONSerializer::Deserialize( SerializableVector<stream>* data )
 	{
 
 	}
 
-	void JSONSerializer::Deserialize( bfu::string* data )
+	void JSONSerializer::Deserialize( string* data )
 	{
 
 	}
-	void JSONSerializer::Deserialize( SerializableVector<bfu::string>* data )
+	void JSONSerializer::Deserialize( SerializableVector<string>* data )
 	{
 
 	}
 
 	void JSONSerializer::Deserialize( uint8_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNu8, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<uint8_t>* data )
 	{
@@ -315,7 +317,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( uint16_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNu16, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<uint16_t>* data )
 	{
@@ -324,7 +329,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( uint32_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNu32, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<uint32_t>* data )
 	{
@@ -333,7 +341,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( uint64_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNu64, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<uint64_t>* data )
 	{
@@ -343,7 +354,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( int8_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNd8, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<int8_t>* data )
 	{
@@ -352,7 +366,10 @@ namespace bfu2
 
 	void JSONSerializer::Deserialize( int16_t* data )
 	{
+		skipToOneOf("-0123456789");
 
+		m_readCursor += sscanf(m_readCursor, "%" SCNd16, data);
+		skipToOneOf(",]}");
 	}
 	void JSONSerializer::Deserialize( SerializableVector<int16_t>* data )
 	{

@@ -30,7 +30,6 @@ namespace bfu2
 		using std::vector<SerializableClassInterface*>::vector;
 	};
 
-	SERIALIZABLE_VECTOR( char );
 	SERIALIZABLE_VECTOR( uint8_t );
 	SERIALIZABLE_VECTOR( int8_t );
 	SERIALIZABLE_VECTOR( uint16_t );
@@ -40,7 +39,7 @@ namespace bfu2
 	SERIALIZABLE_VECTOR( uint64_t );
 	SERIALIZABLE_VECTOR( int64_t );
 	SERIALIZABLE_VECTOR( float );
-	SERIALIZABLE_VECTOR( double );
+	SERIALIZABLE_VECTOR( bool );
 
 	class JSONSerializer;
 	//typedef void (JSONSerializer::*funcFlaot)(const float*);
