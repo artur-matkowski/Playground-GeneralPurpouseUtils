@@ -280,12 +280,12 @@ namespace bfu{
 			m_buffsize = newsize;
 			using_prealocated = false;
 			
-			*m_last = '\0';
+			*(m_last-1) = '\0';
 		}
 
 		inline void grow(int minSize)
 		{
-			int newSize = m_last-m_first+1;
+			int newSize = m_last-m_first+1+1;
 			newSize = next_power_of_two(newSize);
 			resize(newSize);
 		}
