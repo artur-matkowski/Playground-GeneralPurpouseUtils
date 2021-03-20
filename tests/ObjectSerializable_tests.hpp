@@ -47,7 +47,7 @@ namespace ObjectSerializationTests
 			A tt; \
 			A tt2; \
 			tt.i = value; \
-			tt.ii = value+1; \
+			tt.ii = value; \
 			 \
 			serializer1.Serialize(&tt); \
 			 \
@@ -98,6 +98,9 @@ GENERATE_TEST_FOR_SIMPLE_VAR(string, "testing bfu::string" );
 
 using bfu::stream;
 GENERATE_TEST_FOR_SIMPLE_VAR(stream, "testing bfu::stream" );
+
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 namespace nestedClassTest
 {
@@ -163,6 +166,83 @@ namespace nestedClassTest
 	} 
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+#define GENERATE_TEST_FOR_VAR_VECTOR(T, value) \
+	namespace testing_v_##T \
+	{ \
+		class A: public bfu2::SerializableClassBase<A> \
+		{ \
+		public: \
+			SERIALIZABLE_VAR_VEC(A, T, i); \
+			SERIALIZABLE_VAR_VEC(A, T, ii); \
+		public: \
+			A() \
+			{}; \
+			~A(){}; \
+		}; \
+		bool _TESTJSONStream(bfu::MemBlockBase* memBlock) \
+		{ \
+			char buff1[4096]; \
+			char buff2[4096]; \
+			 \
+			bfu2::JSONSerializer serializer1(buff1, 4096, memBlock); \
+			bfu2::JSONSerializer serializer2(buff2, 4096, memBlock); \
+			 \
+			A tt; \
+			A tt2; \
+			tt.i = { value, value, value, value, value, value, value, value, value }; \
+			tt.ii = { value, value, value, value, value, value, value, value, value }; \
+			 \
+			serializer1.Serialize(&tt); \
+			 \
+			serializer1.SetCursonPos(0); \
+			 \
+			serializer1.Deserialize(&tt2); \
+			serializer2.Serialize(&tt2); \
+			 \
+			log::info << "Testing: " << #T << "\n\tOriginal input:\n\t\t>"  \
+			 		<< "<\n\tSerialized to JSON:\n\t\t>" << serializer1.str()   \
+			 		<< "<\n\tDeserialized back to type:\n\t\t>"  \
+			 		<< "<\n\tSerialized to JSON2:\n\t\t>" << serializer2.str()   \
+					<< "<\n" << std::endl; \
+					 \
+			if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i==tt2.i && tt.ii==tt2.ii ) \
+			{ \
+				log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl; \
+				return true; \
+			} \
+			else \
+			{ \
+				log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl; \
+				return false;		 \
+			} \
+		} \
+	}
+
+#define PROCESS_TEST_FOR_VAR_VECTOR(T, mBlock) \
+	testing_v_##T::_TESTJSONStream(mBlock)
+
+
+GENERATE_TEST_FOR_VAR_VECTOR(float, randF() );
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+
+
+class A: public bfu2::SerializableClassBase<A> 
+{ 
+public: 
+	SERIALIZABLE_VAR_VEC(A, float, i); 
+public: 
+	A() 
+	{}; 
+	~A(){}; 
+}; 
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
@@ -187,6 +267,8 @@ namespace nestedClassTest
 
 
 		test = test && nestedClassTest::_TESTJSONStream( mBlock );
+
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(float, mBlock);
 
 
 		return test;

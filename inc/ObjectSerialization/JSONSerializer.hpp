@@ -11,7 +11,7 @@ namespace bfu2
 
 		virtual void Serialize( SerializableClassInterface* data ) override;
 		
-		virtual void Serialize( SerializableVector<SerializableClassInterface*>* data ) override;
+		virtual void Serialize( SerializableVector<SerializableClassInterface>* data ) override;
 
 		virtual void Serialize( float* data ) override;
 		
@@ -76,7 +76,7 @@ namespace bfu2
 
 		virtual void Deserialize( SerializableClassInterface* data ) override;
 		
-		virtual void Deserialize( SerializableVector<SerializableClassInterface*>* data ) override;
+		virtual void Deserialize( SerializableVector<SerializableClassInterface>* data ) override;
 
 		virtual void Deserialize( float* data ) override;
 		
