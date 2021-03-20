@@ -207,7 +207,9 @@ namespace bfu2
 
 			Deserialize( &token );
 
-			(*classInfo)[ token.c_str() ]->jsonDeserializeFunc( this,  (void*) ((size_t)data + classInfo->offset) );
+			ClassInfo* tmp = (*classInfo)[ token.c_str() ];
+
+			tmp->jsonDeserializeFunc( this,  (void*) ((size_t)data + tmp->offset) );
 
 			this->skipToOneOf("\"}");
 

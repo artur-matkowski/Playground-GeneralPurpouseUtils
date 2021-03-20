@@ -53,7 +53,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_##T, \
 				bfu2::SerializerBase::Deserialize_##T); \
 				isRegistered = true; \

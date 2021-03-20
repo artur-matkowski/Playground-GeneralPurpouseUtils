@@ -37,8 +37,7 @@ namespace bfu2
 	protected:
 		static char s_className[255];
 		static char s_NamespacedClassName[1024];
-		int s;
-
+		
 		static constexpr ClassInfo* className()
 		{
 			const int strl = strlen(__PRETTY_FUNCTION__);

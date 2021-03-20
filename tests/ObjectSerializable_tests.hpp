@@ -30,6 +30,7 @@ namespace ObjectSerializationTests
 		{ \
 		public: \
 			SERIALIZABLE_VAR(A, T, i); \
+			SERIALIZABLE_VAR(A, T, ii); \
 		public: \
 			A() \
 			{}; \
@@ -46,6 +47,7 @@ namespace ObjectSerializationTests
 			A tt; \
 			A tt2; \
 			tt.i = value; \
+			tt.ii = value+1; \
 			 \
 			serializer1.Serialize(&tt); \
 			 \
@@ -54,13 +56,13 @@ namespace ObjectSerializationTests
 			serializer1.Deserialize(&tt2); \
 			serializer2.Serialize(&tt2); \
 			 \
-			log::info << "Testing: " << #T << "\n\tOriginal input:\n\t\t>" << tt.i \
+			log::info << "Testing: " << #T << "\n\tOriginal input:\n\t\t>" << tt.i << " " << tt.ii \
 			 		<< "<\n\tSerialized to JSON:\n\t\t>" << serializer1.str()   \
-			 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2.i \
+			 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2.i << " " << tt2.ii \
 			 		<< "<\n\tSerialized to JSON2:\n\t\t>" << serializer2.str()   \
 					<< "<\n" << std::endl; \
 					 \
-			if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i==tt2.i ) \
+			if( std::strcmp(serializer1.str().c_str(), serializer2.str().c_str() )==0 && tt.i==tt2.i && tt.ii==tt2.ii ) \
 			{ \
 				log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl; \
 				return true; \
@@ -77,13 +79,13 @@ namespace ObjectSerializationTests
 	testing_##T::_TESTJSONStream(mBlock)
 
 
-GENERATE_TEST_FOR_SIMPLE_VAR(int8_t, randI() );
-GENERATE_TEST_FOR_SIMPLE_VAR(int16_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(int8_t, randI()%127 );
+GENERATE_TEST_FOR_SIMPLE_VAR(int16_t, randI()%16000 );
 GENERATE_TEST_FOR_SIMPLE_VAR(int32_t, randI() );
 GENERATE_TEST_FOR_SIMPLE_VAR(int64_t, randI() );
 
-GENERATE_TEST_FOR_SIMPLE_VAR(uint8_t, randI() );
-GENERATE_TEST_FOR_SIMPLE_VAR(uint16_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR(uint8_t, randI()%255 );
+GENERATE_TEST_FOR_SIMPLE_VAR(uint16_t, randI()%16000 );
 GENERATE_TEST_FOR_SIMPLE_VAR(uint32_t, randI() );
 GENERATE_TEST_FOR_SIMPLE_VAR(uint64_t, randI() );
 

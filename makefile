@@ -29,7 +29,7 @@ all:
 	make debug
 	make release
 
-debug: CC += -g -Og -DLOG_LEVEL=DebugLevel::ALL
+debug: CC += -g -DLOG_LEVEL=DebugLevel::ALL
 debug: BUILDPATH = build/$(ARCHITECTURE)/dbg/
 #debug: OBJDIR = build/$(ARCHITECTURE)/dbg/obj/
 #debug: OBJECTS = $(SOURCES:%.cpp=$(OBJDIR)%.o)
