@@ -6,7 +6,7 @@ namespace bfu{
 	stream::stream(MemBlockBase* mBlock)
 	    :m_buffsize( 1 )
 	    ,m_first(tmpBuff)
-	    ,m_last(m_first+m_buffsize-1)
+	    ,m_last(m_first+m_buffsize)
 	    ,m_writeCursor(m_first)
 	    ,m_readCursor(m_first)
 	    ,using_prealocated(true)
@@ -17,7 +17,7 @@ namespace bfu{
 	stream::stream(char* prealocatedBuff, int buffSize, MemBlockBase* mBlock )
 	    :m_buffsize( buffSize )
 	    ,m_first(prealocatedBuff)
-	    ,m_last(m_first+m_buffsize-1)
+	    ,m_last(m_first+m_buffsize)
 	    ,m_writeCursor(m_first)
 	    ,m_readCursor(m_first)
 	    ,using_prealocated(true)
@@ -28,7 +28,7 @@ namespace bfu{
 	stream::stream(const char* prealocatedBuff, MemBlockBase* mBlock )
 	    :m_buffsize( strlen(prealocatedBuff) )
 	    ,m_first((char*)prealocatedBuff)
-	    ,m_last(m_first+m_buffsize-1)
+	    ,m_last(m_first+m_buffsize)
 	    ,m_writeCursor(0)
 	    ,m_readCursor(m_first)
 	    ,using_prealocated(true)
@@ -45,7 +45,7 @@ namespace bfu{
 	    ,using_prealocated(false)
 	    ,m_mBlock(input.m_mBlock)
 	{
-		resize( input.capacity()+1 );
+		resize( input.capacity() );
 		this->operator=(input);
 	}
 /*
