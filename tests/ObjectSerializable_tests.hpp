@@ -13,7 +13,7 @@ namespace ObjectSerializationTests
 		return (rand() % 100) * 0.01 + rand() % 100 - 50;
 	}
 
-	int randI()
+	uint8_t randI()
 	{
 		return rand() % 100 - 50;
 	}
@@ -22,6 +22,41 @@ namespace ObjectSerializationTests
 	{
 		return (rand() % 2) == 0;
 	}
+
+
+	template<class T>
+	const T Rand()
+	{
+		return (rand() % 100) * 0.01 + rand() % 100 - 50;
+	}
+
+	template<>
+	const uint8_t Rand<uint8_t>()
+	{
+		return (rand() % 100) * 0.01 + rand() % 100 - 50;
+	}
+	template<>
+	const int8_t Rand<int8_t>()
+	{
+		return (rand() % 100) * 0.01 + rand() % 100 - 50;
+	}
+	template<>
+	const bfu::string Rand<bfu::string>()
+	{
+		bfu::string ret;
+		ret = std::to_string( (rand() % 100) * 0.01 + rand() % 100 - 50 );
+		ret += " bfu::string test";
+		return ret;
+	}
+	template<>
+	const bfu::stream Rand<bfu::stream>()
+	{
+		bfu::stream ret ;
+		ret.sprintf("bfu::stream test %d", (rand() % 100) * 0.01 + rand() % 100 - 50);
+		return ret;
+	}
+
+
 
 #define GENERATE_TEST_FOR_SIMPLE_VAR(T, value) \
 	namespace testing_##T \
@@ -192,8 +227,8 @@ namespace nestedClassTest
 			 \
 			A tt; \
 			A tt2; \
-			tt.i = { value, value, value, value, value, value, value, value, value }; \
-			tt.ii = { value, value, value, value, value, value, value, value, value }; \
+			for(int i=0; i<10; ++i) { tt.i.push_back(value);} \
+			for(int i=0; i<10; ++i) { tt.ii.push_back(value);} \
 			 \
 			serializer1.Serialize(&tt); \
 			 \
@@ -226,6 +261,17 @@ namespace nestedClassTest
 
 
 GENERATE_TEST_FOR_VAR_VECTOR(float, randF() );
+GENERATE_TEST_FOR_VAR_VECTOR(bool, randB() );
+GENERATE_TEST_FOR_VAR_VECTOR(uint8_t, Rand<uint8_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(uint16_t, Rand<uint16_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(uint32_t, Rand<uint32_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(uint64_t, Rand<uint64_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(int8_t, Rand<int8_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(int16_t, Rand<int16_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(int32_t, Rand<int32_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(int64_t, Rand<int64_t>() );
+GENERATE_TEST_FOR_VAR_VECTOR(stream, Rand<stream>() );
+GENERATE_TEST_FOR_VAR_VECTOR(string, Rand<string>() );
 
 
 
@@ -234,41 +280,42 @@ GENERATE_TEST_FOR_VAR_VECTOR(float, randF() );
 
 
 
-class A: public bfu2::SerializableClassBase<A> 
-{ 
-public: 
-	SERIALIZABLE_VAR_VEC(A, float, i); 
-public: 
-	A() 
-	{}; 
-	~A(){}; 
-}; 
+
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
 		bool test = true;
 
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(bool, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int8_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int16_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int32_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int64_t, mBlock);
-
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint8_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint16_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint32_t, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint64_t, mBlock);
 
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
-
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(bool, mBlock);
-
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(string, mBlock);
 		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(stream, mBlock);
 
-
 		test = test && nestedClassTest::_TESTJSONStream( mBlock );
 
+
+
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR(float, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(bool, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(uint8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(uint16_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(uint32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(uint64_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int16_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int64_t, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(stream, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(string, mBlock);
 
 
 		return test;

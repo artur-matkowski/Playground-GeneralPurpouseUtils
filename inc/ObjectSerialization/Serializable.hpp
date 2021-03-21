@@ -1,6 +1,7 @@
 #ifndef H_Serializable
 #define H_Serializable
 #include <vector>
+#include "stream.hpp"
 #include "ObjectSerializableClassBase.hpp"
 
 namespace bfu2
@@ -32,6 +33,8 @@ namespace bfu2
 	SERIALIZABLE_VECTOR( int64_t );
 	SERIALIZABLE_VECTOR( float );
 	SERIALIZABLE_VECTOR( bool );
+	SERIALIZABLE_VECTOR( bfu::string );
+	SERIALIZABLE_VECTOR( bfu::stream );
 
 	template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
 	{
@@ -59,7 +62,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(i), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_SerializableClassInterface, \
 				bfu2::SerializerBase::Deserialize_SerializableClassInterface); \
 				isRegistered = true; \

@@ -418,7 +418,7 @@ namespace bfu{
 			return *this;
 		}
 
-		bool operator==(const bfu::stream& other)
+		bool operator==(const bfu::stream& other) const
 		{
 			bool ret = this->size() == other.size();
 
