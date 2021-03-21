@@ -4,12 +4,14 @@
 #include <cstring>
 #include <iostream>
 #include <stdio.h>
+#include "MemBlockBase.hpp"
+
 namespace bfu2
 {
 	class SerializerBase;
 	class SerializableClassInterface;
 	typedef void (*Func)(SerializerBase*, void*);
-	typedef SerializableClassInterface* (*AllocateAndInit)();
+	typedef SerializableClassInterface* (*AllocateAndInit)(bfu::MemBlockBase*);
 
 	struct ClassInfo
 	{
@@ -80,13 +82,15 @@ namespace bfu2
 		{
 		}
 
-		static SerializableClassInterface* AllocateAndInit()
+		static SerializableClassInterface* AllocateAndInit(bfu::MemBlockBase* mBlock)
 		{
-			return new T();
+			SerializableClassInterface* ret = (SerializableClassInterface*)mBlock->allocate(1, sizeof(T), alignof(T));
+			new (ret) T();
+			return ret;
 		}
 		virtual void Dispouse() override
 		{
-			delete this;
+			bfu::MemBlockBase::DeallocateUnknown(this);
 		}
 	};
 

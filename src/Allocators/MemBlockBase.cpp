@@ -14,6 +14,11 @@ namespace bfu
 	{
 		return (MemChunkHeader*) ((size_t)ptr - sizeof(MemChunkHeader));
 	}
+	void MemBlockBase::DeallocateUnknown(void* p)
+	{
+		MemChunkHeader* headerInfo = MemChunkHeader::InitFromLifePtr(p);
+		headerInfo->m_MemBlockOwner->deallocate(p, headerInfo->m_sizeOfChunk);
+	}
 }
 
 void convert(size_t& big, size_t& small)

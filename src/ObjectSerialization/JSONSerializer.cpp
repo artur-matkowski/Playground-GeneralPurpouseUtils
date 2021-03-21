@@ -316,7 +316,7 @@ namespace bfu2
  		 
 		while(this->peak() != ']') 
 		{ 
-			SerializableClassInterface* cache = data->allocateAndInit();
+			SerializableClassInterface* cache = data->allocateAndInit( data->mBlock() );
  		 
 			this->Deserialize( cache ); 
  		 

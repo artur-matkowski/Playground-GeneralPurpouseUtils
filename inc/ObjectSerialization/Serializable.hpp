@@ -3,30 +3,43 @@
 #include <vector>
 #include "stream.hpp"
 #include "ObjectSerializableClassBase.hpp"
+#include "CustomAllocator.hpp"
 
 namespace bfu2
 {
 	#define SERIALIZABLE_VECTOR(T) \
 		template<> \
-		class SerializableVector<T>: public std::vector<T> \
+		class SerializableVector<T>: public std::vector<T, bfu::custom_allocator<T>> \
 		{ \
+			bfu::MemBlockBase* m_mBlock = 0; \
 		public: \
-			using std::vector<T>::vector; \
+			using std::vector<T, bfu::custom_allocator<T>>::vector; \
+			\
+			SerializableVector( bfu::MemBlockBase* mBlock = bfu::StdAllocatorMemBlock::GetMemBlock() )  \
+				:std::vector<T, bfu::custom_allocator<T>>( bfu::custom_allocator<T>(mBlock) ) \
+				,m_mBlock(mBlock) \
+			{} \
+			bfu::MemBlockBase* mBlock() { return m_mBlock; } \
 		}
 
 	class SerializableClassInterface;
 
 	template<class T>
-	class SerializableVector: public std::vector<SerializableClassInterface*> 
+	class SerializableVector: public std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>> 
 	{
+		bfu::MemBlockBase* m_mBlock = 0;
 	public:
-		using std::vector<SerializableClassInterface*>::vector;
+		using std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::vector;
 		AllocateAndInit allocateAndInit = nullptr;
 
-		SerializableVector()
+		SerializableVector( bfu::MemBlockBase* mBlock = bfu::StdAllocatorMemBlock::GetMemBlock() )
+			:std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>( bfu::custom_allocator<SerializableClassInterface*>(mBlock) )
+			,m_mBlock(mBlock)
 		{
 			allocateAndInit = T::AllocateAndInit;
 		}
+
+		bfu::MemBlockBase* mBlock() { return m_mBlock; }
 	};
 
 	SERIALIZABLE_VECTOR( uint8_t );
