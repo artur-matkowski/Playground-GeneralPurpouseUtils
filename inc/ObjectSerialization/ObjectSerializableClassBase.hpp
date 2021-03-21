@@ -7,7 +7,9 @@
 namespace bfu2
 {
 	class SerializerBase;
+	class SerializableClassInterface;
 	typedef void (*Func)(SerializerBase*, void*);
+	typedef SerializableClassInterface* (*AllocateAndInit)();
 
 	struct ClassInfo
 	{
@@ -16,19 +18,30 @@ namespace bfu2
 		size_t sizeOf = 0;
 		Func jsonSerializeFunc = nullptr;
 		Func jsonDeserializeFunc = nullptr;
+
 		const char* name = nullptr;
 
 		ClassInfo* operator[](const char*);
+
 	};
 
 
-	int FeedInfo(const char* name, size_t offset, size_t sizeOf, ClassInfo** firstListEntry, Func jsonserialize, Func jsondeserialize);
+	int FeedInfo(const char* name
+				, size_t offset
+				, size_t sizeOf
+				, ClassInfo** firstListEntry
+				, Func jsonserialize
+				, Func jsondeserialize);
 
 	class SerializableClassInterface
 	{
 	public:
 	public:
 		virtual ClassInfo* GetFirstClassInfo() const = 0;
+		virtual void Dispouse() = 0;
+
+		virtual void PostDeserializationCallback(){};
+		virtual void PreSerializationCallback(){};
 	};
 
 	template<class T>
@@ -65,13 +78,15 @@ namespace bfu2
 
 		SerializableClassBase()
 		{
-			// if(sp_first==nullptr)
-			// 	std::cout<< "did not initialized\n";
 		}
 
-		static T* AllocateAndInit()
+		static SerializableClassInterface* AllocateAndInit()
 		{
 			return new T();
+		}
+		virtual void Dispouse() override
+		{
+			delete this;
 		}
 	};
 

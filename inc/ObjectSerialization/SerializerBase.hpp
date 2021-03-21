@@ -50,7 +50,8 @@ namespace bfu2
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( int64_t )
 
 
-		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( SerializableClassInterface )
+		virtual void Serialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
+		static void Serialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( float )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( bool )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( stream )
@@ -82,7 +83,8 @@ namespace bfu2
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( int64_t )
 
 
-		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( SerializableClassInterface )
+		virtual void Deserialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
+		static void Deserialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( float )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( bool )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( stream )
@@ -97,74 +99,6 @@ namespace bfu2
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( int64_t )
 
 
-
-
-
-		// virtual void Serialize( SerializableVector<SerializableClassInterface*>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<float>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<bool>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<stream>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<string>* data ) = 0;
-
-
-		// virtual void Serialize( SerializableVector<uint8_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<uint16_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<uint32_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<uint64_t>* data ) = 0;
-
-
-		// virtual void Serialize( SerializableVector<int8_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<int16_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<int32_t>* data ) = 0;
-
-		// virtual void Serialize( SerializableVector<int64_t>* data ) = 0;
-
-
-
-
-
-		// //---------------
-
-
-
-
-
-		// virtual void Deserialize( SerializableVector<SerializableClassInterface*>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<float>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<bool>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<stream>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<string>* data ) = 0;
-
-
-		// virtual void Deserialize( SerializableVector<uint8_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<uint16_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<uint32_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<uint64_t>* data ) = 0;
-
-
-		// virtual void Deserialize( SerializableVector<int8_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<int16_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<int32_t>* data ) = 0;
-
-		// virtual void Deserialize( SerializableVector<int64_t>* data ) = 0;
 	};
 }
 

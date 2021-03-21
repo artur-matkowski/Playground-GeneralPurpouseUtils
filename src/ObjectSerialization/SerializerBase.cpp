@@ -34,7 +34,7 @@ namespace bfu2
 	GENERATE_SERIALIZE_BINDING_FUNC( int64_t )
 
 
-	GENERATE_SERIALIZE_VECTOR_BINDING_FUNC( SerializableClassInterface )
+	void SerializerBase::Serialize_v_SerializableClassInterface (SerializerBase* serializer, void* data){ serializer->Serialize( (SerializableVector<SerializableClassInterface>*)data ); }
 	GENERATE_SERIALIZE_VECTOR_BINDING_FUNC( float )
 	GENERATE_SERIALIZE_VECTOR_BINDING_FUNC( bool )
 	GENERATE_SERIALIZE_VECTOR_BINDING_FUNC( stream )
@@ -66,7 +66,7 @@ namespace bfu2
 	GENERATE_DESERIALIZE_BINDING_FUNC( int64_t )
 
 	
-	GENERATE_DESERIALIZE_VECTOR_BINDING_FUNC( SerializableClassInterface )
+	void SerializerBase::Deserialize_v_SerializableClassInterface (SerializerBase* serializer, void* data){ serializer->Deserialize( (SerializableVector<SerializableClassInterface>*)data ); }
 	GENERATE_DESERIALIZE_VECTOR_BINDING_FUNC( float )
 	GENERATE_DESERIALIZE_VECTOR_BINDING_FUNC( bool )
 	GENERATE_DESERIALIZE_VECTOR_BINDING_FUNC( stream )

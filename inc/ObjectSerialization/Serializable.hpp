@@ -21,6 +21,12 @@ namespace bfu2
 	{
 	public:
 		using std::vector<SerializableClassInterface*>::vector;
+		AllocateAndInit allocateAndInit = nullptr;
+
+		SerializableVector()
+		{
+			allocateAndInit = T::AllocateAndInit;
+		}
 	};
 
 	SERIALIZABLE_VECTOR( uint8_t );
@@ -80,6 +86,20 @@ namespace bfu2
 				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_v_##T, \
 				bfu2::SerializerBase::Deserialize_v_##T); \
+				isRegistered = true; \
+			} \
+		} 
+
+	#define SERIALIZABLE_OBJ_VEC(C, T, i) \
+		bfu2::SerializableVector<T> i; \
+		static inline void initVar_v_##i() __attribute__((constructor)) \
+		{ \
+			static bool isRegistered = false; \
+			if( isRegistered==false ) \
+			{ \
+				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
+				bfu2::SerializerBase::Serialize_v_SerializableClassInterface, \
+				bfu2::SerializerBase::Deserialize_v_SerializableClassInterface); \
 				isRegistered = true; \
 			} \
 		} 

@@ -47,6 +47,8 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
+		data->PreSerializationCallback();
+
 		this->sprintf("{");
 		ClassInfo* it = data->GetFirstClassInfo();
 
@@ -69,7 +71,28 @@ namespace bfu2
 	
 	void JSONSerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
 	{
-
+		this->sprintf("["); 
+ 		 
+		if( data->begin() != data->end() ) 
+		{ 
+			for(auto it = data->begin(); ; ) 
+			{ 
+				this->Serialize(*it); 
+ 		 
+				++it; 
+ 		 
+				if( it != data->end() ) 
+				{ 
+					this->sprintf(", "); 
+				} 
+				else 
+				{ 
+					break; 
+				} 
+			} 
+		} 
+		 
+		this->sprintf("]");
 	}
 
 	void JSONSerializer::Serialize( float* data )
@@ -277,10 +300,28 @@ namespace bfu2
 
 		}
 		this->skip(1);
+
+		data->PostDeserializationCallback();
 	}
 	void JSONSerializer::Deserialize( SerializableVector<SerializableClassInterface>* data )
 	{
+		for(int i=0; i<data->size(); ++i)
+		{
+			(*data)[i]->Dispouse();
+		}
+		data->clear(); 
 
+		this->skipTo('['); 
+		this->skip( 1 ); 
+ 		 
+		while(this->peak() != ']') 
+		{ 
+			SerializableClassInterface* cache = data->allocateAndInit();
+ 		 
+			this->Deserialize( cache ); 
+ 		 
+			data->emplace_back( cache ); 
+		}
 	}
 
 	void JSONSerializer::Deserialize( float* data )
@@ -292,19 +333,7 @@ namespace bfu2
 	}
 	void JSONSerializer::Deserialize( SerializableVector<float>* data )
 	{
-		data->clear();
-
-		this->skipTo('[');
-		this->skip( 1 );
-
-		while(this->peak() != ']')
-		{
-			float cache;
-
-			this->Deserialize( &cache );
-
-			data->emplace_back( cache );
-		}
+		GENERAL_VECTOR_DESERIALIZE_BODY(float);
 	}
 
 	void JSONSerializer::Deserialize( bool* data )
