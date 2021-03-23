@@ -417,11 +417,7 @@ namespace bfu{
 
 		bool operator==(const bfu::stream& other) const
 		{
-			bool ret = this->size() == other.size();
-
-			ret = ret && strncmp(m_begin, other.m_begin, size() )==0;
-
-			return ret;
+			return strncmp(c_str(), other.c_str(), size() )==0;
 		}
 
 		friend std::ostream& operator<<(std::ostream& os, const bfu::stream& strm);
