@@ -61,7 +61,7 @@ namespace bfu{
 	stream::~stream()
 	{
 		if(m_begin!=0 && !using_prealocated)
-			m_mBlock->deallocate( m_begin, capacity()+1 );
+			MemBlockBase::DeallocateUnknown(m_begin);
 	}
 
 	std::ostream& operator<<(std::ostream& os, const stream& strm)

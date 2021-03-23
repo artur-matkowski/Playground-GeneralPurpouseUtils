@@ -383,8 +383,8 @@ namespace nestedClassVectorTest
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int16_t, mBlock);
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int32_t, mBlock);
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR(int64_t, mBlock);
-		test = test && PROCESS_TEST_FOR_VAR_VECTOR(stream, mBlock);
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR(string, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR(stream, mBlock);
 
 
 		test = test && nestedClassVectorTest::_TESTJSONStream( mBlock );

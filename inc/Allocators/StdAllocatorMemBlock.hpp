@@ -24,6 +24,7 @@ namespace bfu
 	    	size_t size = sizeOf * elements + sizeof(MemChunkHeader);
 
 	        void* ret = aligned_alloc( alignOf, size );
+			//std::memset(ret, 0, size);
 
 	        MemChunkHeader* headerInfo = (MemChunkHeader*)ret;
 

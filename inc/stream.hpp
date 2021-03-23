@@ -61,9 +61,10 @@ namespace bfu{
 
 	    inline void assignMemBlock(MemBlockBase* mBlock)
 	    {
+	    	m_mBlock = mBlock;
+
 	    	if(using_prealocated)
 	    	{
-	    		m_mBlock = mBlock;
 	    		return;
 	    	}
 
@@ -75,8 +76,7 @@ namespace bfu{
 			std::memcpy(newbuff, m_begin, toCopy);
 
 			if(m_begin!=0)
-				m_mBlock->deallocate( m_begin, (size_t)m_end-(size_t)m_begin );
-	    	m_mBlock = mBlock;
+				MemBlockBase::DeallocateUnknown(m_begin);
 
 			int readOffset = m_readCursor - m_begin;
 
@@ -267,7 +267,7 @@ namespace bfu{
 			std::memcpy(newbuff, m_begin, toCopy);
 
 			if(m_begin!=0 && !using_prealocated)
-				m_mBlock->deallocate( m_begin, (size_t)m_end-(size_t)m_begin );
+				MemBlockBase::DeallocateUnknown(m_begin);
 
 			int readOffset = m_readCursor - m_begin;
 
@@ -405,6 +405,20 @@ namespace bfu{
 
 			m_writeCursor = m_begin + (src.m_writeCursor==0 ? src.size() : writeOffset);
 			m_readCursor = m_begin + readOffset;
+
+			return *this;
+		}
+
+		inline stream& operator=(const char* src)
+		{
+			const int strsize = strlen(src);
+
+			resize( strsize );
+
+			std::memcpy(m_begin, src, strsize+1);
+
+			m_writeCursor = m_begin + strsize;
+			m_readCursor = m_begin;
 
 			return *this;
 		}
