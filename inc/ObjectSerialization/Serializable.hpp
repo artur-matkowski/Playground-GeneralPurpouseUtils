@@ -39,6 +39,15 @@ namespace bfu2
 			allocateAndInit = T::AllocateAndInit;
 		}
 
+		~SerializableVector()
+		{
+			for(int j=0; j<size(); ++j) 
+			{ 
+				( (T*) this->operator[](j) )->~T();
+				bfu::MemBlockBase::DeallocateUnknown( this->operator[](j) ); 
+			}
+		}
+
 		bfu::MemBlockBase* mBlock() { return m_mBlock; }
 	};
 
