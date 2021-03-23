@@ -389,7 +389,6 @@ namespace nestedClassVectorTest
 
 		test = test && nestedClassVectorTest::_TESTJSONStream( mBlock );
 
-
 		return test;
 	}
 }

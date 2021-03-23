@@ -25,7 +25,7 @@ namespace bfu{
 
 	stream::stream(const char* prealocatedBuff, MemBlockBase* mBlock )
 	    :m_begin((char*)prealocatedBuff)
-	    ,m_end(m_begin+strlen(prealocatedBuff))
+	    ,m_end(m_begin+strlen(prealocatedBuff)+2) //+1 for '\0' & +1 for 'end', not 'last'
 	    ,m_writeCursor(0)
 	    ,m_readCursor(m_begin)
 	    ,using_prealocated(true)
@@ -41,7 +41,6 @@ namespace bfu{
 	    ,using_prealocated(false)
 	    ,m_mBlock(input.m_mBlock)
 	{
-		resize( input.capacity() );
 		this->operator=(input);
 	}
 /*

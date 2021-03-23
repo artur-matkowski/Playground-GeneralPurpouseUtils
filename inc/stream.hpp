@@ -76,6 +76,7 @@ namespace bfu{
 
 			if(m_begin!=0)
 				m_mBlock->deallocate( m_begin, (size_t)m_end-(size_t)m_begin );
+	    	m_mBlock = mBlock;
 
 			int readOffset = m_readCursor - m_begin;
 
@@ -99,7 +100,7 @@ namespace bfu{
 
 	    inline int capacity() const
 	    {
-	    	return (int) (m_end-m_begin);
+	    	return (int) (m_end-m_begin)-2;
 	    }
 
 		inline void clear()
