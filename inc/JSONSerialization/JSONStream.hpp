@@ -160,7 +160,7 @@ namespace bfu{
 
       char* skipper = m_readCursor+1;
 
-      while( m_readCursor!=m_last )
+      while( m_readCursor!=m_end )
       {
         if( skipper[0] == '\"' && skipper[-1] != '\\' )
         {
@@ -211,7 +211,7 @@ namespace bfu{
 
       char* skipper = m_readCursor+1;
 
-      while( m_readCursor!=m_last )
+      while( m_readCursor!=m_end )
       {
         if( skipper[0] == '\"' && skipper[-1] != '\\' )
         {
@@ -259,7 +259,7 @@ namespace bfu{
 
       char* skipper = m_readCursor+1;
 
-      while( m_readCursor!=m_last )
+      while( m_readCursor!=m_end )
       {
         if( skipper[0] == '\"' && skipper[-1] != '\\' )
         {
