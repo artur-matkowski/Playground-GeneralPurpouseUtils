@@ -305,7 +305,10 @@ namespace nestedClassVectorTest
 	public: 
 		B() 
 		{}; 
-		~B(){}; 
+		~B(){
+		for(int j=0; j<i.size(); ++j) { bfu::MemBlockBase::DeallocateUnknown(i[j]); } 
+		for(int i=0; i<ii.size(); ++i) { bfu::MemBlockBase::DeallocateUnknown(ii[i]); } 
+		}; 
 	}; 
 
 	bool _TESTJSONStream(bfu::MemBlockBase* memBlock) 
@@ -318,8 +321,8 @@ namespace nestedClassVectorTest
 		 
 		B tt; 
 		B tt2;
-		for(int i=0; i<10; ++i) { tt.i.push_back(new A()); } 
-		for(int i=0; i<10; ++i) { tt.ii.push_back(new A()); } 
+		for(int i=0; i<10; ++i) { tt.i.push_back( A::AllocateAndInit(memBlock) ); } 
+		for(int i=0; i<10; ++i) { tt.ii.push_back( A::AllocateAndInit(memBlock) ); } 
 		 
 		serializer1.Serialize(&tt); 
 		 
