@@ -7,7 +7,7 @@ namespace bfu{
 
 	class JSONStream;
 
-	class SerializableBase
+	class __attribute__((deprecated("new serializer available in 'bfu2' namespace"))) SerializableBase
 	{
 		
 	public:

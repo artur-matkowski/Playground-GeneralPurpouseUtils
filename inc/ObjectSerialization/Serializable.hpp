@@ -76,7 +76,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_##T, \
 				bfu2::SerializerBase::Deserialize_##T); \
 				isRegistered = true; \
@@ -90,7 +90,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_SerializableClassInterface, \
 				bfu2::SerializerBase::Deserialize_SerializableClassInterface); \
 				isRegistered = true; \
@@ -105,7 +105,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_v_##T, \
 				bfu2::SerializerBase::Deserialize_v_##T); \
 				isRegistered = true; \
@@ -119,7 +119,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
-				FeedInfo(#i, offsetOf(&C::i), sizeof(T), &C::sp_first, \
+				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_v_SerializableClassInterface, \
 				bfu2::SerializerBase::Deserialize_v_SerializableClassInterface); \
 				isRegistered = true; \

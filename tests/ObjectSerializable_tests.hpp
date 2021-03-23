@@ -305,10 +305,7 @@ namespace nestedClassVectorTest
 	public: 
 		B() 
 		{}; 
-		~B(){
-		//for(int j=0; j<i.size(); ++j) { bfu::MemBlockBase::DeallocateUnknown(i[j]); } 
-		//for(int i=0; i<ii.size(); ++i) { bfu::MemBlockBase::DeallocateUnknown(ii[i]); } 
-		}; 
+		~B(){}; 
 	}; 
 
 	bool _TESTJSONStream(bfu::MemBlockBase* memBlock) 

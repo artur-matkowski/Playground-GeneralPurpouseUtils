@@ -21,12 +21,12 @@ namespace bfu2
 	//cant be constexpr as I need to be able togrow array if is to shr
 	int FeedInfo(const char* name
 				, size_t offset
-				, size_t sizeOf
+				, size_t hash_code
 				, ClassInfo** firstListEntry
 				, Func jsonserialize
 				, Func jsondeserialize)
 	{
-		printf("%s offset: %d size: %d\n", name, offset, sizeOf);
+		printf("%s offset: %d hash: %zu\n", name, offset, hash_code);
 		static int freeIndex = 0;
 
 		ClassInfo* free = &infos[freeIndex];
@@ -34,7 +34,7 @@ namespace bfu2
 
 		free->name = name;
 		free->offset = offset;
-		free->sizeOf = sizeOf;
+		free->hash_code = hash_code;
 		free->jsonSerializeFunc = jsonserialize;
 		free->jsonDeserializeFunc = jsondeserialize;
 

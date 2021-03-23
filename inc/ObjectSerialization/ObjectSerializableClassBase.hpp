@@ -17,7 +17,7 @@ namespace bfu2
 	{
 		ClassInfo* next = nullptr;
 		size_t offset = 0;
-		size_t sizeOf = 0;
+		size_t hash_code = 0;
 		Func jsonSerializeFunc = nullptr;
 		Func jsonDeserializeFunc = nullptr;
 
@@ -30,7 +30,7 @@ namespace bfu2
 
 	int FeedInfo(const char* name
 				, size_t offset
-				, size_t sizeOf
+				, size_t hash_code
 				, ClassInfo** firstListEntry
 				, Func jsonserialize
 				, Func jsondeserialize);
