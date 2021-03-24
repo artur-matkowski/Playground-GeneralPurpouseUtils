@@ -6,6 +6,8 @@
 #include "log.hpp"
 #include "udp.hpp"
 #include "Allocators/CustomAllocator.hpp"
+#include "ObjectSerialization/ObjectSerializableClassBase.hpp"
+#include "ObjectSerialization/JSONSerializer.hpp"
 
 
 

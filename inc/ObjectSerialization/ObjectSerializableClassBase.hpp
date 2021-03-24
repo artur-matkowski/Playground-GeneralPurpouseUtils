@@ -8,6 +8,78 @@
 
 namespace bfu2
 {
+	template <bool, typename T = void>
+	struct enable_if {
+	};
+	template <typename T>
+	struct enable_if<true, T> {
+	    typedef T type;
+	};
+
+
+	typedef bfu::MemBlockBase* MemBlockBasePtr;
+
+
+	template <typename T>
+	struct ConstructoFinder {
+	    /* If T provides a constructor matching this signature, this is the declaration of SFINAE that will succeed,
+	     * of size 4 bytes
+	     */
+	    template<typename U>
+	    static int32_t SFINAE(decltype(U(MemBlockBasePtr()))*);
+
+	    /* Otherwise the ellipsis will accept just about anything (and has minimum priority) so in the fallback case
+	     * we'll use this definition and SFINAE will be 1 byte big
+	     */
+	    template<typename U>
+	    static int8_t SFINAE(...);
+
+	    // Check what size SFINAE ended up being, this tells us if the constructor matched the right signature or not
+	    static const bool value = sizeof(SFINAE<T>(nullptr)) == sizeof(int32_t);
+	};
+
+	class ConditionalBuilder {
+	public:
+
+	    /**
+	     * Construct an element which has a constructor with two int arguments.
+	     */
+	    template <class U>
+	    /* Here we have a dummy argument which defaults to a null pointer of type U* if there is a 2-int constructor.
+	     *
+	     * Otherwise the resolution of enable_if will fail. The compiler will quietly discard this method
+	     * during overload resolution and call the no-arg constructor version instead.
+	     */
+	    static U constructCandidate(bfu::MemBlockBase* mBlock, typename enable_if<ConstructoFinder<U>::value, U>::type* = 0) {
+	        return U(mBlock);
+	    }
+
+	    /**
+	     * Fallback for element types without two-int signatures.
+	     */
+	    template <class U>
+	    static U constructCandidate(bfu::MemBlockBase* mBlock,typename enable_if<!ConstructoFinder<U>::value, U>::type* = 0) {
+	        return U();
+	    }
+
+	    template <class U>
+	    static U* constructPtrCandidate(bfu::MemBlockBase* mBlock, typename enable_if<ConstructoFinder<U>::value, U>::type* = 0) {
+	    	U* ret = (U*)mBlock->allocate(1, sizeof(U), alignof(U));
+	    	new (ret) U(mBlock);
+	        return ret;
+	    }
+
+	    template <class U>
+	    static U* constructPtrCandidate(bfu::MemBlockBase* mBlock,typename enable_if<!ConstructoFinder<U>::value, U>::type* = 0) {
+	    	U* ret = (U*)mBlock->allocate(1, sizeof(U), alignof(U));
+	    	new (ret) U();
+	        return ret;
+	    }
+
+	};
+
+
+
 	class SerializerBase;
 	class SerializableClassInterface;
 	typedef void (*Func)(SerializerBase*, void*);
@@ -84,8 +156,7 @@ namespace bfu2
 
 		static SerializableClassInterface* AllocateAndInit(bfu::MemBlockBase* mBlock)
 		{
-			SerializableClassInterface* ret = (SerializableClassInterface*)mBlock->allocate(1, sizeof(T), alignof(T));
-			new (ret) T();
+			SerializableClassInterface* ret = (SerializableClassInterface*)ConditionalBuilder::constructPtrCandidate<T>(mBlock);
 			return ret;
 		}
 		virtual void Dispouse() override
