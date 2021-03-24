@@ -1,7 +1,7 @@
 #ifndef H_SerializerBase
 #define H_SerializerBase
 #include <cstdint>
-#include "Serializable.hpp"
+#include "ObjectSerialization/Serializable.hpp"
 #include "stream.hpp"
 
 namespace bfu2

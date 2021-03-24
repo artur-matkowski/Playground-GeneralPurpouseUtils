@@ -1,7 +1,7 @@
 #ifndef _H_SerializableVar
 #define _H_SerializableVar
-#include "JSONStream.hpp"
-#include "SerializableClassBase.hpp"
+#include "JSONSerialization/JSONStream.hpp"
+#include "JSONSerialization/SerializableClassBase.hpp"
 
 
 namespace bfu{

@@ -1,6 +1,6 @@
 #ifndef _H_SerializableVarArray
 #define _H_SerializableVarArray
-#include "SerializableVarVector.hpp"
+#include "JSONSerialization/SerializableVarVector.hpp"
 #include <vector>
 
 namespace bfu

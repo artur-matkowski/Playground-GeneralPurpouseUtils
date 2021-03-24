@@ -6,7 +6,7 @@
 #include <memory>
 #include "udp.hpp"
 #include "log.hpp"
-#include "SerializableVarVector.hpp"
+#include "JSONSerialization/SerializableVarVector.hpp"
 
 
 namespace bfu{

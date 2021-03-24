@@ -1,6 +1,6 @@
 #ifndef H_JSONSerializer
 #define H_JSONSerializer 
-#include "SerializerBase.hpp"
+#include "ObjectSerialization/SerializerBase.hpp"
 
 namespace bfu2
 {

@@ -2,8 +2,8 @@
 #define H_Serializable
 #include <vector>
 #include "stream.hpp"
-#include "ObjectSerializableClassBase.hpp"
-#include "CustomAllocator.hpp"
+#include "ObjectSerialization/ObjectSerializableClassBase.hpp"
+#include "Allocators/CustomAllocator.hpp"
 
 namespace bfu2
 {

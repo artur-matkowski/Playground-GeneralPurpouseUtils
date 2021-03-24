@@ -1,6 +1,6 @@
 #ifndef _H_JSONStream
 #define _H_JSONStream
-#include "SerializableBase.hpp"
+#include "JSONSerialization/SerializableBase.hpp"
 #include <cstdio>
 #include <cstring>
 #include <cstdarg>

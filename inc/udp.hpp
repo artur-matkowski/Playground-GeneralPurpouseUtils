@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string>
 
-#include "SerializableVarVector.hpp"
+#include "JSONSerialization/SerializableVarVector.hpp"
 
 #define PACKAGESIZE 65507
 

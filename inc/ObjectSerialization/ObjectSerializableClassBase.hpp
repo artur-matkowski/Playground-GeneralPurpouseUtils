@@ -4,7 +4,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdio.h>
-#include "MemBlockBase.hpp"
+#include "Allocators/MemBlockBase.hpp"
 
 namespace bfu2
 {
