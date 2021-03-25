@@ -114,8 +114,10 @@ namespace bfu2
 		virtual ClassInfo* GetFirstClassInfo() const = 0;
 		virtual void Dispouse() = 0;
 
+		virtual void PreDeserializationCallback(){};
 		virtual void PostDeserializationCallback(){};
 		virtual void PreSerializationCallback(){};
+		virtual void PostSerializationCallback(){};
 	};
 
 	template<class T>
