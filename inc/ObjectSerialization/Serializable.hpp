@@ -48,10 +48,16 @@ namespace bfu2
 		{
 			for(int j=0; j<size(); ++j) 
 			{ 
-				( (T*) this->operator[](j) )->~T();
-				bfu::MemBlockBase::DeallocateUnknown( this->operator[](j) ); 
+				T* p = (T*) std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::operator[](j);
+				p->~T();
+				bfu::MemBlockBase::DeallocateUnknown( p );
 			}
 			std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::clear();
+		}
+
+		T& operator[](const int i)
+		{
+			return *(T*)std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::operator[](i);
 		}
 
 		bfu::MemBlockBase* mBlock() { return m_mBlock; }

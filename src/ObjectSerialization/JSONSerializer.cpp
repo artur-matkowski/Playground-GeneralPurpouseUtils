@@ -311,7 +311,7 @@ namespace bfu2
 	{
 		for(int i=0; i<data->size(); ++i)
 		{
-			(*data)[i]->Dispouse();
+			(*data)[i].Dispouse();
 		}
 		data->clear(); 
 
