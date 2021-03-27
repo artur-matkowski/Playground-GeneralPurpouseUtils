@@ -92,15 +92,14 @@ namespace bfu{
 
 	    inline int size() const
 	    {
-	    	if(m_writeCursor!=0)
-	    		return (int)(m_writeCursor-m_begin);
-	    	else
-	    		return strlen(m_begin);
+	    	const int _size = m_writeCursor!=0 ? (int)(m_writeCursor-m_begin) : strlen(m_begin);
+	    	return _size;
 	    }
 
 	    inline int capacity() const
 	    {
-	    	return (int) (m_end-m_begin)-2;
+	    	const int cap = (int) (m_end-m_begin)-2;
+	    	return cap;
 	    }
 
 		inline void clear()
