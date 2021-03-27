@@ -81,6 +81,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
+				printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code()); \
 				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_##T, \
 				bfu2::SerializerBase::Deserialize_##T); \
@@ -95,6 +96,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
+				printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code()); \
 				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_SerializableClassInterface, \
 				bfu2::SerializerBase::Deserialize_SerializableClassInterface); \
@@ -110,6 +112,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
+				printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code()); \
 				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_v_##T, \
 				bfu2::SerializerBase::Deserialize_v_##T); \
@@ -124,6 +127,7 @@ namespace bfu2
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
 			{ \
+				printf("%s offset: %d in class %s hash: %zu\n", #i, offsetOf(&C::i), #C, typeid(T).hash_code()); \
 				FeedInfo(#i, offsetOf(&C::i), typeid(T).hash_code(), &C::sp_first, \
 				bfu2::SerializerBase::Serialize_v_SerializableClassInterface, \
 				bfu2::SerializerBase::Deserialize_v_SerializableClassInterface); \

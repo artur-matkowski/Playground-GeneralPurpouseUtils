@@ -9,6 +9,8 @@ namespace bfu2
 	public:
 		using bfu::stream::stream;
 
+		JSONSerializer(bfu::stream&&);
+
 		virtual void Serialize( SerializableClassInterface* data ) override;
 		virtual void Serialize( SerializableVector<SerializableClassInterface>* data ) override;
 		virtual void Serialize( float* data ) override;

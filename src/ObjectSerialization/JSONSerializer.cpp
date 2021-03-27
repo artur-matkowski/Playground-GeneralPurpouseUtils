@@ -45,6 +45,10 @@ namespace bfu2
 		}
 
 
+	JSONSerializer::JSONSerializer(bfu::stream&& other)
+		:bfu::stream(std::move(other))
+	{}
+
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		data->PreSerializationCallback();

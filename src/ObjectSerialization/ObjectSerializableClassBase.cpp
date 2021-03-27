@@ -26,7 +26,6 @@ namespace bfu2
 				, Func jsonserialize
 				, Func jsondeserialize)
 	{
-		printf("%s offset: %d hash: %zu\n", name, offset, hash_code);
 		static int freeIndex = 0;
 
 		ClassInfo* free = &infos[freeIndex];
