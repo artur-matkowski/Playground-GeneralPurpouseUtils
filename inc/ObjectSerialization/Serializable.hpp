@@ -51,6 +51,7 @@ namespace bfu2
 				( (T*) this->operator[](j) )->~T();
 				bfu::MemBlockBase::DeallocateUnknown( this->operator[](j) ); 
 			}
+			std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::clear();
 		}
 
 		bfu::MemBlockBase* mBlock() { return m_mBlock; }
