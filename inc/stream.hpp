@@ -98,7 +98,7 @@ namespace bfu{
 
 	    inline int capacity() const
 	    {
-	    	const int cap = (int) (m_end-m_begin)-2;
+	    	const int cap = (int) (m_end-m_begin)-1;
 	    	return cap;
 	    }
 
