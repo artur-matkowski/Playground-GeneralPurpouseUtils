@@ -43,6 +43,17 @@ namespace bfu{
 	{
 		this->operator=(input);
 	}
+
+	stream::stream(stream&& other) noexcept
+		:m_begin( other.m_begin )
+		,m_end( other.m_end )
+		,m_writeCursor( other.m_writeCursor )
+		,m_readCursor( other.m_readCursor )
+		,using_prealocated( other.using_prealocated )
+		,m_mBlock( other.m_mBlock )
+	{
+		new (&other) stream(m_mBlock);
+	}
 /*
 	stream::stream(const int size)
 	    :m_buffsize( sizeof(initialbuff) )
@@ -68,6 +79,20 @@ namespace bfu{
 	{
 	    os << strm.m_begin << std::flush;
 	    return os;
+	}
+
+	stream& stream::operator=(bfu::stream&& other)
+	{
+		m_begin = other.m_begin;
+		m_end = other.m_end;
+		m_writeCursor = other.m_writeCursor;
+		m_readCursor = other.m_readCursor;
+		using_prealocated = other.using_prealocated;
+		m_mBlock = other.m_mBlock;
+	
+		new (&other) stream(m_mBlock);
+
+		return *this;
 	}
 
 }

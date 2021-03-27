@@ -41,6 +41,11 @@ namespace bfu2
 
 		~SerializableVector()
 		{
+			clear();
+		}
+
+		void clear() noexcept
+		{
 			for(int j=0; j<size(); ++j) 
 			{ 
 				( (T*) this->operator[](j) )->~T();

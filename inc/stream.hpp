@@ -53,8 +53,11 @@ namespace bfu{
 
 		stream( MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
 	    stream(char* prealocatedBuff, int size, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
-	    stream(const char* prealocatedBuff, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock()  );
+	    stream(const char* prealocatedBuff, MemBlockBase* mBlock = StdAllocatorMemBlock::GetMemBlock() );
 	    stream(const stream& input);
+
+	    // Move constructor
+	    stream(stream&& other) noexcept;
 	    //stream(const int size);
 
 	    ~stream();
@@ -407,6 +410,8 @@ namespace bfu{
 
 			return *this;
 		}
+
+		stream& operator=(bfu::stream&& src);
 
 		inline stream& operator=(const char* src)
 		{
