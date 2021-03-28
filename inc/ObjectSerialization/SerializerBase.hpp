@@ -7,24 +7,27 @@
 namespace bfu2
 {
 
+	#define SERIALIZER_SECTION __attribute__((section(".Serializer")))
+	#define DESERIALIZER_SECTION __attribute__((section(".Deserializer")))
+
 #define GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR(T) \
-	virtual void Serialize( T* data ) = 0; \
-	static void Serialize_##T (SerializerBase* serializer, void* data); \
+	virtual void SERIALIZER_SECTION Serialize( T* data ) = 0; \
+	static void SERIALIZER_SECTION Serialize_##T (SerializerBase* serializer, void* data); \
 
 
 #define GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR(T) \
-	virtual void Serialize( SerializableVector<T>* data ) = 0; \
-	static void Serialize_v_##T (SerializerBase* serializer, void* data); \
+	virtual void SERIALIZER_SECTION Serialize( SerializableVector<T>* data ) = 0; \
+	static void SERIALIZER_SECTION Serialize_v_##T (SerializerBase* serializer, void* data); \
 
 
 
 #define GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR(T) \
-	virtual void Deserialize( T* data ) = 0; \
-	static void Deserialize_##T (SerializerBase* serializer, void* data); \
+	virtual void DESERIALIZER_SECTION Deserialize( T* data ) = 0; \
+	static void DESERIALIZER_SECTION Deserialize_##T (SerializerBase* serializer, void* data); \
 
 #define GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR(T) \
-	virtual void Deserialize( SerializableVector<T>* data ) = 0; \
-	static void Deserialize_v_##T (SerializerBase* serializer, void* data); \
+	virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<T>* data ) = 0; \
+	static void DESERIALIZER_SECTION Deserialize_v_##T (SerializerBase* serializer, void* data); \
 
 	class SerializableClassInterface;
 
@@ -50,8 +53,8 @@ namespace bfu2
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( int64_t )
 
 
-		virtual void Serialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
-		static void Serialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
+		virtual void SERIALIZER_SECTION Serialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
+		static void SERIALIZER_SECTION Serialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( float )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( bool )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( stream )
@@ -82,8 +85,8 @@ namespace bfu2
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( int64_t )
 
 
-		virtual void Deserialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
-		static void Deserialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
+		virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<SerializableClassInterface>* data ) = 0; 
+		static void DESERIALIZER_SECTION Deserialize_v_SerializableClassInterface (SerializerBase* serializer, void* data); 
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( float )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( bool )
 		GENERATE_DESERIALIZE_FUNCTIONS_FOR_VAR_VECTOR( stream )

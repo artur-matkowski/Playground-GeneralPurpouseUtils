@@ -8,6 +8,8 @@
 
 namespace bfu2
 {
+
+
 	template <bool, typename T = void>
 	struct enable_if {
 	};

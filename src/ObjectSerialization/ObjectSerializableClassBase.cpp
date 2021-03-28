@@ -19,7 +19,7 @@ namespace bfu2
 	ClassInfo infos[1024];
 
 	//cant be constexpr as I need to be able togrow array if is to shr
-	int FeedInfo(const char* name
+	int  FeedInfo(const char* name
 				, size_t offset
 				, size_t hash_code
 				, ClassInfo** firstListEntry

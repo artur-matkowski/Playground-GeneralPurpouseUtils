@@ -7,6 +7,8 @@
 
 namespace bfu2
 {
+
+	
 	#define SERIALIZABLE_VECTOR(T) \
 		template<> \
 		class SerializableVector<T>: public std::vector<T, bfu::custom_allocator<T>> \

@@ -16,6 +16,16 @@ namespace bfu
 		shrp_forwardedMemBlock = cp.shrp_forwardedMemBlock;
 	}
 
+
+	void* ForwardAllocatorMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
+	{
+		return shrp_forwardedMemBlock->allocate(elements, sizeOf, alignOf);
+	}
+	void ForwardAllocatorMemBlock::deallocate (void* p, std::size_t n)
+	{
+		MemBlockBase::DeallocateUnknown( p );
+	}
+
 	size_t ForwardAllocatorMemBlock::getFreeMemory() 
 	{
 		return shrp_forwardedMemBlock->getFreeMemory();
