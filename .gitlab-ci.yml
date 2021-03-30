@@ -114,7 +114,7 @@ event-armhf:
             - Logs
 
 
-serial-armhf:
+serial-JSON-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests serialj
@@ -126,7 +126,7 @@ serial-armhf:
         paths:
             - Logs
 
-serial-armhf:
+serial-BIN-armhf:
     stage: tests
     script:
         - ./build/armhf/rel/bitforgeutils_tests serialb
@@ -261,7 +261,7 @@ event-amd64:
         paths:
             - Logs
 
-serial-amd64:
+serial-JSON-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests serialj
@@ -273,7 +273,7 @@ serial-amd64:
         paths:
             - Logs
 
-serial-amd64:
+serial-BIN-amd64:
     stage: tests
     script:
         - ./build/amd64/rel/bitforgeutils_tests serialb
