@@ -1,15 +1,25 @@
 #ifndef H_BinarySerializer
 #define H_BinarySerializer 
 #include "ObjectSerialization/SerializerBase.hpp"
+//#include "Allocators/CustomAllocator.hpp"
+#include <vector>
 
 namespace bfu2
 {
 	class BinarySerializer: public SerializerBase
 	{
+		std::vector<char, bfu::custom_allocator<char>> m_buff;
+		uint32_t m_readCursor = 0;
 	public:
+		inline void SetCursonPos(int i){ m_readCursor = i;}
 		//enum class Mode {Serialize, Deserialize};
 
-		BinarySerializer();
+		bool operator==(const BinarySerializer&);
+		void growToFitNextData(int incomingbuffsize);
+		char* buff();
+		uint32_t size();
+
+		BinarySerializer( bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock() );
 		BinarySerializer(BinarySerializer&&);
 
 		virtual void SERIALIZER_SECTION Serialize( SerializableClassInterface* data ) override;
@@ -78,6 +88,8 @@ namespace bfu2
 		virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int32_t>* data ) override;
 		virtual void DESERIALIZER_SECTION Deserialize( int64_t* data ) override;
 		virtual void DESERIALIZER_SECTION Deserialize( SerializableVector<int64_t>* data ) override;
+
+
 	};
 }
 

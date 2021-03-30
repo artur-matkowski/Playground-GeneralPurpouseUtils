@@ -51,8 +51,6 @@ namespace bfu2
 
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
-		data->PreSerializationCallback();
-
 		this->sprintf("{");
 		ClassInfo* it = data->GetFirstClassInfo();
 
@@ -304,8 +302,6 @@ namespace bfu2
 
 		}
 		this->skip(1);
-
-		data->PostDeserializationCallback();
 	}
 	void JSONSerializer::Deserialize( SerializableVector<SerializableClassInterface>* data )
 	{
