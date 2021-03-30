@@ -85,7 +85,7 @@ namespace bfu2
 		uint32_t buffSize = data->size();
 
 		growToFitNextData( sizeof(uint32_t) );
-		m_buff.insert(m_buff.end(), &buffSize, &buffSize+sizeof(uint32_t));
+		m_buff.insert(m_buff.end(), (char*)&buffSize, ((char*)&buffSize)+sizeof(uint32_t));
 
 		growToFitNextData( buffSize );
 		m_buff.insert(m_buff.end(), data->c_str(), data->c_str()+buffSize);
@@ -99,7 +99,7 @@ namespace bfu2
 		uint32_t buffSize = data->size();
 
 		growToFitNextData( sizeof(uint32_t) );
-		m_buff.insert(m_buff.end(), &buffSize, &buffSize+sizeof(uint32_t));
+		m_buff.insert(m_buff.end(), (char*)&buffSize, ((char*)&buffSize)+sizeof(uint32_t));
 
 		growToFitNextData( buffSize );
 		m_buff.insert(m_buff.end(), data->c_str(), data->c_str()+buffSize);
@@ -119,9 +119,7 @@ namespace bfu2
 	}
 	void BinarySerializer::Serialize( uint16_t* data )
 	{
-		//GENERAL_VAR_SERIALIZE_BODY(uint16_t);
-		growToFitNextData( sizeof(uint16_t) );
-		m_buff.insert(m_buff.end(), (char*)data, ((char*)data)+sizeof(uint16_t));
+		GENERAL_VAR_SERIALIZE_BODY(uint16_t);
 	}
 	void BinarySerializer::Serialize( SerializableVector<uint16_t>* data )
 	{
@@ -215,6 +213,14 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( bfu::stream* data )
 	{
+		uint32_t buffSize;
+
+		buffSize = *(uint32_t*) (m_buff.data() + m_readCursor);
+		m_readCursor += sizeof(uint32_t);
+
+		data->clear();
+		data->assign(m_buff.data() + m_readCursor, buffSize);
+		m_readCursor += buffSize;
 	}
 	void BinarySerializer::Deserialize( SerializableVector<bfu::stream>* data )
 	{
@@ -222,6 +228,15 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( bfu::string* data )
 	{
+		uint32_t buffSize;
+
+		buffSize = *(uint32_t*) (m_buff.data() + m_readCursor);
+		m_readCursor += sizeof(uint32_t);
+
+		data->clear();
+		data->reserve(buffSize);
+		data->insert(0, m_buff.data() + m_readCursor, buffSize);
+		m_readCursor += buffSize;
 	}
 	void BinarySerializer::Deserialize( SerializableVector<bfu::string>* data )
 	{
@@ -238,10 +253,7 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( uint16_t* data )
 	{
-		//GENERAL_VAR_DESERIALIZE_BODY( uint16_t );
-
-		*data = *(uint16_t*) (m_buff.data() + m_readCursor); \
-		m_readCursor += sizeof(uint16_t);
+		GENERAL_VAR_DESERIALIZE_BODY( uint16_t );
 	}
 	void BinarySerializer::Deserialize( SerializableVector<uint16_t>* data )
 	{

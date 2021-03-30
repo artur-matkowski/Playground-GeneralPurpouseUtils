@@ -427,6 +427,19 @@ namespace bfu{
 			return *this;
 		}
 
+		inline void assign(const char* src, int strlen )
+		{
+			const int strsize = strlen;
+
+			resize( strsize );
+
+			std::memcpy(m_begin, src, strsize);
+
+			m_writeCursor = m_begin + strsize;
+			m_readCursor = m_begin;
+			m_begin[strsize] = '\0';
+		}
+
 		inline bfu::stream& operator<<(const bfu::stream& src)
 		{
 			this->sprintf( src.c_str() );
