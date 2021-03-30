@@ -117,7 +117,19 @@ event-armhf:
 serial-armhf:
     stage: tests
     script:
-        - ./build/armhf/rel/bitforgeutils_tests serial
+        - ./build/armhf/rel/bitforgeutils_tests serialj
+    tags:
+        - testpi0-gcc8.3
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+serial-armhf:
+    stage: tests
+    script:
+        - ./build/armhf/rel/bitforgeutils_tests serialb
     tags:
         - testpi0-gcc8.3
     artifacts:
@@ -252,7 +264,19 @@ event-amd64:
 serial-amd64:
     stage: tests
     script:
-        - ./build/amd64/rel/bitforgeutils_tests serial
+        - ./build/amd64/rel/bitforgeutils_tests serialj
+    tags:
+        - amd64
+    artifacts:
+        name: OBJ_$COMMIT_TIME
+        expire_in: 1 week
+        paths:
+            - Logs
+
+serial-amd64:
+    stage: tests
+    script:
+        - ./build/amd64/rel/bitforgeutils_tests serialb
     tags:
         - amd64
     artifacts:

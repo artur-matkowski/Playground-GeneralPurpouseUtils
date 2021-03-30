@@ -12,7 +12,8 @@
 #include "tests/udpTests.hpp"
 #include "tests/jsonTests.hpp"
 #include "tests/EventTest.hpp"
-#include "tests/ObjectSerializable_tests.hpp"
+#include "tests/JSONObjectSerializable_tests.hpp"
+#include "tests/BINObjectSerializable_tests.hpp"
 
 using namespace std;
 
@@ -84,7 +85,8 @@ int main(int argc, char** argv)
 		cout << "\n\t\t- logging - runs logging tests";
 		cout << "\n\t\t- udp     - runs udp tests";
 		cout << "\n\t\t- event   - event tests";
-		cout << "\n\t\t- serial  - new serialization methods\n";
+		cout << "\n\t\t- serialj - new serialization methods (JSON)";
+		cout << "\n\t\t- serialb - new serialization methods (BINARY)\n";
 
 		return -1;
 	}
@@ -134,9 +136,18 @@ int main(int argc, char** argv)
 		else
 			return -1;
 	}
-	else if( strcmp(argv[1], "serial") == 0 )
+	else if( strcmp(argv[1], "serialj") == 0 )
 	{
-		bool ret = ObjectSerializationTests::ObjectSerializableTests(&membloc);
+		bool ret = JSONObjectSerializationTests::ObjectSerializableTests(&membloc);
+
+		if(ret)
+			return 0;
+		else
+			return -1;
+	}
+	else if( strcmp(argv[1], "serialb") == 0 )
+	{
+		bool ret = BINObjectSerializationTests::ObjectSerializableTests(&membloc);
 
 		if(ret)
 			return 0;
@@ -166,7 +177,8 @@ int main(int argc, char** argv)
 	cout << "\n\t\t- logging - runs logging tests";
 	cout << "\n\t\t- udp     - runs udp tests";
 	cout << "\n\t\t- event   - event tests";
-	cout << "\n\t\t- serial  - new serialization methods\n";
+	cout << "\n\t\t- serialj - new serialization methods (JSON)";
+	cout << "\n\t\t- serialb - new serialization methods (BINARY)\n";
 	return -1;
 }
 

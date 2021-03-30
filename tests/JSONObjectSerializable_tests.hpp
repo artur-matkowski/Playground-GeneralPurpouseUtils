@@ -1,12 +1,12 @@
-#ifndef H_ObjectSerializationTests
-#define H_ObjectSerializationTests 
+#ifndef H_JSONObjectSerializationTests
+#define H_JSONObjectSerializationTests 
 #include "ObjectSerializableClassBase.hpp"
 #include "JSONSerializer.hpp"
 #include <vector>
 #include <stdlib.h>    
 #include <time.h>
 
-namespace ObjectSerializationTests
+namespace JSONObjectSerializationTests
 {
 	float randF()
 	{
