@@ -125,7 +125,22 @@ namespace bfu2
 	}
 	void BinarySerializer::Serialize( SerializableVector<bfu::stream>* data )
 	{
+		uint32_t arraySize = data->size(); 
+ 		 
+		growToFitNextData( sizeof(uint32_t) ); 
+		m_buff.insert(m_buff.end(), (char*)&arraySize, ((char*)&arraySize)+sizeof(uint32_t)); 
+		 
 
+		for(int i=0; i<arraySize; ++i)
+		{
+			uint32_t stringSize = (*data)[i].size();
+			growToFitNextData( sizeof(uint32_t) ); 
+			m_buff.insert(m_buff.end(), (char*)&stringSize, ((char*)&stringSize)+sizeof(uint32_t)); 
+
+
+			growToFitNextData( stringSize );
+			m_buff.insert(m_buff.end(), (*data)[i].c_str(), (*data)[i].c_str()+stringSize);
+		}
 	}
 	void BinarySerializer::Serialize( bfu::string* data )
 	{
@@ -139,7 +154,22 @@ namespace bfu2
 	}
 	void BinarySerializer::Serialize( SerializableVector<bfu::string>* data )
 	{
+		uint32_t arraySize = data->size(); 
+ 		 
+		growToFitNextData( sizeof(uint32_t) ); 
+		m_buff.insert(m_buff.end(), (char*)&arraySize, ((char*)&arraySize)+sizeof(uint32_t)); 
+		 
 
+		for(int i=0; i<arraySize; ++i)
+		{
+			uint32_t stringSize = (*data)[i].size();
+			growToFitNextData( sizeof(uint32_t) ); 
+			m_buff.insert(m_buff.end(), (char*)&stringSize, ((char*)&stringSize)+sizeof(uint32_t)); 
+
+
+			growToFitNextData( stringSize );
+			m_buff.insert(m_buff.end(), (*data)[i].c_str(), (*data)[i].c_str()+stringSize);
+		}
 	}
 		
 	void BinarySerializer::Serialize( uint8_t* data )
@@ -270,7 +300,25 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( SerializableVector<bfu::stream>* data )
 	{
+		uint32_t arraySize;
 
+		arraySize = *(uint32_t*) (m_buff.data() + m_readCursor);
+		m_readCursor += sizeof(uint32_t);
+
+		data->clear();
+		data->reserve(arraySize);
+		for(int i=0; i<arraySize; ++i)
+		{
+			uint32_t stringSize;
+
+			stringSize = *(uint32_t*) (m_buff.data() + m_readCursor);
+			m_readCursor += sizeof(uint32_t);
+
+
+			data->emplace_back( data->mBlock() );
+			(*data)[i].assign(m_buff.data() + m_readCursor, stringSize);
+			m_readCursor += stringSize;
+		}
 	}
 	void BinarySerializer::Deserialize( bfu::string* data )
 	{
@@ -286,7 +334,25 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( SerializableVector<bfu::string>* data )
 	{
+		uint32_t arraySize;
 
+		arraySize = *(uint32_t*) (m_buff.data() + m_readCursor);
+		m_readCursor += sizeof(uint32_t);
+
+		data->clear();
+		data->reserve(arraySize);
+		for(int i=0; i<arraySize; ++i)
+		{
+			uint32_t stringSize;
+
+			stringSize = *(uint32_t*) (m_buff.data() + m_readCursor);
+			m_readCursor += sizeof(uint32_t);
+
+
+			data->emplace_back( data->mBlock() );
+			(*data)[i].insert(0, m_buff.data() + m_readCursor, stringSize);
+			m_readCursor += stringSize;
+		}
 	}
 		
 	void BinarySerializer::Deserialize( uint8_t* data )

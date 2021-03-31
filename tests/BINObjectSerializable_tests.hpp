@@ -224,7 +224,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			std::cout << "{"; \
 			for(int i=0; i<tt.i.size(); ) \
 			{	 \
-				std::cout << (int)tt.i[i]; \
+				std::cout << tt.i[i]; \
 				++i; \
 				if(i<tt.i.size())  \
 					std::cout << ", "; \
@@ -232,7 +232,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			std::cout << "},\n{"; \
 			for(int i=0; i<tt.ii.size(); ) \
 			{	 \
-				std::cout << (int)tt.ii[i]; \
+				std::cout << tt.ii[i]; \
 				++i; \
 				if(i<tt.ii.size())  \
 					std::cout << ", "; \
@@ -240,7 +240,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			 		std::cout<< "}<\n\tDeserialized back to type:\n{" ; \
 			for(int i=0; i<tt2.i.size(); ) \
 			{	 \
-				std::cout << (int)tt2.i[i]; \
+				std::cout << tt2.i[i]; \
 				++i; \
 				if(i<tt2.i.size())  \
 					std::cout << ", "; \
@@ -248,7 +248,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			std::cout << "},\n{"; \
 			for(int i=0; i<tt2.ii.size(); ) \
 			{	 \
-				std::cout << (int)tt2.ii[i]; \
+				std::cout << tt2.ii[i]; \
 				++i; \
 				if(i<tt2.ii.size())  \
 					std::cout << ", "; \
@@ -285,6 +285,8 @@ GENERATE_TEST_FOR_VAR_VECTOR_BIN( int8_t, randI() );
 GENERATE_TEST_FOR_VAR_VECTOR_BIN( int16_t, randI() );
 GENERATE_TEST_FOR_VAR_VECTOR_BIN( int32_t, randI() );
 GENERATE_TEST_FOR_VAR_VECTOR_BIN( int64_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN(stream, Rand<stream>() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN(string, Rand<string>() );
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
@@ -308,14 +310,17 @@ GENERATE_TEST_FOR_VAR_VECTOR_BIN( int64_t, randI() );
 
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( float, mBlock );
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( bool, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint8_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint16_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint32_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint64_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int8_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int16_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int32_t, mBlock );
-		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int64_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint8_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint16_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint32_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint64_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int8_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int16_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int32_t, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int64_t, mBlock );
+
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN(string, mBlock);
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN(stream, mBlock);
 
 		return test;
 	}
