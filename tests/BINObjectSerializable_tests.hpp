@@ -288,6 +288,81 @@ GENERATE_TEST_FOR_VAR_VECTOR_BIN( int64_t, randI() );
 GENERATE_TEST_FOR_VAR_VECTOR_BIN(stream, Rand<stream>() );
 GENERATE_TEST_FOR_VAR_VECTOR_BIN(string, Rand<string>() );
 
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+namespace nestedClassVectorTest
+{
+	class A: public bfu2::SerializableClassBase<A> 
+	{ 
+	public: 
+		SERIALIZABLE_VAR(A, int32_t, i); 
+		SERIALIZABLE_VAR(A, float, ii); 
+	public: 
+		A() 
+		{
+			i = randI();
+			ii = randF();
+		}; 
+		~A(){}; 
+	}; 
+
+	class B: public bfu2::SerializableClassBase<B> 
+	{ 
+	public: 
+		SERIALIZABLE_OBJ_VEC(B, A, i); 
+		SERIALIZABLE_OBJ_VEC(B, A, ii); 
+	public: 
+		B() 
+		{}; 
+		~B(){}; 
+	}; 
+
+	bool _TESTBINStream(bfu::MemBlockBase* memBlock) 
+	{ 
+		bfu2::BinarySerializer serializer1(memBlock);
+		bfu2::BinarySerializer serializer2(memBlock);
+		 
+		B tt; 
+		B tt2;
+		for(int i=0; i<10; ++i) { tt.i.push_back( A::AllocateAndInit(memBlock) ); } 
+		for(int i=0; i<10; ++i) { tt.ii.push_back( A::AllocateAndInit(memBlock) ); } 
+		 
+		serializer1.Serialize(&tt); 
+		 
+		serializer1.SetCursonPos(0); 
+		 
+		serializer1.Deserialize(&tt2); 
+		serializer2.Serialize(&tt2); 
+		 
+		log::info << "Testing: nested Class Vector Test" << std::endl; 
+		std::cout << "===================\n\tSerialized to BIN: size( "<< serializer1.size() <<" )\n"; 
+		hex_dump(std::cout, serializer1.buff(), serializer1.size() ); 
+		std::cout << "===================\n\tSerialized to BIN2: size( "<< serializer2.size() <<" )\n"; 
+		hex_dump(std::cout, serializer2.buff(), serializer2.size() ); 
+				 
+		if( serializer1 == serializer2  ) 
+		{ 
+			log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl; 
+			return true; 
+		} 
+		else 
+		{ 
+			log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl; 
+			return false;		 
+		} 
+	} 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
 		bool test = true;
@@ -321,6 +396,8 @@ GENERATE_TEST_FOR_VAR_VECTOR_BIN(string, Rand<string>() );
 
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN(string, mBlock);
 		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN(stream, mBlock);
+
+		test = test && nestedClassVectorTest::_TESTBINStream( mBlock );
 
 		return test;
 	}

@@ -85,7 +85,16 @@ namespace bfu2
 	}
 	void BinarySerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
 	{
-
+		uint32_t arraySize = data->size();
+ 		 
+		growToFitNextData( sizeof(uint32_t) ); 
+		m_buff.insert(m_buff.end(), (char*)&arraySize, ((char*)&arraySize)+sizeof(uint32_t));
+		
+		for(uint32_t i=0; i<arraySize; ++i)
+		{ 
+			SerializableClassInterface* ptr = &(*data)[i];
+			Serialize( ptr );
+		}
 	}
 	void BinarySerializer::Serialize( float* data )
 	{
@@ -256,6 +265,25 @@ namespace bfu2
 	}
 	void BinarySerializer::Deserialize( SerializableVector<SerializableClassInterface>* data )
 	{
+		for(int i=0; i<data->size(); ++i)
+		{
+			(*data)[i].Dispouse();
+		}
+		data->clear(); 
+
+		uint32_t arraySize = 0; 
+		 
+		arraySize = *(uint32_t*) (m_buff.data() + m_readCursor); 
+		m_readCursor += sizeof(uint32_t);
+ 		 
+		for(int i=0; i<arraySize; ++i)
+		{ 
+			SerializableClassInterface* cache = data->allocateAndInit( data->mBlock() );
+ 		 
+			Deserialize( cache ); 
+ 		 
+			data->emplace_back( cache ); 
+		}
 	}
 	void BinarySerializer::Deserialize( float* data )
 	{
