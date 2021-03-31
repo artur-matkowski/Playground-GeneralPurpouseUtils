@@ -104,7 +104,7 @@ namespace BINObjectSerializationTests
 
 
 
-#define GENERATE_TEST_FOR_SIMPLE_VAR(T, value) \
+#define GENERATE_TEST_FOR_SIMPLE_VAR_BIN(T, value) \
 	namespace testing_##T \
 	{ \
 		class A: public bfu2::SerializableClassBase<A> \
@@ -157,49 +157,165 @@ namespace BINObjectSerializationTests
 		} \
 	}
 
-#define PROCESS_TEST_FOR_SIMPLE_VAR(T, mBlock) \
+#define PROCESS_TEST_FOR_SIMPLE_VAR_BIN(T, mBlock) \
 	testing_##T::_TESTBINStream(mBlock)
 
 
 
-GENERATE_TEST_FOR_SIMPLE_VAR(int8_t, randI()%127 );
-GENERATE_TEST_FOR_SIMPLE_VAR(int16_t, randI()%16000 );
-GENERATE_TEST_FOR_SIMPLE_VAR(int32_t, randI() );
-GENERATE_TEST_FOR_SIMPLE_VAR(int64_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(int8_t, randI()%127 );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(int16_t, randI()%16000 );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(int32_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(int64_t, randI() );
 
-GENERATE_TEST_FOR_SIMPLE_VAR(uint8_t, randI()%255 );
-GENERATE_TEST_FOR_SIMPLE_VAR(uint16_t, randI()%16000 );
-GENERATE_TEST_FOR_SIMPLE_VAR(uint32_t, randI() );
-GENERATE_TEST_FOR_SIMPLE_VAR(uint64_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(uint8_t, randI()%255 );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(uint16_t, randI()%16000 );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(uint32_t, randI() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(uint64_t, randI() );
 
-GENERATE_TEST_FOR_SIMPLE_VAR(float, randF() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(float, randF() );
 
-GENERATE_TEST_FOR_SIMPLE_VAR(bool, randB() );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(bool, randB() );
 
 using bfu::string;
-GENERATE_TEST_FOR_SIMPLE_VAR(string, "testing bfu::string" );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(string, "testing bfu::string" );
 
 using bfu::stream;
-GENERATE_TEST_FOR_SIMPLE_VAR(stream, "testing bfu::stream" );
+GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#define GENERATE_TEST_FOR_VAR_VECTOR_BIN(T, value) \
+	namespace testing_v_##T \
+	{ \
+		class A: public bfu2::SerializableClassBase<A> \
+		{ \
+		public: \
+			SERIALIZABLE_VAR_VEC(A, T, i); \
+			SERIALIZABLE_VAR_VEC(A, T, ii); \
+		public: \
+			A() \
+			{}; \
+			~A(){}; \
+		}; \
+		bool _TESTBINStream(bfu::MemBlockBase* memBlock) \
+		{ \
+			char buff1[4096]; \
+			char buff2[4096]; \
+			 \
+			bfu2::BinarySerializer serializer1(memBlock); \
+			bfu2::BinarySerializer serializer2(memBlock); \
+			 \
+			A tt; \
+			A tt2; \
+			for(int i=0; i<10; ++i) { tt.i.push_back(value);} \
+			for(int i=0; i<10; ++i) { tt.ii.push_back(value);} \
+			 \
+			serializer1.Serialize(&tt); \
+			 \
+			serializer1.SetCursonPos(0); \
+			 \
+			serializer1.Deserialize(&tt2); \
+			serializer2.Serialize(&tt2); \
+			 \
+			 \
+			log::info << "Testing vector: " << #T << " of sizeof( " << (int)sizeof(T) << " ) \n\tOriginal input:" <<std::endl;  \
+			std::cout << "{"; \
+			for(int i=0; i<tt.i.size(); ) \
+			{	 \
+				std::cout << (int)tt.i[i]; \
+				++i; \
+				if(i<tt.i.size())  \
+					std::cout << ", "; \
+			}  \
+			std::cout << "},\n{"; \
+			for(int i=0; i<tt.ii.size(); ) \
+			{	 \
+				std::cout << (int)tt.ii[i]; \
+				++i; \
+				if(i<tt.ii.size())  \
+					std::cout << ", "; \
+			}  \
+			 		std::cout<< "}<\n\tDeserialized back to type:\n{" ; \
+			for(int i=0; i<tt2.i.size(); ) \
+			{	 \
+				std::cout << (int)tt2.i[i]; \
+				++i; \
+				if(i<tt2.i.size())  \
+					std::cout << ", "; \
+			}  \
+			std::cout << "},\n{"; \
+			for(int i=0; i<tt2.ii.size(); ) \
+			{	 \
+				std::cout << (int)tt2.ii[i]; \
+				++i; \
+				if(i<tt2.ii.size())  \
+					std::cout << ", "; \
+			}  \
+			std::cout << "}\n"; \
+			std::cout << "===================\n\tSerialized to BIN: size( "<< serializer1.size() <<" )\n"; \
+			hex_dump(std::cout, serializer1.buff(), serializer1.size() ); \
+			std::cout << "===================\n\tSerialized to BIN2: size( "<< serializer2.size() <<" )\n"; \
+			hex_dump(std::cout, serializer2.buff(), serializer2.size() ); \
+ 			 \
+			if( serializer1 == serializer2 ) \
+			{ \
+				log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl; \
+				return true; \
+			} \
+			else \
+			{ \
+				log::error << "<<<<<<<<<<<<<<<< Test concluded : FAILED\n" << std::endl; \
+				return false;		 \
+			} \
+		} \
+	}
+
+#define PROCESS_TEST_FOR_VAR_VECTOR_BIN(T, mBlock) \
+	testing_v_##T::_TESTBINStream(mBlock)
+
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( float, randF() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( bool, randB() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( uint8_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( uint16_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( uint32_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( uint64_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( int8_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( int16_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( int32_t, randI() );
+GENERATE_TEST_FOR_VAR_VECTOR_BIN( int64_t, randI() );
 
 	bool ObjectSerializableTests( bfu::MemBlockBase* mBlock )
 	{
 		bool test = true;
 
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(float, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(bool, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int8_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int16_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int32_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(int64_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint8_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint16_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint32_t, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(uint64_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(float, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(bool, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(int8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(int16_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(int32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(int64_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(uint8_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(uint16_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(uint32_t, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(uint64_t, mBlock);
 
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(string, mBlock);
-		test = test && PROCESS_TEST_FOR_SIMPLE_VAR(stream, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(string, mBlock);
+		test = test && PROCESS_TEST_FOR_SIMPLE_VAR_BIN(stream, mBlock);
+
+
+
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( float, mBlock );
+		test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( bool, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint8_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint16_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint32_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( uint64_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int8_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int16_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int32_t, mBlock );
+		// test = test && PROCESS_TEST_FOR_VAR_VECTOR_BIN( int64_t, mBlock );
 
 		return test;
 	}
