@@ -47,14 +47,13 @@ public:
 
         // out stream object
         static struct OutStream {
-
-                char  m_buff[1024] = {'0'};
-                bfu::stream     	stream;
                 DebugLevel 			level = DebugLevel::ALL;
                 bool 				loggingToFile = false;
                 char           		LogFileName[1024] = {'0'};
                	std::ofstream 		outfile;
                 const char*         path = "./Logs/";
+                bfu::stream         stream;
+                char  m_buff[1024] = {'0'};
 
                 inline const char* LogLvl(DebugLevel lvl)
                 {

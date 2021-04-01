@@ -14,12 +14,8 @@
 
 bool udpTests( bfu::MemBlockBase* mBlock )
 {
-	bfu::udp::packet out(mBlock);
-	bfu::udp::packet msg(mBlock);
-
-	out.SetHost("127.0.0.1");
-	out.m_port = 8888;
-	out.m_id.GetRef() << TEST_STRING;
+	char hostBuff[16];
+	char recvBuff[128] = {0};
 
 	int result = fork();
 
@@ -28,28 +24,25 @@ bool udpTests( bfu::MemBlockBase* mBlock )
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
 
-		bfu::udp udp(8889, mBlock);
-		udp.Write( out );
-		udp.Write( out );
+		//bfu::udp _udp(8889);
+
+		bfu::udp::Write(TEST_STRING, strlen(TEST_STRING), "127.0.0.1", 8888);
 
 		return false; // irrelevent
 	}
 	else //child
 	{
-		bfu::udp udp(8888, mBlock);
-
-		//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		bfu::udp udp(8888);
 
 		bool readed;
 
 		do
 		{
-			readed = udp.Read( msg, false);
-			//printf( "pudp pooling test:%s\n", msg.m_id.GetRef().c_str() );
+			readed = udp.Read( recvBuff, 128, hostBuff, 16, false) > 0;
 		}while(!readed);
 	}
 
-	if( std::strcmp(TEST_STRING, msg.m_id.GetRef().c_str() )==0 )
+	if( std::strcmp(TEST_STRING, recvBuff )==0 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Test concluded : SUCCES\n" << std::endl;
 		return true;
