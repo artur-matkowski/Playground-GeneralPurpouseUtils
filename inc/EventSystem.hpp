@@ -1,6 +1,7 @@
 #ifndef H_EventSystem
 #define H_EventSystem 
 #include "ObjectSerialization/SerializerBase.hpp"
+#include "udp.hpp"
 #include <vector>
 #include <map>
 #include <string>
@@ -28,29 +29,19 @@ namespace bfu
 
 	class Event
 	{
-	public:
-		struct NetworkReceiver
-		{
-			char* m_networkBuff = nullptr;
-			char* m_eventID = nullptr;
-			int sizeOfArgs = 0;
-			std::vector<std::pair<char[16], uint16_t> > * p_propagationTargets;
-		};
-
 	protected: 
-		NetworkReceiver networkReceiver;
-
 		std::vector<CallbackData, custom_allocator<CallbackData>> callbacks;
-		char* m_evID = nullptr;
+		char* 				m_evID = nullptr;
+		EventSystem* 		m_owner = nullptr;
+		int 				m_sizeOfArg = 0;
 
-		static bfu2::SerializerBase* serializer;
 		friend EventSystem;
 
-
-		Event( const char* desc = 0, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-				, char* networkBuff = nullptr
-				, int sizeOfArg = 0
-				, std::vector<std::pair<char[16], uint16_t> > * p_propagationTargets = nullptr );
+		Event(){};
+		Event( const char* desc
+				, int sizeOfArg
+				, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
+				, EventSystem* owner = nullptr);
 	public:
 		~Event();
 
@@ -62,6 +53,7 @@ namespace bfu
 		void UnRegisterCallback(Callback callback);
 
 		inline const char* GetEventID(){ return m_evID; }
+		static void PushEventThroutghNetwork(void* receiver, void* data);
 	};
 
 
@@ -86,16 +78,21 @@ namespace bfu
 		std::vector<std::pair<char[16], uint16_t> > m_propagationTargets;
 		char 							m_networkBuff[PACKAGESIZE];
 
+		bfu2::SerializerBase* 			m_serializer = nullptr;
+
+		friend Event;
+
+		bfu::udp						m_udp;
 
 	public:
-		void RegisterFastEvent( const char* desc = 0
+		void RegisterFastEvent( const char* desc 
+								, int sizeOfArg 
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-								, bool isNetworked = false
-								, int sizeOfArg = 0 );
-		void RegisterLateEvent( const char* desc = 0
+								, bool isNetworked = false );
+		void RegisterLateEvent( const char* desc
+								, int sizeOfArg
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-								, bool isNetworked = false
-								, int sizeOfArg = 0 );
+								, bool isNetworked = false );
 		inline Event* GetFastEvent(int i){ return &(m_fastEvents[i]); }
 		inline Event* GetFastEvent(const char* desc)
 		{
@@ -108,13 +105,18 @@ namespace bfu
 		}
 
 		void DisableNetworkPropagation(Event*);
-		inline void SetSerializer(bfu2::SerializerBase* p){ Event::serializer = p; }
+		inline void SetSerializer(bfu2::SerializerBase* p){ m_serializer = p; }
+		inline bfu2::SerializerBase* GetSerializer(bfu2::SerializerBase* p){ return m_serializer; }
 		inline void PushPropagationTarget(const char* host, uint16_t port)
 		{
 			m_propagationTargets.emplace_back( std::pair<char[16], uint16_t>() );
 			strncpy(m_propagationTargets.back().first, host, 16);
 			m_propagationTargets.back().second = port;
 		}
+
+		int PullNetworkEvents();
+		inline bool StartListening(int port){ return m_udp.StartListening(port); }
+		inline char* GetNetworkBuffer(){ return m_networkBuff; }
 	};
 }
 
