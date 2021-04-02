@@ -45,18 +45,6 @@ dbg-armhf:
 
 
 
-json-armhf:
-    stage: tests
-    script:
-        - ./build/armhf/rel/bitforgeutils_tests json
-    tags:
-        - testpi0-gcc8.3
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
-        paths:
-            - Logs
-
 
 
 stream-armhf:
@@ -191,19 +179,6 @@ dbg-amd64:
             - build
             - inc
 
-
-
-json-amd64:
-    stage: tests
-    script:
-        - ./build/amd64/rel/bitforgeutils_tests json
-    tags:
-        - amd64
-    artifacts:
-        name: OBJ_$COMMIT_TIME
-        expire_in: 1 week
-        paths:
-            - Logs
 
 
 

@@ -11,7 +11,6 @@
 #include "tests/streamTests.hpp"
 #include "tests/loggingTests.hpp"
 #include "tests/udpTests.hpp"
-#include "tests/jsonTests.hpp"
 #include "tests/EventTest.hpp"
 #include "tests/JSONObjectSerializable_tests.hpp"
 #include "tests/BINObjectSerializable_tests.hpp"
@@ -81,7 +80,6 @@ int main(int argc, char** argv)
 		cout << "\nUsage:";
 		cout << "\n\t" << argv[0] << " [1] [2]";
 		cout << "\n\t[1]:";
-		cout << "\n\t\t- json    - runs json tests";
 		cout << "\n\t\t- stream  - runs stream rests";
 		cout << "\n\t\t- logging - runs logging tests";
 		cout << "\n\t\t- udp     - runs udp tests";
@@ -92,16 +90,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	if( strcmp(argv[1], "json") == 0 )
-	{
-		bool ret = jsonTests(&membloc);
-
-		if(ret)
-			return 0;
-		else
-			return -1;
-	}
-	else if( strcmp(argv[1], "stream") == 0 )
+	if( strcmp(argv[1], "stream") == 0 )
 	{
 		bool ret = streamTests(&membloc);
 
@@ -173,7 +162,6 @@ int main(int argc, char** argv)
 	cout << "\nUsage:";
 	cout << "\n\t" << argv[0] << " [1] [2]";
 	cout << "\n\t[1]:";
-	cout << "\n\t\t- json    - runs json tests";
 	cout << "\n\t\t- stream  - runs stream rests";
 	cout << "\n\t\t- logging - runs logging tests";
 	cout << "\n\t\t- udp     - runs udp tests";

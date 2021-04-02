@@ -14,6 +14,7 @@ namespace bfu
 	ForwardAllocatorMemBlock& ForwardAllocatorMemBlock::operator=(const ForwardAllocatorMemBlock& cp)
 	{
 		shrp_forwardedMemBlock = cp.shrp_forwardedMemBlock;
+		return *this;
 	}
 
 
