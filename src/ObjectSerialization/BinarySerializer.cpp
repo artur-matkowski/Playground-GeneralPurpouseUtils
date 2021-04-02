@@ -64,6 +64,16 @@ namespace bfu2
 	{
 		return m_buff.size();
 	}
+	void BinarySerializer::clear()
+	{
+		m_buff.clear();
+	}
+	void BinarySerializer::assignData(char* data, uint32_t size)
+	{
+		m_buff.clear();
+		m_buff.reserve(size);
+		m_buff.insert(m_buff.begin(), data, data+size);
+	}
 
 	bool BinarySerializer::operator==(const BinarySerializer& other)
 	{

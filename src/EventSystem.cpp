@@ -13,19 +13,42 @@ namespace bfu
 			return;
 
 		Event* _this = (Event*)receiver;
+		uint32_t dataLength = _this->m_sizeOfArg;
+		uint32_t dataLengthNet = htonl(dataLength);
+
 
 		uint32_t evIDlength = strlen(_this->m_evID);
+		uint32_t evIDlengthNet = htonl(evIDlength);
 
 		char* networkBuff = _this->m_owner->m_networkBuff;
 
-		memcpy(networkBuff, &evIDlength, sizeof(uint32_t));
+		//copy string length
+		memcpy(networkBuff
+				, &evIDlengthNet
+				, sizeof(uint32_t));
+		//copy string
 		memcpy(networkBuff + sizeof(uint32_t)
 				, _this->m_evID
 				, evIDlength);
 		networkBuff[ sizeof(uint32_t) + evIDlength] = '\0';
+
+		//serialize data, if serializable
+		if( _this->m_serializer!=0 )
+		{	
+			_this->m_serializer->clear();
+			_this->m_serializer->Serialize( (bfu2::SerializableClassInterface*) data );
+			data = _this->m_serializer->data();
+			dataLength = _this->m_serializer->size();
+			dataLengthNet = htonl( dataLength );
+		}
+
 		memcpy(networkBuff + sizeof(uint32_t) + evIDlength + 1
+				, &dataLengthNet
+				, sizeof(uint32_t) );
+
+		memcpy(networkBuff + sizeof(uint32_t)*2 + evIDlength + 1
 				, data
-				, _this->m_sizeOfArg);
+				, dataLength );
 
 		std::vector<std::pair<char[16], uint16_t> > &propagationTargets = _this->m_owner->m_propagationTargets;
 
@@ -33,11 +56,10 @@ namespace bfu
 		for(int i=0; i<propagationTargets.size(); ++i)
 		{
 			bfu::udp::Write(networkBuff
-							, sizeof(uint32_t) + evIDlength+1 + _this->m_sizeOfArg
+							, sizeof(uint32_t)*2 + evIDlength+1 + dataLength
 							, propagationTargets[i].first
 							, propagationTargets[i].second);
 		}
-		log::info << "KURWAAAAAAAAAAAAAAAAAA" << std::endl;
 	}
 
 
@@ -45,10 +67,12 @@ namespace bfu
 	Event::Event( const char* desc
 				, int sizeOfArg
 				, bfu::MemBlockBase* memBlock
-				, EventSystem* owner)
+				, EventSystem* owner
+				, void* serializationCache )
 		:callbacks( custom_allocator<CallbackData>(memBlock) )
 		,m_owner(owner)
 		,m_sizeOfArg(sizeOfArg)
+		,p_serializationCache(serializationCache)
 	{
 		if(desc != 0)
 		{
@@ -116,12 +140,12 @@ namespace bfu
 
 
 
-	void EventSystem::RegisterFastEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked)
+	void EventSystem::RegisterFastEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
 	{
 		Event* ev = &m_fastEvents[m_lastFreeFastEvent];
 
 		(*ev).~Event();
-		new (ev) Event(desc, sizeOfArg, memBlock, this );
+		new (ev) Event(desc, sizeOfArg, memBlock, this, serializationCache );
 
 		if(isNetworked)
 		{
@@ -130,10 +154,10 @@ namespace bfu
 		}
 		++m_lastFreeFastEvent;
 	}
-	void EventSystem::RegisterLateEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked)
+	void EventSystem::RegisterLateEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
 	{
 		Event* ev = (Event*)memBlock->allocate(1, sizeof(Event), alignof(Event));
-		new (ev) Event(desc, sizeOfArg, memBlock, this );
+		new (ev) Event(desc, sizeOfArg, memBlock, this, serializationCache );
 		
 		m_lateEvents[ desc ] = ev;
 	}
@@ -151,13 +175,33 @@ namespace bfu
 		{
 			++processedEvents;
 			log::debug << "Received udp event from host: "<< remoteHost << std::endl;
-			uint32_t eventTypeSize = *(uint32_t*)m_networkBuff;
+			uint32_t eventTypeSize = ntohl(*(uint32_t*)m_networkBuff);
 
 			Event* ev = m_networkEvents[m_networkBuff+sizeof(uint32_t)];
+			void* data = m_networkBuff+sizeof(uint32_t)+eventTypeSize+1;
+			uint32_t dataTypeSize = ntohl(*(uint32_t*)data);
+			data = m_networkBuff+sizeof(uint32_t)*2+eventTypeSize+1;
 
-			supresNetworkPropagation = true;
-			ev->Invoke(m_networkBuff+sizeof(uint32_t)+eventTypeSize+1);
-			supresNetworkPropagation = false;
+
+
+			if( ev->m_serializer!=0 )
+			{	
+				ev->m_serializer->clear();
+				ev->m_serializer->assignData((char*)data, dataTypeSize);
+
+				ev->m_serializer->Deserialize( (bfu2::SerializableClassInterface*) ev->p_serializationCache );
+
+				supresNetworkPropagation = true;
+				ev->Invoke( ev->p_serializationCache );
+				supresNetworkPropagation = false;
+			}
+			else
+			{
+				supresNetworkPropagation = true;
+				ev->Invoke( data );
+				supresNetworkPropagation = false;
+			}
+
 
 		}
 		return processedEvents;

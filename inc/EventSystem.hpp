@@ -31,9 +31,11 @@ namespace bfu
 	{
 	protected: 
 		std::vector<CallbackData, custom_allocator<CallbackData>> callbacks;
-		char* 				m_evID = nullptr;
-		EventSystem* 		m_owner = nullptr;
-		int 				m_sizeOfArg = 0;
+		char* 							m_evID = nullptr;
+		EventSystem* 					m_owner = nullptr;
+		int 							m_sizeOfArg = 0;
+		void*							p_serializationCache = nullptr;
+		bfu2::SerializerBase* 			m_serializer = nullptr;
 
 		friend EventSystem;
 
@@ -41,7 +43,8 @@ namespace bfu
 		Event( const char* desc
 				, int sizeOfArg
 				, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-				, EventSystem* owner = nullptr);
+				, EventSystem* owner = nullptr
+				, void* serializationCache = nullptr);
 	public:
 		~Event();
 
@@ -54,6 +57,9 @@ namespace bfu
 
 		inline const char* GetEventID(){ return m_evID; }
 		static void PushEventThroutghNetwork(void* receiver, void* data);
+
+		inline void SetSerializer(bfu2::SerializerBase* p){ m_serializer = p; }
+		inline bfu2::SerializerBase* GetSerializer(bfu2::SerializerBase* p){ return m_serializer; }
 	};
 
 
@@ -78,7 +84,6 @@ namespace bfu
 		std::vector<std::pair<char[16], uint16_t> > m_propagationTargets;
 		char 							m_networkBuff[PACKAGESIZE];
 
-		bfu2::SerializerBase* 			m_serializer = nullptr;
 
 		friend Event;
 
@@ -88,11 +93,13 @@ namespace bfu
 		void RegisterFastEvent( const char* desc 
 								, int sizeOfArg 
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-								, bool isNetworked = false );
+								, bool isNetworked = false
+								, void* serializationCache = nullptr );
 		void RegisterLateEvent( const char* desc
 								, int sizeOfArg
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
-								, bool isNetworked = false );
+								, bool isNetworked = false
+								, void* serializationCache = nullptr );
 		inline Event* GetFastEvent(int i){ return &(m_fastEvents[i]); }
 		inline Event* GetFastEvent(const char* desc)
 		{
@@ -105,8 +112,6 @@ namespace bfu
 		}
 
 		void DisableNetworkPropagation(Event*);
-		inline void SetSerializer(bfu2::SerializerBase* p){ m_serializer = p; }
-		inline bfu2::SerializerBase* GetSerializer(bfu2::SerializerBase* p){ return m_serializer; }
 		inline void PushPropagationTarget(const char* host, uint16_t port)
 		{
 			m_propagationTargets.emplace_back( std::pair<char[16], uint16_t>() );

@@ -17,6 +17,8 @@ namespace bfu2
 
 		virtual char* data() override;
 		virtual int size() override;
+		virtual void clear() override;
+		virtual void assignData(char* data, uint32_t size) override;
 
 		bool operator==(const BinarySerializer&);
 		void growToFitNextData(int incomingbuffsize);

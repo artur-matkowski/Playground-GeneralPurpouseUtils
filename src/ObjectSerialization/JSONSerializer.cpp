@@ -56,7 +56,15 @@ namespace bfu2
 	}
 	int JSONSerializer::size() 
 	{
-		return this->size();
+		return bfu::stream::size();
+	}
+	void JSONSerializer::clear()
+	{
+		bfu::stream::clear();
+	}
+	void JSONSerializer::assignData(char* data, uint32_t size)
+	{
+		this->assign(data, size);
 	}
 
 	void JSONSerializer::Serialize( SerializableClassInterface* data )

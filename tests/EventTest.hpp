@@ -4,6 +4,7 @@
 #include "ObjectSerializableClassBase.hpp"
 #include "JSONSerializer.hpp"
 
+#define TESTPORT 8889
 
 std::ostream& hexdump(std::ostream& os, const void *buffer, 
                        std::size_t bufsize, bool showPrintableChars = true)
@@ -61,29 +62,60 @@ struct Receiver
 	}
 };
 
+class SerializedEventArg: public bfu2::SerializableClassBase<SerializedEventArg> 
+{ 
+public: 
+	SERIALIZABLE_VAR(SerializedEventArg, uint32_t, i); 
+public: 
+	SerializedEventArg() 
+	{}; 
+	~SerializedEventArg(){}; 
+}; 
+
+
 bool EventTest( bfu::MemBlockBase* mBlock )
 {
 	bool result = true;
 
-	//Local event test
-	// {
-	// 	bfu::EventSystem es;
-	// 	Receiver receiver;
+
+/////////////////////////////////
+//
+//
+//
+// local event test
+//
+//
+//
+//
+/////////////////////////////////
+	{
+		bfu::EventSystem es;
+		Receiver receiver;
 
 
-	// 	es.RegisterFastEvent("test event", mBlock, false);
-	// 	bfu::Event* ev = es.GetFastEvent("test event");
+		es.RegisterFastEvent("test event", sizeof(int), mBlock, false);
+		bfu::Event* ev = es.GetFastEvent("test event");
 
-	// 	ev->RegisterCallback(&receiver, Receiver::alter);
+		ev->RegisterCallback(&receiver, Receiver::alter);
 
-	// 	int arg = (int)'r';
-	// 	ev->Invoke(&arg);
+		int arg = (int)'r';
+		ev->Invoke(&arg);
 
-	// 	result = result && receiver.i==(int)'r';
-	// 	log::debug << "Local event callback arg: int="<<arg<<" result="<< receiver.i << std::endl;
-	// }
+		result = result && receiver.i==(int)'r';
+		log::debug << "Local event callback arg: int="<<arg<<" result="<< receiver.i << std::endl;
+	}
 
-	//remote event test
+
+/////////////////////////////////
+//
+//
+//
+// remote event test (raw data):
+//
+//
+//
+//
+/////////////////////////////////	
 	{
 		bfu2::JSONSerializer serializer(mBlock);
 		bfu::EventSystem es;
@@ -91,13 +123,14 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 		int arg = (int)'r';
 
 
-		es.PushPropagationTarget("127.0.0.1", 8888);
+		es.PushPropagationTarget("127.0.0.1", TESTPORT);
 
 
 		es.RegisterFastEvent("test event", sizeof(int), mBlock, true );
 		bfu::Event* ev = es.GetFastEvent("test event");
 
 		ev->RegisterCallback(&receiver, Receiver::alter);
+		//ev->SetSerializer( &serializer );
 
 		int pid = fork();
 
@@ -116,9 +149,18 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 		}
 		else
 		{
-			es.StartListening(8888);
-
-			while(es.PullNetworkEvents()<=0);
+			es.StartListening(TESTPORT);
+			int timeout = 3;
+			while(es.PullNetworkEvents()<=0)
+			{
+				--timeout;
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				if(timeout==0)
+				{
+					log::error << "Network event timeout FAILED\n" << std::endl;
+					break;
+				} 
+			}
 			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 			std::cout<<"\nIncoming buffer:\n";
@@ -132,6 +174,93 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 		log::debug << "Remote event callback arg: int="<<arg<<" result="<< receiver.i << " pid:" << pid << std::endl;
 	}
 
+
+
+/////////////////////////////////
+//
+//
+//
+// remote event test (serialized data):
+//
+//
+//
+//
+/////////////////////////////////
+	{
+
+
+
+		struct SerilizedReceiver
+		{
+			int i = -1;
+			static void alter(void* target, void* data)
+			{
+				SerializedEventArg* arg = (SerializedEventArg*)data;
+				SerilizedReceiver* _this = (SerilizedReceiver*)target;
+				_this->i = arg->i;
+			}
+		};
+
+
+		bfu2::JSONSerializer serializer(mBlock);
+		bfu::EventSystem es;
+		SerilizedReceiver receiver;
+		SerializedEventArg arg;
+		arg.i = (int)'f';
+		SerializedEventArg* cache = (SerializedEventArg*)SerializedEventArg::AllocateAndInit(mBlock);
+
+
+		es.PushPropagationTarget("127.0.0.1", TESTPORT);
+
+
+		es.RegisterFastEvent("test event", sizeof(SerializedEventArg), mBlock, true, cache );
+		bfu::Event* ev = es.GetFastEvent("test event");
+
+		ev->RegisterCallback(&receiver, SerilizedReceiver::alter);
+		ev->SetSerializer( &serializer );
+
+		int pid = fork();
+
+		if( pid == 0 )
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(200));
+			arg.i = (int)'r';
+
+			ev->Invoke(&arg);
+
+			std::cout<<"\nOut buffer:\n";
+			hexdump(std::cout, es.GetNetworkBuffer(), 100);
+
+			result = false;
+
+			exit(0);
+		}
+		else
+		{
+			es.StartListening(TESTPORT);
+			int timeout = 3;
+			while(es.PullNetworkEvents()<=0)
+			{
+				--timeout;
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				if(timeout==0)
+				{
+					log::error << "Network event timeout FAILED\n" << std::endl;
+					break;
+				} 
+			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+			std::cout<<"\nIncoming buffer:\n";
+			hexdump(std::cout, es.GetNetworkBuffer(), 100);
+		}
+		
+
+
+
+		result = result && receiver.i==(int)'r';
+		log::debug << "Remote event callback arg: int="<<arg.i<<" result="<< receiver.i << " pid:" << pid << std::endl;
+	}
 
 
 

@@ -40,6 +40,8 @@ namespace bfu2
 
 		virtual char* data() = 0;
 		virtual int size() = 0;
+		virtual void clear() = 0;
+		virtual void assignData(char* data, uint32_t size) = 0;
 
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( SerializableClassInterface )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( float )
