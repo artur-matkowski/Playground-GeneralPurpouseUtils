@@ -2,7 +2,7 @@
 #define H_JSONSerializer 
 #include "ObjectSerialization/SerializerBase.hpp"
 
-namespace bfu2
+namespace bfu
 {
 	class JSONSerializer: public SerializerBase, public bfu::stream
 	{

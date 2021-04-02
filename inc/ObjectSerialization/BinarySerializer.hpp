@@ -4,7 +4,7 @@
 //#include "Allocators/CustomAllocator.hpp"
 #include <vector>
 
-namespace bfu2
+namespace bfu
 {
 	class BinarySerializer: public SerializerBase
 	{

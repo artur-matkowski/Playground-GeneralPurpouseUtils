@@ -1,7 +1,7 @@
 #include "ObjectSerializableClassBase.hpp"
 #include <iostream>
 
-namespace bfu2
+namespace bfu
 {
 	ClassInfo* ClassInfo::operator[](const char* name)
 	{

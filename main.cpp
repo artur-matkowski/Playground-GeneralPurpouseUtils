@@ -43,7 +43,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 }
 
 	// template<class T>
-	// class A: public bfu2::SerializableClassBase<A<T>>
+	// class A: public bfu::SerializableClassBase<A<T>>
 	// {
 	// public:
 	// 	SERIALIZABLE_VAR(A<T>, int, i);
@@ -56,7 +56,7 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 	// };
 
 
-	// class B: public bfu2::SerializableClassBase<B>
+	// class B: public bfu::SerializableClassBase<B>
 	// {
 	// public:
 	// 	SERIALIZABLE_VAR(B, int, i);

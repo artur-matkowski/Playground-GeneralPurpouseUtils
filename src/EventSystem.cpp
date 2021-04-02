@@ -36,7 +36,7 @@ namespace bfu
 		if( _this->m_serializer!=0 )
 		{	
 			_this->m_serializer->clear();
-			_this->m_serializer->Serialize( (bfu2::SerializableClassInterface*) data );
+			_this->m_serializer->Serialize( (bfu::SerializableClassInterface*) data );
 			data = _this->m_serializer->data();
 			dataLength = _this->m_serializer->size();
 			dataLengthNet = htonl( dataLength );
@@ -189,7 +189,7 @@ namespace bfu
 				ev->m_serializer->clear();
 				ev->m_serializer->assignData((char*)data, dataTypeSize);
 
-				ev->m_serializer->Deserialize( (bfu2::SerializableClassInterface*) ev->p_serializationCache );
+				ev->m_serializer->Deserialize( (bfu::SerializableClassInterface*) ev->p_serializationCache );
 
 				supresNetworkPropagation = true;
 				ev->Invoke( ev->p_serializationCache );

@@ -62,7 +62,7 @@ struct Receiver
 	}
 };
 
-class SerializedEventArg: public bfu2::SerializableClassBase<SerializedEventArg> 
+class SerializedEventArg: public bfu::SerializableClassBase<SerializedEventArg> 
 { 
 public: 
 	SERIALIZABLE_VAR(SerializedEventArg, uint32_t, i); 
@@ -117,7 +117,7 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 //
 /////////////////////////////////	
 	{
-		bfu2::JSONSerializer serializer(mBlock);
+		bfu::JSONSerializer serializer(mBlock);
 		bfu::EventSystem es;
 		Receiver receiver;
 		int arg = (int)'r';
@@ -202,7 +202,7 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 		};
 
 
-		bfu2::JSONSerializer serializer(mBlock);
+		bfu::JSONSerializer serializer(mBlock);
 		bfu::EventSystem es;
 		SerilizedReceiver receiver;
 		SerializedEventArg arg;

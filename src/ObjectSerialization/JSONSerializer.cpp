@@ -1,7 +1,7 @@
 #include "JSONSerializer.hpp"
 #include "ObjectSerializableClassBase.hpp"
 
-namespace bfu2
+namespace bfu
 {
 
 #define GENERAL_VECTOR_SERIALIZE_BODY \

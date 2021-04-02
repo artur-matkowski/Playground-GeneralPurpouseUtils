@@ -4,7 +4,7 @@
 #include "ObjectSerialization/Serializable.hpp"
 #include "stream.hpp"
 
-namespace bfu2
+namespace bfu
 {
 
 	#define SERIALIZER_SECTION __attribute__((section(".Serializer")))

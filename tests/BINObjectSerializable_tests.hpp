@@ -107,7 +107,7 @@ namespace BINObjectSerializationTests
 #define GENERATE_TEST_FOR_SIMPLE_VAR_BIN(T, value) \
 	namespace testing_##T \
 	{ \
-		class A: public bfu2::SerializableClassBase<A> \
+		class A: public bfu::SerializableClassBase<A> \
 		{ \
 		public: \
 			SERIALIZABLE_VAR(A, T, i); \
@@ -122,8 +122,8 @@ namespace BINObjectSerializationTests
 			char buff1[4096]; \
 			char buff2[4096]; \
 			 \
-			bfu2::BinarySerializer serializer1(memBlock); \
-			bfu2::BinarySerializer serializer2(memBlock); \
+			bfu::BinarySerializer serializer1(memBlock); \
+			bfu::BinarySerializer serializer2(memBlock); \
 			 \
 			A tt; \
 			A tt2; \
@@ -189,7 +189,7 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 #define GENERATE_TEST_FOR_VAR_VECTOR_BIN(T, value) \
 	namespace testing_v_##T \
 	{ \
-		class A: public bfu2::SerializableClassBase<A> \
+		class A: public bfu::SerializableClassBase<A> \
 		{ \
 		public: \
 			SERIALIZABLE_VAR_VEC(A, T, i); \
@@ -204,8 +204,8 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			char buff1[4096]; \
 			char buff2[4096]; \
 			 \
-			bfu2::BinarySerializer serializer1(memBlock); \
-			bfu2::BinarySerializer serializer2(memBlock); \
+			bfu::BinarySerializer serializer1(memBlock); \
+			bfu::BinarySerializer serializer2(memBlock); \
 			 \
 			A tt; \
 			A tt2; \
@@ -299,7 +299,7 @@ GENERATE_TEST_FOR_VAR_VECTOR_BIN(string, Rand<string>() );
 
 namespace nestedClassVectorTest
 {
-	class A: public bfu2::SerializableClassBase<A> 
+	class A: public bfu::SerializableClassBase<A> 
 	{ 
 	public: 
 		SERIALIZABLE_VAR(A, int32_t, i); 
@@ -313,7 +313,7 @@ namespace nestedClassVectorTest
 		~A(){}; 
 	}; 
 
-	class B: public bfu2::SerializableClassBase<B> 
+	class B: public bfu::SerializableClassBase<B> 
 	{ 
 	public: 
 		SERIALIZABLE_OBJ_VEC(B, A, i); 
@@ -326,8 +326,8 @@ namespace nestedClassVectorTest
 
 	bool _TESTBINStream(bfu::MemBlockBase* memBlock) 
 	{ 
-		bfu2::BinarySerializer serializer1(memBlock);
-		bfu2::BinarySerializer serializer2(memBlock);
+		bfu::BinarySerializer serializer1(memBlock);
+		bfu::BinarySerializer serializer2(memBlock);
 		 
 		B tt; 
 		B tt2;

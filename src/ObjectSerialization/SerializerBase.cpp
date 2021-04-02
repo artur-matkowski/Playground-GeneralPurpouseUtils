@@ -2,7 +2,7 @@
 
 
 
-namespace bfu2
+namespace bfu
 {
 #define GENERATE_SERIALIZE_BINDING_FUNC(T) \
 	void SerializerBase::Serialize_##T (SerializerBase* serializer, void* data){ serializer->Serialize( (T*)data ); }

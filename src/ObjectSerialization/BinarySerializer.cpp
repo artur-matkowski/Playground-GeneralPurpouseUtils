@@ -1,6 +1,6 @@
 #include "BinarySerializer.hpp"
 
-namespace bfu2
+namespace bfu
 {
 	int next_power_of_two(int n)
 	{

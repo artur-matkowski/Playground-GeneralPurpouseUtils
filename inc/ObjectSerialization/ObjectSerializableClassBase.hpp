@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "Allocators/MemBlockBase.hpp"
 
-namespace bfu2
+namespace bfu
 {
 
 

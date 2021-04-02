@@ -35,7 +35,7 @@ namespace bfu
 		EventSystem* 					m_owner = nullptr;
 		int 							m_sizeOfArg = 0;
 		void*							p_serializationCache = nullptr;
-		bfu2::SerializerBase* 			m_serializer = nullptr;
+		bfu::SerializerBase* 			m_serializer = nullptr;
 
 		friend EventSystem;
 
@@ -58,8 +58,8 @@ namespace bfu
 		inline const char* GetEventID(){ return m_evID; }
 		static void PushEventThroutghNetwork(void* receiver, void* data);
 
-		inline void SetSerializer(bfu2::SerializerBase* p){ m_serializer = p; }
-		inline bfu2::SerializerBase* GetSerializer(bfu2::SerializerBase* p){ return m_serializer; }
+		inline void SetSerializer(bfu::SerializerBase* p){ m_serializer = p; }
+		inline bfu::SerializerBase* GetSerializer(bfu::SerializerBase* p){ return m_serializer; }
 	};
 
 
