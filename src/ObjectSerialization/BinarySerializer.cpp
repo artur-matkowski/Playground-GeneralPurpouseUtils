@@ -50,7 +50,20 @@ namespace bfu2
 
 	}
 	BinarySerializer::BinarySerializer(BinarySerializer&& other)
-	{}
+		:m_buff( std::move(other.m_buff) )
+	{
+
+	}
+
+
+	char* BinarySerializer::data()
+	{
+		return m_buff.data();
+	}
+	int BinarySerializer::size()
+	{
+		return m_buff.size();
+	}
 
 	bool BinarySerializer::operator==(const BinarySerializer& other)
 	{
@@ -60,14 +73,6 @@ namespace bfu2
 	{
 		incomingbuffsize = next_power_of_two( m_buff.size() + incomingbuffsize );
 		m_buff.reserve( incomingbuffsize );
-	}
-	char* BinarySerializer::buff()
-	{
-		return m_buff.data();
-	}
-	uint32_t BinarySerializer::size()
-	{
-		return m_buff.size();
 	}
 
 

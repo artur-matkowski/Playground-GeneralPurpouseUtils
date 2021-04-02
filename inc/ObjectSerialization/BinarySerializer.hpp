@@ -14,10 +14,12 @@ namespace bfu2
 		inline void SetCursonPos(int i){ m_readCursor = i;}
 		//enum class Mode {Serialize, Deserialize};
 
+
+		virtual char* data() override;
+		virtual int size() override;
+
 		bool operator==(const BinarySerializer&);
 		void growToFitNextData(int incomingbuffsize);
-		char* buff();
-		uint32_t size();
 
 		BinarySerializer( bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock() );
 		BinarySerializer(BinarySerializer&&);

@@ -49,6 +49,16 @@ namespace bfu2
 		:bfu::stream(std::move(other))
 	{}
 
+
+	char* JSONSerializer::data() 
+	{
+		return this->c_str();
+	}
+	int JSONSerializer::size() 
+	{
+		return this->size();
+	}
+
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
 		this->sprintf("{");

@@ -2,22 +2,34 @@
 #define _H_EventTest
 #include "bfu.hpp"
 
+
+
+struct Receiver
+{
+	int i = -1;
+	static void alter(void* target, void* data)
+	{
+		int* arg = (int*)data;
+		Receiver* _this = (Receiver*)target;
+		_this->i = *arg;
+	}
+};
+
 bool EventTest( bfu::MemBlockBase* mBlock )
 {
+	bfu::EventSystem es;
+	Receiver receiver;
 
-/*
+	es.RegisterFastEvent("test event", mBlock, false);
+	bfu::Event* ev = es.GetFastEvent("test event");
+
+	ev->RegisterCallback(&receiver, Receiver::alter);
+
+	int arg = 43;
+	ev->Invoke(&arg);
 
 
-	if(result==0)
-	{
-    	log::info << "Test on sneder site, local invoke result: " << test << std::endl;
-	}
-	else
-	{
-		log::info << "Test on receiver site, remote invoke result: " << test << std::endl;
-	}
-
-    if( test==16 )
+    if( receiver.i==43 )
 	{
 		log::warning << "<<<<<<<<<<<<<<<< Event Test concluded : SUCCES\n" << std::endl;
 		return true;
@@ -26,9 +38,7 @@ bool EventTest( bfu::MemBlockBase* mBlock )
 	{
 		log::error << "<<<<<<<<<<<<<<<< Event Test concluded : FAILED\n" << std::endl;
 		return false;		
-	}*/
-
-	return false;
+	}
 }
 
 #endif

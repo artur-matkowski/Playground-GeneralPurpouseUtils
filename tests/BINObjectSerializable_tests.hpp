@@ -140,9 +140,9 @@ namespace BINObjectSerializationTests
 			log::info << "Testing: " << #T << " of sizeof( " << (int)sizeof(T) << " ) \n\tOriginal input:\n\t\t>" << tt.i << " " << tt.ii \
 			 		<< "<\n\tDeserialized back to type:\n\t\t>" << tt2.i << " " << tt2.ii << std::endl; \
 			std::cout << "===================\n\tSerialized to BIN:\n"; \
-			hex_dump(std::cout, serializer1.buff(), serializer1.size() ); \
+			hex_dump(std::cout, serializer1.data(), serializer1.size() ); \
 			std::cout << "===================\n\tSerialized to BIN2:\n"; \
-			hex_dump(std::cout, serializer2.buff(), serializer2.size() ); \
+			hex_dump(std::cout, serializer2.data(), serializer2.size() ); \
  			 \
 			if( serializer1 == serializer2 && tt.i==tt2.i && tt.ii==tt2.ii ) \
 			{ \
@@ -255,9 +255,9 @@ GENERATE_TEST_FOR_SIMPLE_VAR_BIN(stream, "testing bfu::stream" );
 			}  \
 			std::cout << "}\n"; \
 			std::cout << "===================\n\tSerialized to BIN: size( "<< serializer1.size() <<" )\n"; \
-			hex_dump(std::cout, serializer1.buff(), serializer1.size() ); \
+			hex_dump(std::cout, serializer1.data(), serializer1.size() ); \
 			std::cout << "===================\n\tSerialized to BIN2: size( "<< serializer2.size() <<" )\n"; \
-			hex_dump(std::cout, serializer2.buff(), serializer2.size() ); \
+			hex_dump(std::cout, serializer2.data(), serializer2.size() ); \
  			 \
 			if( serializer1 == serializer2 ) \
 			{ \
@@ -343,9 +343,9 @@ namespace nestedClassVectorTest
 		 
 		log::info << "Testing: nested Class Vector Test" << std::endl; 
 		std::cout << "===================\n\tSerialized to BIN: size( "<< serializer1.size() <<" )\n"; 
-		hex_dump(std::cout, serializer1.buff(), serializer1.size() ); 
+		hex_dump(std::cout, serializer1.data(), serializer1.size() ); 
 		std::cout << "===================\n\tSerialized to BIN2: size( "<< serializer2.size() <<" )\n"; 
-		hex_dump(std::cout, serializer2.buff(), serializer2.size() ); 
+		hex_dump(std::cout, serializer2.data(), serializer2.size() ); 
 				 
 		if( serializer1 == serializer2  ) 
 		{ 

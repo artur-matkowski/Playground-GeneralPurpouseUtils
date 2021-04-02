@@ -38,6 +38,9 @@ namespace bfu2
 	{
 	public:
 
+		virtual char* data() = 0;
+		virtual int size() = 0;
+
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( SerializableClassInterface )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( float )
 		GENERATE_SERIALIZE_FUNCTIONS_FOR_SINGLE_VAR( bool )
