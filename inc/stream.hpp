@@ -20,6 +20,9 @@ namespace bfu{
 		string(const std::string& cp, MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
 			:t_string(cp.c_str(), memBlock)
 		{}
+		string(const char* str, MemBlockBase* memBlock = StdAllocatorMemBlock::GetMemBlock() )
+			:t_string(str, memBlock)
+		{}
 		operator std::string() const
 	    {
 	        return std::string(this->c_str());

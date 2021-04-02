@@ -120,7 +120,7 @@ namespace bfu{
 	        exit(-1);
 	    }
 
-	    log::debug << "Sending udp msg: {" << buff << "} to {"<<host<<":"<<port<<"}" << std::endl;
+	    log::debug << "Sending udp msg: {" << buff << "} of size: " << buffsize << " to {"<<host<<":"<<port<<"}" << std::endl;
 
 	    //send the message
 	    if (sendto(s, buff, buffsize , 0 , (struct sockaddr *) &si_other, slen)==-1)
