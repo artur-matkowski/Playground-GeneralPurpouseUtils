@@ -140,7 +140,7 @@ namespace bfu
 
 
 
-	void EventSystem::RegisterFastEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
+	Event* EventSystem::RegisterFastEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
 	{
 		Event* ev = &m_fastEvents[m_lastFreeFastEvent];
 
@@ -153,13 +153,17 @@ namespace bfu
 			ev->RegisterCallback(ev, Event::PushEventThroutghNetwork );
 		}
 		++m_lastFreeFastEvent;
+
+		return ev;
 	}
-	void EventSystem::RegisterLateEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
+	Event* EventSystem::RegisterLateEvent( const char* desc, int sizeOfArg , bfu::MemBlockBase* memBlock, bool isNetworked, void* serializationCache)
 	{
 		Event* ev = (Event*)memBlock->allocate(1, sizeof(Event), alignof(Event));
 		new (ev) Event(desc, sizeOfArg, memBlock, this, serializationCache );
 		
 		m_lateEvents[ desc ] = ev;
+		
+		return ev;
 	}
 	void EventSystem::DisableNetworkPropagation(Event* ev)
 	{

@@ -90,12 +90,12 @@ namespace bfu
 		bfu::udp						m_udp;
 
 	public:
-		void RegisterFastEvent( const char* desc 
+		Event* RegisterFastEvent( const char* desc 
 								, int sizeOfArg 
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
 								, bool isNetworked = false
 								, void* serializationCache = nullptr );
-		void RegisterLateEvent( const char* desc
+		Event* RegisterLateEvent( const char* desc
 								, int sizeOfArg
 								, bfu::MemBlockBase* memBlock = bfu::StdAllocatorMemBlock::GetMemBlock()
 								, bool isNetworked = false
