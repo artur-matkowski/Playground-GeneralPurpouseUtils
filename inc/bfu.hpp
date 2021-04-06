@@ -6,6 +6,7 @@
 #include "Allocators/CustomAllocator.hpp"
 #include "ObjectSerialization/ObjectSerializableClassBase.hpp"
 #include "ObjectSerialization/BinarySerializer.hpp"
+#include "ObjectSerialization/JSONSerializer.hpp"
 
 
 
