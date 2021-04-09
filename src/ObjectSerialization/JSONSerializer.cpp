@@ -69,6 +69,7 @@ namespace bfu
 
 	void JSONSerializer::Serialize( SerializableClassInterface* data )
 	{
+		data->PreSerializationCallback();
 		this->sprintf("{");
 		ClassInfo* it = data->GetFirstClassInfo();
 
@@ -87,6 +88,7 @@ namespace bfu
 		}
 
 		this->sprintf("\n}");
+		data->PostDeserializationCallback();
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
@@ -295,6 +297,7 @@ namespace bfu
 
 	void JSONSerializer::Deserialize( SerializableClassInterface* data )
 	{
+		data->PreDeserializationCallback();
 		char buff[1024] = {'0'};
     	bfu::stream token(buff, 1024 /*, mBlock*/);
 		ClassInfo* classInfo = data->GetFirstClassInfo();
@@ -320,6 +323,7 @@ namespace bfu
 
 		}
 		this->skip(1);
+		data->PostDeserializationCallback();
 	}
 	void JSONSerializer::Deserialize( SerializableVector<SerializableClassInterface>* data )
 	{

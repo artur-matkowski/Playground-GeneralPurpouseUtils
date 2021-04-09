@@ -23,9 +23,7 @@ namespace bfu
 	{
 		SerializableClassInterface* i_data = (SerializableClassInterface*)data;
 
-		i_data->PreSerializationCallback();
 		serializer->Serialize( i_data );
-		i_data->PostDeserializationCallback();
 	}
 	GENERATE_SERIALIZE_BINDING_FUNC( float )
 	GENERATE_SERIALIZE_BINDING_FUNC( bool )
@@ -62,9 +60,7 @@ namespace bfu
 	{
 		SerializableClassInterface* i_data = (SerializableClassInterface*)data;
 
-		i_data->PreDeserializationCallback();
 		serializer->Deserialize( i_data );
-		i_data->PostDeserializationCallback();
 	}
 	GENERATE_DESERIALIZE_BINDING_FUNC( float )
 	GENERATE_DESERIALIZE_BINDING_FUNC( bool )

@@ -93,10 +93,12 @@ namespace bfu
 
 	void BinarySerializer::Serialize( SerializableClassInterface* data )
 	{
+		data->PreSerializationCallback();
 		for(ClassInfo* it = data->GetFirstClassInfo(); it != nullptr; it = it->next )
 		{
 			it->jsonSerializeFunc(this, (void*) ((size_t)data + it->offset) );
 		}
+		data->PostDeserializationCallback();
 	}
 	void BinarySerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
 	{
@@ -273,10 +275,12 @@ namespace bfu
 
 	void BinarySerializer::Deserialize( SerializableClassInterface* data )
 	{
+		data->PreDeserializationCallback();
 		for( ClassInfo* classInfo = data->GetFirstClassInfo(); classInfo != nullptr; classInfo = classInfo->next )
 		{
 			classInfo->jsonDeserializeFunc( this,  (void*) ((size_t)data + classInfo->offset) );
 		}
+		data->PostDeserializationCallback();
 	}
 	void BinarySerializer::Deserialize( SerializableVector<SerializableClassInterface>* data )
 	{
