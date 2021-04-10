@@ -2,6 +2,8 @@
 #define _H_CustomAllocator
 #include "Allocators/StdAllocatorMemBlock.hpp"
 #include "Allocators/ForwardAllocatorMemBlock.hpp"
+#include "Allocators/PreAllocatedMemBlock.hpp"
+
 
 namespace bfu
 {

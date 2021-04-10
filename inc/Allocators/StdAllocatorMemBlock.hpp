@@ -20,8 +20,8 @@ namespace bfu
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	    {
-	    	s_allocatedMemory += sizeOf * elements + sizeof(MemChunkHeader);
 	    	size_t size = sizeOf * elements + sizeof(MemChunkHeader);
+	    	s_allocatedMemory += size;
 
 	        void* ret = aligned_alloc( alignOf, size );
 			//std::memset(ret, 0, size);

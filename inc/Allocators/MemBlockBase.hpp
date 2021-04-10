@@ -34,6 +34,7 @@ namespace bfu
 	{
 		MemBlockBase* 	m_MemBlockOwner = nullptr;
 		size_t			m_sizeOfChunk = 0;
+		void* 			m_actuallBlockStart = nullptr;
 
 		static MemChunkHeader* InitFromLifePtr(void* ptr);
 	};

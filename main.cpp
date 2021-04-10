@@ -70,8 +70,9 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 
 int main(int argc, char** argv)
 {
-	//MonotonicMemBlock<1024*1024*50> membloc("main memory block");
-	StdAllocatorMemBlock membloc("STD memory block");
+	char* membuff[1024*1024*10];
+	PreAllocatedMemBlock membloc(membuff, 1024*1024*10, "main memory block");
+	//StdAllocatorMemBlock membloc("STD memory block");
 	//log::file();
 
 
