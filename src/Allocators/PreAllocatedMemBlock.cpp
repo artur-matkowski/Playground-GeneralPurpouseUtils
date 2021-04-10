@@ -48,7 +48,7 @@ namespace bfu
 	        headerInfo->m_sizeOfChunk = (size_t)result - (size_t)m_buffFreePtr + size;
 	        headerInfo->m_actuallBlockStart = m_buffFreePtr;
 
-            m_buffFreePtr = (void*)((size_t) m_buffFreePtr + size);
+            m_buffFreePtr = (void*)((size_t) result + size);
 
 			++m_allocationCount;
 

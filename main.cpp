@@ -68,10 +68,34 @@ void process_mem_usage(double& vm_usage, double& resident_set)
 	// 	~B(){};
 	// };
 
+
 int main(int argc, char** argv)
 {
-	char* membuff[1024*1024*10];
+	char* membuff = new char[1024*1024*10];
 	PreAllocatedMemBlock membloc(membuff, 1024*1024*10, "main memory block");
+
+	float* ff = (float*)membloc.allocate(1, sizeof(float), alignof(float));
+	*ff = 9.34f;
+
+	cout << "\nhex dump after first allocation\n";
+	hex_dump(cout, membuff, 100);
+
+	float* dd = (float*)membloc.allocate(1, sizeof(float), alignof(float));
+	*dd = 19.84f;
+
+	cout << "\nhex dump after second allocation\n";
+	hex_dump(cout, membuff, 100);
+
+	MemBlockBase::DeallocateUnknown(ff);
+	cout << "\nhex dump after one deallocation\n";
+	hex_dump(cout, membuff, 100);
+	MemBlockBase::DeallocateUnknown(dd);
+
+
+	cout << *dd << " " << *ff << endl;
+
+
+
 	//StdAllocatorMemBlock membloc("STD memory block");
 	//log::file();
 
