@@ -8,12 +8,13 @@ namespace bfu
 	class ForwardAllocatorMemBlock: public MemBlockBase
 	{
 	protected:
-		std::shared_ptr< MemBlockBase > shrp_forwardedMemBlock;
+		MemBlockBase* p_forwardedMemBlock;
 	public:
-		ForwardAllocatorMemBlock(std::shared_ptr< MemBlockBase >& forwardTarget);
+		ForwardAllocatorMemBlock(MemBlockBase* forwardTarget);
 		ForwardAllocatorMemBlock(const ForwardAllocatorMemBlock& forwardTarget);
 
 		ForwardAllocatorMemBlock& operator=(const ForwardAllocatorMemBlock& forwardTarget);
+		ForwardAllocatorMemBlock& operator=(MemBlockBase* forwardTarget);
 
 
 		virtual void* allocate (int elements, std::size_t sizeOf, std::size_t alignOf) override;

@@ -2,25 +2,31 @@
 
 namespace bfu
 {
-	ForwardAllocatorMemBlock::ForwardAllocatorMemBlock(std::shared_ptr< MemBlockBase >& forwardTarget)
+	ForwardAllocatorMemBlock::ForwardAllocatorMemBlock(MemBlockBase* forwardTarget)
 		:MemBlockBase("Forwarded Mem Block")
-		,shrp_forwardedMemBlock(forwardTarget)
+		,p_forwardedMemBlock(forwardTarget)
 	{}
 	ForwardAllocatorMemBlock::ForwardAllocatorMemBlock(const ForwardAllocatorMemBlock& cp)
 		:MemBlockBase(cp)
-		,shrp_forwardedMemBlock(cp.shrp_forwardedMemBlock)
+		,p_forwardedMemBlock(cp.p_forwardedMemBlock)
 	{}
 		
 	ForwardAllocatorMemBlock& ForwardAllocatorMemBlock::operator=(const ForwardAllocatorMemBlock& cp)
 	{
-		shrp_forwardedMemBlock = cp.shrp_forwardedMemBlock;
+		p_forwardedMemBlock = cp.p_forwardedMemBlock;
+		return *this;
+	}
+
+	ForwardAllocatorMemBlock& ForwardAllocatorMemBlock::operator=(MemBlockBase*  cp)
+	{
+		p_forwardedMemBlock = cp;
 		return *this;
 	}
 
 
 	void* ForwardAllocatorMemBlock::allocate (int elements, std::size_t sizeOf, std::size_t alignOf)
 	{
-		return shrp_forwardedMemBlock->allocate(elements, sizeOf, alignOf);
+		return p_forwardedMemBlock->allocate(elements, sizeOf, alignOf);
 	}
 	void ForwardAllocatorMemBlock::deallocate (void* p, std::size_t n)
 	{
@@ -29,30 +35,30 @@ namespace bfu
 
 	size_t ForwardAllocatorMemBlock::getFreeMemory() 
 	{
-		return shrp_forwardedMemBlock->getFreeMemory();
+		return p_forwardedMemBlock->getFreeMemory();
 	}
 	size_t ForwardAllocatorMemBlock::getUsedMemory() 
 	{
-		return shrp_forwardedMemBlock->getUsedMemory();
+		return p_forwardedMemBlock->getUsedMemory();
 	}
 	void* ForwardAllocatorMemBlock::getRefPtr() 
 	{
-		return shrp_forwardedMemBlock->getRefPtr();
+		return p_forwardedMemBlock->getRefPtr();
 	}
 	void* ForwardAllocatorMemBlock::getMemPtr() 
 	{
-		return shrp_forwardedMemBlock->getMemPtr();
+		return p_forwardedMemBlock->getMemPtr();
 	}
 	bool ForwardAllocatorMemBlock::owns(void* p) 
 	{
-		return shrp_forwardedMemBlock->owns(p);
+		return p_forwardedMemBlock->owns(p);
 	}
 	int ForwardAllocatorMemBlock::GetAllocationsCount() 
 	{
-		return shrp_forwardedMemBlock->GetAllocationsCount();
+		return p_forwardedMemBlock->GetAllocationsCount();
 	}
 	int ForwardAllocatorMemBlock::GetDeallocationsCount() 
 	{
-		return shrp_forwardedMemBlock->GetDeallocationsCount();
+		return p_forwardedMemBlock->GetDeallocationsCount();
 	}
 }
