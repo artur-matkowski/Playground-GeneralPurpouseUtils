@@ -3,14 +3,14 @@
 namespace bfu
 {
 	PreAllocatedMemBlock::PreAllocatedMemBlock(void* memStart, size_t memSize, const char* name)
-		:bfu::MemBlockBase(name)
+		:MemBlockBase(name)
 	{
 		m_buffFreePtr = m_buffStartPtr = memStart;
 		std::memset(m_buffFreePtr, 0, memSize);
 		m_buffEndPtr = (void*)((size_t)m_buffStartPtr + memSize);
 	}
 	PreAllocatedMemBlock::PreAllocatedMemBlock(PreAllocatedMemBlock&& cp)
-		:bfu::MemBlockBase(cp.m_memBlockDescriptor)
+		:MemBlockBase(cp.m_memBlockDescriptor)
 	{
 		m_buffStartPtr = cp.m_buffStartPtr;
 		cp.m_buffStartPtr = nullptr;

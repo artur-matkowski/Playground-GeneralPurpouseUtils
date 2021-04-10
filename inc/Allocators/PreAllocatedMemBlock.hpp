@@ -7,6 +7,7 @@ namespace bfu
 {
 	class PreAllocatedMemBlock: public MemBlockBase
 	{
+	protected:
 		void* m_buffStartPtr = 0;
 		void* m_buffFreePtr = 0;
 		void* m_buffEndPtr = 0;
