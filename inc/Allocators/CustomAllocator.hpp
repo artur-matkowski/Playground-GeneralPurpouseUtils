@@ -3,6 +3,7 @@
 #include "Allocators/StdAllocatorMemBlock.hpp"
 #include "Allocators/ForwardAllocatorMemBlock.hpp"
 #include "Allocators/PreAllocatedMemBlock.hpp"
+#include "Allocators/StdPreAllocatedMemBlock.hpp"
 
 
 namespace bfu
