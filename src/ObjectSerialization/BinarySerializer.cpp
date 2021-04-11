@@ -98,7 +98,7 @@ namespace bfu
 		{
 			it->jsonSerializeFunc(this, (void*) ((size_t)data + it->offset) );
 		}
-		data->PostDeserializationCallback();
+		data->PostSerializationCallback();
 	}
 	void BinarySerializer::Serialize( SerializableVector<SerializableClassInterface>* data )
 	{

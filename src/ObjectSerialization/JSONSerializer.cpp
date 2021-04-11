@@ -88,7 +88,7 @@ namespace bfu
 		}
 
 		this->sprintf("\n}");
-		data->PostDeserializationCallback();
+		data->PostSerializationCallback();
 	}
 	
 	void JSONSerializer::Serialize( SerializableVector<SerializableClassInterface>* data )

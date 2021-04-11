@@ -63,6 +63,11 @@ namespace bfu
 		}
 
 		bfu::MemBlockBase* mBlock() { return m_mBlock; }
+
+		SerializableVector<T>& operator=(SerializableVector<T>&& other)
+		{
+			std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::operator=(std::move(other));
+		}
 	};
 
 	SERIALIZABLE_VECTOR( uint8_t );
