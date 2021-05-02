@@ -317,7 +317,8 @@ namespace bfu
 
 			ClassInfo* tmp = (*classInfo)[ token.c_str() ];
 
-			tmp->jsonDeserializeFunc( this,  (void*) ((size_t)data + tmp->offset) );
+			if( tmp != nullptr )
+				tmp->jsonDeserializeFunc( this,  (void*) ((size_t)data + tmp->offset) );
 
 			this->skipToOneOf("\"}");
 
