@@ -45,9 +45,9 @@ release: $(SOURCES) $(OUT)
 	
 
 $(OUT):
-	$(CC) -shared -o $(BUILDPATH)$@.so $(CPPFLAGS) $(BUILDPATH)*.o  
+	$(CC) -shared -o $(BUILDPATH)lib$@.so $(CPPFLAGS) $(BUILDPATH)*.o  
 	#as rcs $(BUILDPATH)$@.a $(BUILDPATH)*.o
-	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)$@.so  main.cpp 
+	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)lib$@.so  main.cpp 
 	#$(CC) -o $(BUILDPATH)$@_testO $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)*.o  main.cpp 
 
 
@@ -72,6 +72,6 @@ remove:
 install:
 	mkdir -p $(HEADERDIR)bitforge
 	mkdir -p $(HEADERDIR)bitforge/utils
-	cp build/${ARCHITECTURE}/dbg/${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
+	cp build/${ARCHITECTURE}/dbg/lib${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
 	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
 	cp -r inc/* $(HEADERDIR)bitforge/utils
