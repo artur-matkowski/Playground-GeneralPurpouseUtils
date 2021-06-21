@@ -48,6 +48,7 @@ $(OUT):
 	$(CC) -shared -o $(BUILDPATH)lib$@.so $(CPPFLAGS) $(BUILDPATH)*.o  
 	#as rcs $(BUILDPATH)$@.a $(BUILDPATH)*.o
 	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)lib$@.so  main.cpp 
+	ar rcs $(BUILDPATH)lib$@.a $(BUILDPATH)*.o 
 	#$(CC) -o $(BUILDPATH)$@_testO $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)*.o  main.cpp 
 
 
