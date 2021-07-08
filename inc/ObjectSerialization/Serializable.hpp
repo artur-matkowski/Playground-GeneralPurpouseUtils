@@ -67,6 +67,7 @@ namespace bfu
 		SerializableVector<T>& operator=(SerializableVector<T>&& other)
 		{
 			std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::operator=(std::move(other));
+			return *this;
 		}
 	};
 
