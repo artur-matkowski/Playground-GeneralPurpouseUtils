@@ -45,12 +45,7 @@ release: $(SOURCES) $(OUT)
 	
 
 $(OUT):
-	$(CC) -shared -o $(BUILDPATH)lib$@.so $(CPPFLAGS) $(BUILDPATH)*.o  
-	#as rcs $(BUILDPATH)$@.a $(BUILDPATH)*.o
 	$(CC) -o $(BUILDPATH)$@_tests $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)*.o  main.cpp 
-	ar rcs $(BUILDPATH)lib$@.a $(BUILDPATH)*.o 
-	#$(CC) -o $(BUILDPATH)$@_testO $(CPPFLAGS) $(INCSTRUCTURE) $(BUILDPATH)*.o  main.cpp 
-
 
 $(SOURCES): $(INCDIR)$(@:%.cpp=%.hpp) $@
 	$(CC) -c $(CPPFLAGS) $(INCSTRUCTURE) $@.cpp -o $(BUILDPATH)$(notdir $@).o -fpic
@@ -64,15 +59,3 @@ clean:
 	rm -fr build/*
 	./prebuild.sh
 	rm Logs/*
-
-remove:
-	rm -rf $(HEADERDIR)bitforge/utils
-	rm ${INSTALLDIR}lib${OUT}.so*
-
-
-install:
-	mkdir -p $(HEADERDIR)bitforge
-	mkdir -p $(HEADERDIR)bitforge/utils
-	cp build/${ARCHITECTURE}/dbg/lib${OUT}.so ${INSTALLDIR}lib${OUT}.so$(VERSION)
-	ln -sf ${INSTALLDIR}lib${OUT}.so$(VERSION) ${INSTALLDIR}lib${OUT}.so
-	cp -r inc/* $(HEADERDIR)bitforge/utils
