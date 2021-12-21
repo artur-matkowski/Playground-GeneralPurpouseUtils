@@ -69,7 +69,22 @@ namespace bfu
 			std::vector<SerializableClassInterface*, bfu::custom_allocator<SerializableClassInterface*>>::operator=(std::move(other));
 			return *this;
 		}
+
+
+		template<class U>
+		friend bfu::stream& operator<<(bfu::stream& os, const SerializableVector<U>& vec);
 	};
+
+	template <class T>
+	bfu::stream& operator<<(bfu::stream& os, const SerializableVector<T>& vec)
+	{
+		for(int i=0; i<vec.size(); ++i)
+		{
+			const T* ptr = (T*)*vec.begin();
+			os << "\n" << *(ptr + i);
+		}
+		return os;
+	}
 
 	SERIALIZABLE_VECTOR( uint8_t );
 	SERIALIZABLE_VECTOR( int8_t );
