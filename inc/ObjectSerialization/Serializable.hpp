@@ -80,8 +80,8 @@ namespace bfu
 	{
 		for(int i=0; i<vec.size(); ++i)
 		{
-			const T* ptr = (T*)*vec.begin();
-			os << "\n" << *(ptr + i);
+			const T* ptr = (T*)*(vec.begin() + i);
+			os << "\n" << *ptr;
 		}
 		return os;
 	}
