@@ -121,7 +121,7 @@ namespace bfu
 
 	#define SERIALIZABLE_OBJ(C, T, i) \
 		T i; \
-		static inline void initVar_##i() __attribute__((constructor)) \
+		static inline void initVar_##i() __attribute__((constructor, used)) \
 		{ \
 			static bool isRegistered = false; \
 			if( isRegistered==false ) \
