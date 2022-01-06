@@ -49,6 +49,9 @@ namespace bfu
 
 		virtual void deallocate (void* p, std::size_t n)
 	    {
+	    	if( p==nullptr )
+	    		return;
+	    	
 	        MemChunkHeader* headerInfo = MemChunkHeader::InitFromLifePtr(p);
 	    	s_deallocatedMemory += headerInfo->m_sizeOfChunk;
 	    	++s_deallocationCount;
