@@ -271,11 +271,6 @@ This is a playground/experimental repository for general-purpose utilities. Cont
 
 Please check with the repository maintainer for licensing information.
 
-## Contact
-
-- **Maintainer**: artur.matkowski.zan@gmail.com
-- **Website**: bitforge.pl
-
 ## Additional Notes
 
 - The library is designed with embedded systems in mind, supporting custom memory management
